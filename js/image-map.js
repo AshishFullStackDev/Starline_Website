@@ -297,8 +297,8 @@
             desc: "Industrial-strength braided nylon cargo climbing nets, commando crawls, and enclosed cylindrical suspended net bridges."
         },
         "tyre-balance-obstacles": {
-             image: "images/equipment/Tyre Balance Obstacles.jpeg",
-             alt: "Tyre Balance Obstacles",
+             image: "images/equipment/Tyre_Balance_Obstacles.jpeg",
+             alt: "Tyre & Balance Obstacles",
               desc: "Durable tyre balance obstacles designed for adventure parks, obstacle courses, and outdoor training areas."
         },
         "adventure-park-ladders-bridges": {

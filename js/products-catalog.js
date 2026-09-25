@@ -441,7 +441,7 @@ const STARLINE_PRODUCTS = [
         id: "tyre-balance-obstacles",
         name: "Tyre & Balance Obstacles",
         category: "equipment",
-        image: "",
+        image: "images/equipment/Tyre_Balance_Obstacles.jpeg",
         shortDesc: "Suspended swinging tyre steps, horizontal tyre crawl tunnels, and elevated anti-slip balance beams.",
         fullDesc: "Challenging agility and balance elements designed for ninja courses, tactical fitness tracks, and low/high rope challenge arenas. Features reinforced industrial automobile tyres with drainage weep holes suspended by calibrated short-link chains and sleeved cables, paired with treated timber or steel balance beams coated with non-slip quartz grit.",
         specs: [
