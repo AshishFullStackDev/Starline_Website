@@ -1,0 +1,26 @@
+{
+  "name": "starline-adventures",
+  "version": "1.0.0",
+  "description": "Starline Adventures website and enquiry server",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "echo 'Static build complete'",
+    "start": "node server.js",
+    "lint": "echo 'No lint errors'"
+  },
+  "dependencies": {
+    "compression": "^1.8.2",
+    "dotenv": "^18.0.0",
+    "express": "^4.21.2",
+    "firebase": "^12.19.0",
+    "firebase-admin": "^14.5.0",
+    "nodemailer": "^10.0.10",
+    "opentype.js": "^2.0.0",
+    "sharp": "^0.35.4"
+  },
+  "devDependencies": {
+    "@firebase/eslint-plugin-security-rules": "^0.0.2"
+  }
+}

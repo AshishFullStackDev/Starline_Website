@@ -1,0 +1,577 @@
+/**
+ * STARLINE ADVENTURES - CENTRALIZED IMAGE & ACTIVITY MAPPING SYSTEM
+ * Single source of truth for all product, activity, and project image resolutions.
+ * Matches activities to verified authentic existing image assets.
+ * When no image exists, cleanly handles empty/placeholder state without unrelated image fallbacks.
+ */
+
+(function(root, factory) {
+    if (typeof module === 'object' && module.exports) {
+        module.exports = factory();
+    } else {
+        const exported = factory();
+        root.StarlineImageMap = exported;
+        if (typeof window !== 'undefined') {
+            window.StarlineImageMap = exported;
+            window.STARLINE_IMAGE_MAP = exported.productImageMap;
+            window.getProductImage = exported.getProductImage;
+            window.normalizeActivityKey = exported.normalizeKey;
+            window.renderProductCardImage = exported.renderProductCardImage;
+            window.renderProductDetailImage = exported.renderProductDetailImage;
+            window.getEmptyPlaceholderHtml = exported.getEmptyPlaceholderHtml;
+            window.getVerifiedGalleryData = exported.getVerifiedGalleryData;
+        }
+    }
+})(typeof globalThis !== 'undefined' ? globalThis : (typeof window !== 'undefined' ? window : this), function() {
+
+    /**
+     * Centralized master product & activity image map.
+     * Maps canonical activity IDs to verified existing on-disk image assets.
+     * Missing or non-existent items are intentionally mapped to null so no unrelated image is used.
+     */
+    const productImageMap = {
+        // 1. Giant Swing
+        "giant-swing": {
+            image: "images/Giant swing new.jpeg",
+            alt: "Giant Pendulum Swing High-Altitude Ride - Starline Adventures",
+            title: "Giant Swing",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "Massive A-frame pendulum swing providing exhilarating free-fall release and wide weightless arcs."
+        },
+
+        // 2. Zip Line
+        "zip-line": {
+            image: "images/zipline_square.jpeg",
+            alt: "High-Speed Commercial Zip Line Installation - Starline Adventures",
+            title: "Zip Line",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "A classic overhead zip line that carries riders across scenic spans, lakes, and nature terrain."
+        },
+
+        // 3. Zip Bike / Sky Cycle
+        "zip-bike-sky-cycle": {
+            image: "images/sky_cycle_square.jpeg",
+            alt: "Suspended High-Wire Zip Bike and Sky Cycle Ride - Starline Adventures",
+            title: "Zip Bike / Sky Cycle",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "Participants pedal specially modified aerodynamic bicycles across elevated overhead cable lines."
+        },
+
+        // 4. Sky Roller
+        "sky-roller": {
+            image: "images/sky_roller_square.jpeg",
+            alt: "Dynamic Overhead Sky Roller Cylinder Barrel Attraction - Starline Adventures",
+            title: "Sky Roller",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "A rolling wheel-cage that carries a rider along an elevated high-tension cable line."
+        },
+
+        // 5. Wall Climbing
+        "wall-climbing": {
+            image: "images/wall_climbing_square.jpeg",
+            alt: "Engineered Artificial Rock Climbing Wall Panels - Starline Adventures",
+            title: "Wall Climbing",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "A textured climbing panel with ergonomic modular holds and certified auto-belays."
+        },
+
+        // 6. Ninja Rope Courses
+        "ninja-rope-courses": {
+            image: "images/rope_course_square.jpeg",
+            alt: "Multi-Level Ninja Aerial Rope Obstacle Challenge Course - Starline Adventures",
+            title: "Ninja Rope Courses",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "A modular, multi-tier aerial obstacle course featuring continuous safety belay lifelines."
+        },
+
+        // 7. Multi Activity Tower
+        "multi-activity-tower": {
+            image: "images/tower_square.jpeg",
+            alt: "Multi-Activity Adventure Tower Structural Hub - Starline Adventures",
+            title: "Multi Activity Tower",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "Consolidates 4 to 8 popular adventure activities into a single compact structural footprint."
+        },
+
+        // 8. Glass Bridge
+        "glass-bridge": {
+            image: "images/glass_square.jpg",
+            alt: "High-Altitude Transparent Structural Glass Bridge Walkway - Starline Adventures",
+            title: "Glass Bridge",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "Constructed with triple-layer toughened laminated safety glass and structural steel trusses."
+        },
+
+        // 9. Human Gyro
+        "human-gyro": {
+            image: "images/gyro_square.jpeg",
+            alt: "3-Axis 360-Degree Human Gyroscope Thrill Ride - Starline Adventures",
+            title: "Human Gyro",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "Modeled after space simulation and aerospace pilot training systems, rotating riders freely across 3 axes."
+        },
+
+        // 10. 360 Degree Cycle
+        "360-degree-cycle": {
+            image: "images/360_square.jpeg",
+            alt: "Vertical 360-Degree Inverted Loop Cycling Stunt Ride - Starline Adventures",
+            title: "360 Degree Cycle",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "Riders pedal a counterbalanced sports bicycle inside a vertical circular steel loop to execute full 360° inversions."
+        },
+
+        // 11. Rocket Ejection
+        "rocket-ejection": {
+            image: "images/ejector_square.jpeg",
+            alt: "High-Altitude Twin-Tower Rocket Ejection Reverse Bungee Ride - Starline Adventures",
+            title: "Rocket Ejection",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "Flagship high-altitude thrill attraction using heavy-gauge tensioned bungee cords and winches to catapult riders skyward."
+        },
+
+        // 12. Cup Ride / Spinning Cup
+        "cup-ride": {
+            image: "images/cup_square.jpg",
+            alt: "Family Mechanical Spinning Cup Theme Park Attraction - Starline Adventures",
+            title: "Cup Ride",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "Classic rotating family amusement ride with center steering wheel for controllable spin speed."
+        },
+
+        // 13. Turnkey Installation & Manufacturing (Site work)
+        "turnkey-installation": {
+            image: "images/working.webp",
+            alt: "Starline Adventures In-House Engineering & On-Site Installation Team",
+            title: "Turnkey Installation & Engineering",
+            category: "installation",
+            categoryLabel: "Installation",
+            desc: "Turnkey engineering, structural fabrication, proof testing, and certified on-site rigging."
+        },
+
+        // Items with no existing photos - strictly mapped to null so no unrelated image is used:
+        "4-in-1-bungee-jumping": null,
+        "net-climbing": null,
+        "suspension-bridge": null,
+        "roller-coaster": null,
+        "bull-ride": null,
+        "rifle-shooting": null,
+        "archery": null,
+        "open-gym-equipment": null,
+        "climbing-wall-equipment": null,
+        "rope-course-equipment": null,
+        "safety-nets": null,
+        "safety-harness-belts": null,
+        "zipline-safety-equipment": null,
+        "climbing-ropes": null,
+        "carabiners-connectors": null,
+        "belay-devices": null,
+        "climbing-holds": null,
+        "climbing-wall-panels": null,
+        "climbing-wall-anchors": null,
+        "rope-course-platforms": null,
+        "rope-course-obstacles": null,
+        "zipline-trolleys": null,
+        "zipline-pulleys": null,
+        "zipline-cables": null,
+        "zipline-braking-systems": null,
+        "adventure-safety-lanyards": null,
+        "safety-helmets": null,
+        "fall-arrest-systems": null,
+        "rescue-equipment": null,
+        "steel-cable-rigging-equipment": null,
+        "anchoring-fixing-systems": null,
+        "protective-padding": null,
+        "adventure-park-signage-safety-boards": null,
+        "cargo-nets": null,
+        "tyre-obstacles": null,
+        "balance-beams": null,
+        "monkey-bars": null,
+        "parallel-bars": null,
+        "pull-up-bars": null,
+        "horizontal-ladders": null,
+        "rope-ladders": null,
+        "suspension-bridges-equipment": null,
+        "net-bridges": null,
+        "tarzan-swings": null,
+        "adventure-park-platforms": null,
+        "ground-anchors": null,
+        "structural-support-components": null
+    };
+
+    /**
+     * Verified Project Client Logos Mapping
+     */
+    const projectLogoMap = {
+        "the-grand-machal-resorts": "images/logos/grand_machal.jpg",
+        "grand-machal": "images/logos/grand_machal.jpg",
+        "ikya-island-mussoorie": "images/logos/ikya_island.jpg",
+        "ikya-island": "images/logos/ikya_island.jpg",
+        "forest-department": "images/logos/forest_department.svg",
+        "pench-tiger-reserve": "images/logos/pench_logo.webp",
+        "devgad-zipline": "images/logos/flying_kokan.jpeg",
+        "devgad-adventure": "images/logos/flying_kokan.jpeg",
+        "maniratna-resort": "images/logos/maniratna.jpeg",
+        "srushti-farms": "images/logos/srushti_farm.png",
+        "srushti-farm": "images/logos/srushti_farm.png"
+    };
+
+    /**
+     * Normalizes names, activity titles, IDs, or filenames into a canonical lookup key.
+     * E.g. "Zip Line", "zip-line", "zip_line", "Zipline", "zipline_square.jpeg" -> "zip-line"
+     */
+    function normalizeKey(input) {
+        if (!input) return "";
+
+        let key = String(input).trim().toLowerCase();
+
+        // Strip file extensions if filename passed
+        key = key.replace(/\.(jpeg|jpg|png|webp|svg)$/i, "");
+
+        // Strip common filename suffixes and special characters
+        key = key.replace(/^(images\/|activity_images\/|\/images\/|\/activity_images\/)/i, "");
+        key = key.replace(/_(square|square1|work|new|2)$/i, "");
+        key = key.replace(/\s+(square|square1|work|new|2)$/i, "");
+        key = key.replace(/[^\w\s-]/g, " ");
+
+        // Convert delimiters to hyphens
+        key = key.replace(/[\s/_]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+
+        // Canonical alias mapping
+        if (key === "zipline" || key === "zip-lines" || key === "ziplines" || key === "zip-line" || key === "zipline-square") {
+            return "zip-line";
+        }
+        if (key.includes("sky-cycle") || key.includes("zip-bike") || key.includes("skycycle") || key === "sky-cycle-square") {
+            return "zip-bike-sky-cycle";
+        }
+        if (key.includes("giant-swing") || key === "giant-swing-2" || key === "giant-swing-new" || key === "giant-swing") {
+            return "giant-swing";
+        }
+        if (key.includes("wall-climbing") || key.includes("rock-climbing") || key === "wall-climbing-square") {
+            return "wall-climbing";
+        }
+        if (key.includes("rope-course") || key.includes("ninja-rope") || key === "rope-course-square") {
+            return "ninja-rope-courses";
+        }
+        if (key.includes("multi-activity-tower") || key.includes("multi-tower") || key === "tower-square" || key === "multi-tower") {
+            return "multi-activity-tower";
+        }
+        if (key.includes("glass-bridge") || key.includes("glass-skywalk") || key === "glass-square") {
+            return "glass-bridge";
+        }
+        if (key.includes("human-gyro") || key === "gyro" || key === "gyroscope" || key === "gyro-square") {
+            return "human-gyro";
+        }
+        if (key.includes("360") && (key.includes("cycle") || key.includes("loop"))) {
+            return "360-degree-cycle";
+        }
+        if (key.includes("rocket-ejection") || key.includes("ejector") || key === "ejector-square" || key === "ejector-square1") {
+            return "rocket-ejection";
+        }
+        if (key.includes("sky-roller") || key === "sky-roller-square") {
+            return "sky-roller";
+        }
+        if (key.includes("cup") || key === "cup-square" || key.includes("tea-cup")) {
+            return "cup-ride";
+        }
+        if (key.includes("working") || key.includes("turnkey-installation") || key.includes("manufacturing")) {
+            return "turnkey-installation";
+        }
+
+        return key;
+    }
+
+    /**
+     * Look up the authentic, verified image for any product or activity.
+     * Returns the image path string (e.g. "images/zipline_square.jpeg") or null if no valid image exists.
+     */
+    function getProductImage(productOrNameOrId) {
+        if (!productOrNameOrId) return null;
+
+        let canonicalKey = "";
+
+        if (typeof productOrNameOrId === "object") {
+            // Check direct image property if valid and existing
+            if (productOrNameOrId.id) {
+                canonicalKey = normalizeKey(productOrNameOrId.id);
+            }
+            if (!productImageMap[canonicalKey] && productOrNameOrId.name) {
+                canonicalKey = normalizeKey(productOrNameOrId.name);
+            }
+            if (!productImageMap[canonicalKey] && productOrNameOrId.image) {
+                canonicalKey = normalizeKey(productOrNameOrId.image);
+            }
+        } else {
+            canonicalKey = normalizeKey(productOrNameOrId);
+        }
+
+        const entry = productImageMap[canonicalKey];
+        if (entry && entry.image) {
+            return entry.image;
+        }
+
+        return null;
+    }
+
+    /**
+     * Look up the full image metadata object for an activity.
+     */
+    function getProductImageEntry(productOrNameOrId) {
+        if (!productOrNameOrId) return null;
+        let canonicalKey = "";
+
+        if (typeof productOrNameOrId === "object") {
+            if (productOrNameOrId.id) canonicalKey = normalizeKey(productOrNameOrId.id);
+            if (!productImageMap[canonicalKey] && productOrNameOrId.name) canonicalKey = normalizeKey(productOrNameOrId.name);
+        } else {
+            canonicalKey = normalizeKey(productOrNameOrId);
+        }
+
+        return productImageMap[canonicalKey] || null;
+    }
+
+    /**
+     * Returns verified project logo path
+     */
+    function getProjectLogo(projectIdOrName) {
+        if (!projectIdOrName) return null;
+        const key = normalizeKey(projectIdOrName);
+        return projectLogoMap[key] || null;
+    }
+
+    /**
+     * Standardized HTML for clean empty / "Image coming soon" placeholder.
+     * Never uses Starline logo or unrelated photos as a substitute.
+     */
+    function getEmptyPlaceholderHtml(name, isDetailView) {
+        const cleanName = escapeHtml(name || "Adventure Equipment");
+        if (isDetailView) {
+            return `
+                <div class="product-empty-image-placeholder">
+                    <span class="product-empty-icon" aria-hidden="true">📷</span>
+                    <div class="product-empty-text">${cleanName}</div>
+                    <div class="product-empty-subtext">Product Image Coming Soon</div>
+                </div>
+            `;
+        }
+        return `
+            <div class="product-card-empty-box">
+                <span class="product-card-empty-icon" aria-hidden="true">📷</span>
+                <span class="product-card-empty-text">Image coming soon</span>
+            </div>
+        `;
+    }
+
+    /**
+     * Renders image or placeholder for product catalog cards.
+     */
+    function renderProductCardImage(product) {
+        const imgUrl = getProductImage(product);
+        const name = (product && product.name) ? product.name : "Product";
+
+        if (imgUrl && imgUrl.trim() !== "") {
+            return `
+                <img src="${escapeHtml(imgUrl)}"
+                     alt="${escapeHtml(name)} - Starline Adventures"
+                     class="product-item-img"
+                     loading="lazy"
+                     decoding="async"
+                     onerror="this.onerror=null; this.parentElement.innerHTML = getEmptyPlaceholderHtml('${escapeHtml(name)}', false);">
+            `;
+        }
+        return getEmptyPlaceholderHtml(name, false);
+    }
+
+    /**
+     * Renders image or placeholder for Product Details page.
+     */
+    function renderProductDetailImage(product) {
+        const imgUrl = getProductImage(product);
+        const name = (product && product.name) ? product.name : "Product";
+
+        if (imgUrl && imgUrl.trim() !== "") {
+            return `
+                <img src="${escapeHtml(imgUrl)}"
+                     alt="${escapeHtml(name)} - Starline Adventures"
+                     loading="eager"
+                     decoding="async"
+                     onerror="this.onerror=null; this.parentElement.innerHTML = getEmptyPlaceholderHtml('${escapeHtml(name)}', true);">
+            `;
+        }
+        return getEmptyPlaceholderHtml(name, true);
+    }
+
+    /**
+     * Returns ONLY authentic, verified existing photos for the gallery.
+     * Eliminates broken references and unverified images.
+     */
+    function getVerifiedGalleryData() {
+        return [
+            {
+                id: "gallery-zip-line",
+                filename: "zipline_square.jpeg",
+                src: "images/zipline_square.jpeg",
+                title: "High-Speed Commercial Zip Line Installation",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "Long-span commercial wire rope zip line glide across adventure park terrain.",
+                alt: "High speed commercial zip line flight - Starline Adventures"
+            },
+            {
+                id: "gallery-giant-swing",
+                filename: "Giant swing new.jpeg",
+                src: "images/Giant swing new.jpeg",
+                title: "Giant Pendulum Swing Free-Fall Thrill",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "Twin riders soaring through high-altitude weightless pendulum arcs in safety harnesses.",
+                alt: "Participants riding giant pendulum swing - Starline Adventures"
+            },
+            {
+                id: "gallery-sky-cycle",
+                filename: "sky_cycle_square.jpeg",
+                src: "images/sky_cycle_square.jpeg",
+                title: "High-Wire Zip Bike & Aerial Sky Cycling",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "Participants pedaling custom aerodynamic sports cycles suspended on high-tension wire ropes.",
+                alt: "Adventurers riding elevated sky cycle - Starline Adventures"
+            },
+            {
+                id: "gallery-rope-course",
+                filename: "rope_course_square.jpeg",
+                src: "images/rope_course_square.jpeg",
+                title: "Multi-Tier Ninja Aerial Rope Obstacle Course",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "Continuous belay challenge obstacle course featuring suspended wooden beams and balance crossings.",
+                alt: "Aerial high ropes obstacle challenge course - Starline Adventures"
+            },
+            {
+                id: "gallery-wall-climbing",
+                filename: "wall_climbing_square.jpeg",
+                src: "images/wall_climbing_square.jpeg",
+                title: "Artificial Rock Climbing Wall Panels",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "Outdoor textured climbing wall equipped with ergonomic holds and auto-belay fall arrest safety stations.",
+                alt: "Climber scaling artificial rock wall - Starline Adventures"
+            },
+            {
+                id: "gallery-activity-tower",
+                filename: "tower_square.jpeg",
+                src: "images/tower_square.jpeg",
+                title: "Multi-Activity Adventure Tower Hub",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "Integrated structural adventure tower combining wall climbing, rappelling, and zip line takeoffs.",
+                alt: "Multi activity adventure steel tower - Starline Adventures"
+            },
+            {
+                id: "gallery-glass-bridge",
+                filename: "glass_square.jpg",
+                src: "images/glass_square.jpg",
+                title: "High-Altitude Engineered Glass Bridge Skywalk",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "Triple-layer toughened laminated transparent glass bridge walkway spanning open terrain.",
+                alt: "Visitors on high altitude engineered glass bridge - Starline Adventures"
+            },
+            {
+                id: "gallery-human-gyro",
+                filename: "gyro_square.jpeg",
+                src: "images/gyro_square.jpeg",
+                title: "3-Axis Space Simulation Human Gyroscope",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "360-degree rotational astronaut training gyro ride spinning riders across three concentric axes.",
+                alt: "Human gyroscope 360 degree space ride - Starline Adventures"
+            },
+            {
+                id: "gallery-360-cycle",
+                filename: "360_square.jpeg",
+                src: "images/360_square.jpeg",
+                title: "360° Vertical Loop Stunt Cycling Challenge",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "Rider pedaling through a full vertical loop inversion locked to circular structural steel rail.",
+                alt: "Rider doing 360 degree vertical loop cycling stunt - Starline Adventures"
+            },
+            {
+                id: "gallery-rocket-ejection",
+                filename: "ejector_square.jpeg",
+                src: "images/ejector_square.jpeg",
+                title: "Twin-Tower Rocket Ejection Reverse Bungee",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "High-altitude vertical catapult launching participants skyward with intense acceleration.",
+                alt: "Rocket ejection reverse bungee ride launch - Starline Adventures"
+            },
+            {
+                id: "gallery-sky-roller",
+                filename: "sky_roller_square.jpeg",
+                src: "images/sky_roller_square.jpeg",
+                title: "Sky Roller Elevated Cable Rolling Capsule",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "Rotating cylindrical passenger capsule gliding on high-tension steel overhead cables.",
+                alt: "Sky roller rolling barrel cable ride - Starline Adventures"
+            },
+            {
+                id: "gallery-cup-ride",
+                filename: "cup_square.jpg",
+                src: "images/cup_square.jpg",
+                title: "Mechanical Spinning Cup Theme Park Ride",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "Family mechanical rotating cups with center wheel control for interactive guest fun.",
+                alt: "Spinning cup family amusement attraction - Starline Adventures"
+            },
+            {
+                id: "gallery-turnkey-installation",
+                filename: "working.webp",
+                src: "images/working.webp",
+                title: "In-House Structural Fabrication & Certified Installation",
+                category: "installation",
+                categoryLabel: "Installation",
+                desc: "Starline engineering specialists assembling and proof testing precision steel adventure components.",
+                alt: "Starline fabrication and installation engineering team at work - Starline Adventures"
+            }
+        ];
+    }
+
+    function escapeHtml(str) {
+        if (!str) return "";
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
+
+    return {
+        productImageMap,
+        projectLogoMap,
+        normalizeKey,
+        getProductImage,
+        getProductImageEntry,
+        getProjectLogo,
+        getEmptyPlaceholderHtml,
+        renderProductCardImage,
+        renderProductDetailImage,
+        getVerifiedGalleryData,
+        escapeHtml
+    };
+});

@@ -1,0 +1,594 @@
+/* ==========================================================================
+   STARLINE ADVENTURES - ABOUT PAGE STYLES
+   Senior Engineering Design System Extension
+   Harmonized with style.css, products.html, and portfolio.html
+   ========================================================================== */
+
+.about-page-main {
+    background-color: var(--white);
+}
+
+/* Smooth section rhythms */
+.about-section {
+    padding: 88px 0;
+    position: relative;
+}
+
+.about-section-alt {
+    background-color: #f8fafb;
+    border-top: 1px solid #e7ebed;
+    border-bottom: 1px solid #e7ebed;
+}
+
+/* Hero Section */
+.about-hero-section {
+    padding: 72px 0 80px;
+    background: #ffffff;
+    border-bottom: 1px solid #eef1f3;
+}
+
+.about-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 64px;
+    align-items: center;
+}
+
+.about-hero-content {
+    position: relative;
+    padding-left: 24px;
+    border-left: 3px solid var(--primary-color);
+}
+
+.about-hero-content h1 {
+    font-size: clamp(2.2rem, 4vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    color: var(--text-dark);
+    margin: 0 0 20px 0;
+}
+
+.about-hero-content h1 span {
+    color: var(--primary-color);
+}
+
+.about-hero-copy {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--text-light);
+    margin-bottom: 28px;
+    max-width: 620px;
+}
+
+.about-hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 24px 0 0;
+    margin-top: 28px;
+    border-top: 1px solid #e7ebed;
+}
+
+.about-hero-visual {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+}
+
+.about-hero-visual img {
+    width: 100%;
+    height: 480px;
+    object-fit: cover;
+    display: block;
+}
+
+.about-image-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(30, 41, 59, 0.92);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    margin: 0;
+}
+
+/* Metrics Section */
+.about-highlights {
+    padding: 88px 0;
+    background: #f8fafb;
+    border-top: 1px solid #e7ebed;
+    border-bottom: 1px solid #e7ebed;
+}
+
+.about-section-heading {
+    max-width: 760px;
+    margin-bottom: 36px;
+}
+
+.about-section-heading h2 {
+    font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+    font-weight: 750;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.about-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.metric-item {
+    background: #ffffff;
+    border: 1px solid #e3e7e9;
+    border-radius: 8px;
+    padding: 32px 24px;
+    text-align: center;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-item:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(244, 118, 33, 0.1);
+}
+
+.metric-item strong {
+    display: block;
+    font-size: clamp(2.2rem, 3.5vw, 3rem);
+    font-weight: 800;
+    color: var(--primary-color);
+    line-height: 1;
+    margin-bottom: 8px;
+    font-family: var(--font-heading);
+}
+
+.metric-item span {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.4;
+}
+
+/* Who We Are Layout */
+.about-who-we-are {
+    padding: 88px 0;
+    background: #ffffff;
+}
+
+.about-who-we-are-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: 64px;
+    align-items: center;
+}
+
+.about-who-we-are-visual {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e3e7e9;
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.07);
+}
+
+.about-who-we-are-visual img {
+    width: 100%;
+    height: 480px;
+    object-fit: cover;
+    display: block;
+}
+
+.about-who-we-are-content h2 {
+    font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+    font-weight: 750;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--text-dark);
+    margin: 0 0 18px;
+}
+
+.about-who-we-are-content p {
+    color: var(--text-light);
+    font-size: 1.02rem;
+    line-height: 1.75;
+    margin-bottom: 16px;
+}
+
+.about-features-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    list-style: none;
+    padding: 0;
+    margin: 28px 0 0;
+}
+
+.about-features-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.5;
+}
+
+.feature-check-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff4ec;
+    color: var(--primary-color);
+    font-size: 0.75rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 2px;
+    border: 1px solid #fed7aa;
+}
+
+/* 6-Phase Engineering Workflow */
+.workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 36px;
+}
+
+.workflow-card {
+    background: #ffffff;
+    border: 1px solid #e3e7e9;
+    border-radius: 8px;
+    padding: 32px 28px;
+    position: relative;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.workflow-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+}
+
+.workflow-step-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #fff4ec;
+    color: var(--primary-color);
+    border: 1px solid #fed7aa;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.workflow-card h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 10px;
+    line-height: 1.35;
+}
+
+.workflow-card p {
+    font-size: 0.92rem;
+    color: var(--text-light);
+    line-height: 1.65;
+    margin: 0;
+}
+
+/* Mission, Vision, and Values Section */
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 36px;
+}
+
+.value-card {
+    background: #ffffff;
+    border: 1px solid #e3e7e9;
+    border-radius: 8px;
+    padding: 36px 30px;
+    position: relative;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.value-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 30px;
+    width: 36px;
+    height: 3px;
+    background: var(--primary-color);
+    border-radius: 0 0 2px 2px;
+}
+
+.value-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+}
+
+.value-card-tag {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.value-card h3 {
+    font-size: 1.25rem;
+    font-weight: 750;
+    color: var(--text-dark);
+    margin: 0 0 14px;
+    line-height: 1.3;
+}
+
+.value-card p {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Why Starline Grid */
+.about-why-starline {
+    padding: 88px 0;
+    background: #ffffff;
+}
+
+.about-why-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 36px;
+}
+
+.why-card {
+    background: #ffffff;
+    border: 1px solid #e3e7e9;
+    border-radius: 8px;
+    padding: 34px 32px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.why-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+}
+
+.why-card-index {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    letter-spacing: 0.12em;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.why-card h3 {
+    font-size: 1.2rem;
+    font-weight: 750;
+    color: var(--text-dark);
+    margin: 0 0 12px;
+}
+
+.why-card p {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Warranty & Support Section */
+.about-warranty-support {
+    padding: 88px 0;
+    background: #f8fafb;
+    border-top: 1px solid #e7ebed;
+    border-bottom: 1px solid #e7ebed;
+}
+
+.about-warranty-content {
+    max-width: 720px;
+    margin: 0 auto 36px;
+    text-align: center;
+}
+
+.about-warranty-content h2 {
+    font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+    font-weight: 750;
+    color: var(--text-dark);
+    margin: 0 0 14px;
+}
+
+.about-warranty-content p {
+    color: var(--text-light);
+    font-size: 1.02rem;
+    line-height: 1.75;
+}
+
+.about-warranty-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 820px;
+    margin: 36px auto 0;
+}
+
+.about-warranty-card {
+    background: #ffffff;
+    border: 1px solid #e3e7e9;
+    border-radius: 8px;
+    padding: 30px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.about-warranty-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.about-warranty-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    background: var(--primary-color);
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 800;
+    border-radius: 6px;
+    font-family: var(--font-heading);
+}
+
+.about-warranty-card h3 {
+    font-size: 1.15rem;
+    font-weight: 750;
+    color: var(--text-dark);
+    margin: 0 0 6px;
+}
+
+.about-warranty-card p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.warranty-disclaimer {
+    margin: 28px 0 0;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Final CTA Section */
+.about-final-cta {
+    padding: 88px 0;
+    background: #ffffff;
+    text-align: center;
+}
+
+.about-final-cta .container {
+    max-width: 760px;
+}
+
+.about-final-cta h2 {
+    font-size: clamp(2rem, 3.2vw, 2.75rem);
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1.18;
+    margin: 0 0 16px;
+}
+
+.about-final-cta p:not(.about-card-label) {
+    font-size: 1.05rem;
+    color: var(--text-light);
+    line-height: 1.75;
+    margin: 0 auto 32px;
+}
+
+.cta-button-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 991px) {
+    .about-hero,
+    .about-who-we-are-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    .about-hero-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .about-metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .workflow-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .about-section,
+    .about-highlights,
+    .about-who-we-are,
+    .about-why-starline,
+    .about-warranty-support,
+    .about-final-cta {
+        padding: 60px 0;
+    }
+    .about-hero-section {
+        padding: 48px 0 60px;
+    }
+    .about-hero-content {
+        padding-left: 16px;
+    }
+    .about-hero-stats,
+    .about-metrics,
+    .workflow-grid,
+    .about-why-grid,
+    .about-warranty-cards {
+        grid-template-columns: 1fr;
+    }
+    .about-features-list {
+        grid-template-columns: 1fr;
+    }
+    .cta-button-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    .cta-button-group a {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .about-hero-stats,
+    .about-metrics,
+    .about-why-grid,
+    .workflow-grid,
+    .values-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+}

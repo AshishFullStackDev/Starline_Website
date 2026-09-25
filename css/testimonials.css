@@ -1,0 +1,838 @@
+/* ==========================================================================
+   STARLINE ADVENTURES - TESTIMONIALS & CLIENT REVIEWS STYLING
+   ========================================================================== */
+
+/* Page Hero */
+.testimonials-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%);
+    color: #ffffff;
+    padding: 72px 20px 60px;
+    text-align: center;
+    position: relative;
+    border-bottom: 3px solid #F47621;
+}
+
+.testimonials-hero-content {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.testimonials-hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(244, 118, 33, 0.18);
+    border: 1px solid rgba(244, 118, 33, 0.45);
+    color: #ffaa6b;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.testimonials-hero h1 {
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    line-height: 1.15;
+    margin-bottom: 18px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+}
+
+.testimonials-hero p {
+    font-size: 1.1rem;
+    line-height: 1.65;
+    color: #cbd5e1;
+    margin-bottom: 36px;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Overall Trust & Rating Bar */
+.testimonials-trust-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 16px 28px;
+    max-width: 820px;
+    margin: 0 auto;
+}
+
+.trust-score-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.trust-score-num {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #F47621;
+    line-height: 1;
+}
+
+.trust-score-stars {
+    color: #fbbf24;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+}
+
+.trust-score-text {
+    font-size: 0.85rem;
+    color: #e2e8f0;
+    text-align: left;
+    line-height: 1.3;
+}
+
+.trust-divider {
+    width: 1px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Stats Counter Section */
+.testimonials-stats-section {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 36px 20px;
+}
+
+.testimonials-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.stat-box {
+    text-align: center;
+    padding: 12px 16px;
+}
+
+.stat-box-num {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: #F47621;
+    line-height: 1.1;
+    margin-bottom: 4px;
+}
+
+.stat-box-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Main Reviews Section */
+.reviews-section {
+    background: #f8fafc;
+    padding: 64px 20px 84px;
+}
+
+.reviews-container {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.reviews-header {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.reviews-eyebrow {
+    color: #F47621;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.reviews-title {
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    color: #0f172a;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.reviews-subtitle {
+    color: #64748b;
+    font-size: 1.05rem;
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Filter Controls */
+.testimonial-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 32px auto 44px;
+    max-width: 900px;
+}
+
+.filter-btn {
+    appearance: none;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #334155;
+    padding: 9px 20px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.filter-btn:hover {
+    border-color: #F47621;
+    color: #F47621;
+    background: #fffaf5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(244, 118, 33, 0.2);
+}
+
+.filter-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(244, 118, 33, 0.12);
+}
+
+.filter-btn.active {
+    background: #F47621;
+    color: #ffffff;
+    border-color: #F47621;
+    box-shadow: 0 4px 14px rgba(244, 118, 33, 0.35);
+}
+
+/* Review Cards Grid */
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+}
+
+@media (max-width: 860px) {
+    .reviews-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Review Card Design */
+.review-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 32px 28px 26px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.25s ease;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+    position: relative;
+}
+
+.review-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+    border-color: rgba(244, 118, 33, 0.35);
+}
+
+.review-card-body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/* Card Header: Verified Badge & Quote Icon */
+.review-meta-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.review-sector-badge {
+    display: inline-block;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.review-sector-badge.badge-park {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.review-sector-badge.badge-resort {
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.review-sector-badge.badge-education {
+    background: #f5f3ff;
+    color: #6d28d9;
+}
+
+.review-sector-badge.badge-recreation {
+    background: #f0f9ff;
+    color: #0369a1;
+}
+
+.review-verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #15803d;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: #dcfce7;
+    border: 1px solid #bbf7d0;
+    padding: 4px 11px;
+    border-radius: 999px;
+    letter-spacing: 0.01em;
+}
+
+.review-verified-badge svg {
+    width: 13px;
+    height: 13px;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
+.review-quote-icon {
+    color: var(--primary-color, #F47621);
+    opacity: 0.35;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Rating Row */
+.review-rating-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.review-stars {
+    color: #f59e0b;
+    font-size: 1rem;
+    letter-spacing: 2px;
+}
+
+.review-score-tag {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.review-project-year {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+/* Review Text */
+.review-quote {
+    font-size: 1rem;
+    line-height: 1.72;
+    color: #334155;
+    margin: 0 0 24px 0;
+    flex-grow: 1;
+    position: relative;
+    padding-left: 0;
+    font-style: normal;
+}
+
+/* Installed Equipment Tag */
+.review-equipment-tag {
+    background: #f1f5f9;
+    border-left: 3px solid #F47621;
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.8rem;
+    color: #475569;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.review-equipment-tag strong {
+    color: #0f172a;
+}
+
+/* Client Identity Footer */
+.review-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-top: 18px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.review-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0b192c 0%, #1e293b 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.92rem;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+    border: 2px solid #e2e8f0;
+}
+
+.review-author-info {
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.review-author-name {
+    font-weight: 700;
+    color: #0f172a;
+    font-size: 1.05rem;
+    line-height: 1.35;
+    margin-bottom: 2px;
+}
+
+.review-author-role {
+    font-size: 0.8rem;
+    color: #64748b;
+    line-height: 1.3;
+}
+
+.review-author-location {
+    font-size: 0.82rem;
+    color: #475569;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.review-author-location .location-pin-icon,
+.review-author-location svg {
+    color: #F47621;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+/* Simple Clean Consultation CTA */
+.testimonials-cta-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 44px 32px;
+    text-align: center;
+    max-width: 860px;
+    margin: 56px auto 0;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+}
+
+.testimonials-cta-box h3 {
+    font-size: 1.6rem;
+    color: #0f172a;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.testimonials-cta-box p {
+    color: #64748b;
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto 24px;
+}
+
+.testimonials-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+}
+
+.testimonials-cta-actions .btn {
+    padding: 13px 26px !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    cursor: pointer !important;
+    min-height: 48px;
+    box-sizing: border-box;
+}
+
+.testimonials-cta-actions .btn:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+}
+
+.testimonials-cta-actions .btn-primary {
+    background: var(--primary-color, #f47621) !important;
+    color: #ffffff !important;
+    border: 2px solid var(--primary-color, #f47621) !important;
+    box-shadow: 0 3px 10px rgba(244, 118, 33, 0.25) !important;
+}
+
+.testimonials-cta-actions .btn-primary:hover,
+.testimonials-cta-actions .btn-primary:focus {
+    background: var(--accent-color, #d85f10) !important;
+    border-color: var(--accent-color, #d85f10) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 20px rgba(244, 118, 33, 0.38) !important;
+    transform: translateY(-2px) !important;
+}
+
+.testimonials-cta-actions .btn-primary:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 6px rgba(244, 118, 33, 0.25) !important;
+}
+
+/* Secondary Button - Distinct, high-contrast dark navy border & text on light background */
+.testimonials-cta-actions .btn-secondary,
+.testimonials-cta-actions a:nth-of-type(2),
+main > section:nth-of-type(3) > div > div:nth-of-type(3) > div > a:nth-of-type(2) {
+    background: #ffffff !important;
+    color: #0b192c !important;
+    border: 2px solid #0b192c !important;
+    box-shadow: 0 2px 8px rgba(11, 25, 44, 0.08) !important;
+}
+
+.testimonials-cta-actions .btn-secondary:hover,
+.testimonials-cta-actions .btn-secondary:focus,
+.testimonials-cta-actions a:nth-of-type(2):hover,
+.testimonials-cta-actions a:nth-of-type(2):focus {
+    background: #0b192c !important;
+    color: #ffffff !important;
+    border-color: #0b192c !important;
+    box-shadow: 0 6px 20px rgba(11, 25, 44, 0.22) !important;
+    transform: translateY(-2px) !important;
+}
+
+.testimonials-cta-actions .btn-secondary:active,
+.testimonials-cta-actions a:nth-of-type(2):active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 6px rgba(11, 25, 44, 0.12) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .testimonials-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .testimonials-hero {
+        padding: 50px 16px 40px;
+    }
+
+    .testimonials-trust-bar {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .trust-divider {
+        display: none;
+    }
+
+    .reviews-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .testimonials-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stat-box-num {
+        font-size: 1.8rem;
+    }
+
+    .testimonials-cta-box {
+        padding: 32px 20px;
+    }
+}
+
+/* ==========================================================================
+   OUR PROJECTS & CLIENTS HORIZONTAL CAROUSEL (CIRCULAR LOGO/IMAGE CARDS)
+   ========================================================================== */
+.clients-carousel-section {
+    background: #ffffff;
+    padding: 60px 0 64px;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+    overflow: hidden;
+    position: relative;
+}
+
+.clients-carousel-header {
+    text-align: center;
+    max-width: 820px;
+    margin: 0 auto 36px;
+    padding: 0 20px;
+}
+
+.clients-carousel-eyebrow {
+    color: #F47621;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.clients-carousel-title {
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    color: #0b192c;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+}
+
+.clients-carousel-subtitle {
+    color: #64748b;
+    font-size: 1.02rem;
+    line-height: 1.6;
+    margin: 0 auto;
+}
+
+.clients-carousel-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 14px 0 20px;
+    -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 8%, rgba(0, 0, 0, 1) 92%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 8%, rgba(0, 0, 0, 1) 92%, rgba(0, 0, 0, 0) 100%);
+}
+
+.clients-carousel-track {
+    display: flex;
+    gap: 32px;
+    width: max-content;
+    animation: clientsContinuousScroll 28s linear infinite;
+    will-change: transform;
+    align-items: center;
+}
+
+.clients-carousel-wrapper:hover .clients-carousel-track,
+.clients-carousel-wrapper:focus-within .clients-carousel-track {
+    animation-play-state: paused;
+}
+
+.clients-carousel-group {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Equal-size Circle Shape Cards - No Name Just Logo */
+.client-circle-card,
+.client-card {
+    width: 130px;
+    height: 130px;
+    min-width: 130px;
+    min-height: 130px;
+    max-width: 130px;
+    max-height: 130px;
+    border-radius: 50% !important;
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 4px 16px rgba(11, 25, 44, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    box-sizing: border-box;
+    text-decoration: none;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                border-color 0.35s ease,
+                background-color 0.35s ease;
+    cursor: pointer;
+    user-select: none;
+}
+
+.client-circle-card:hover,
+.client-circle-card:focus-visible,
+.client-card:hover,
+.client-card:focus-visible {
+    transform: translateY(-6px) scale(1.08);
+    border-color: #f47621;
+    background: #ffffff;
+    box-shadow: 0 12px 30px rgba(244, 118, 33, 0.22), 0 0 0 3px rgba(244, 118, 33, 0.2);
+    outline: none;
+}
+
+.client-circle-card img,
+.client-card img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain !important;
+    object-position: center !important;
+    border-radius: 0 !important;
+    display: block;
+    margin: auto;
+    transition: transform 0.35s ease;
+}
+
+.client-circle-card:hover img,
+.client-card:hover img {
+    transform: scale(1.05);
+}
+
+/* Keyframes for seamless continuous right-to-left auto-scroll */
+@keyframes clientsContinuousScroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(calc(-50% - 16px));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .clients-carousel-track {
+        animation: none;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 992px) {
+    .clients-carousel-track,
+    .clients-carousel-group {
+        gap: 24px;
+    }
+
+    .client-circle-card,
+    .client-card {
+        width: 110px;
+        height: 110px;
+        min-width: 110px;
+        min-height: 110px;
+        max-width: 110px;
+        max-height: 110px;
+        padding: 15px;
+    }
+
+    @keyframes clientsContinuousScroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(calc(-50% - 12px));
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .clients-carousel-section {
+        padding: 44px 0 48px;
+    }
+    
+    .clients-carousel-header {
+        margin-bottom: 24px;
+    }
+
+    .clients-carousel-track,
+    .clients-carousel-group {
+        gap: 18px;
+    }
+
+    .client-circle-card,
+    .client-card {
+        width: 96px;
+        height: 96px;
+        min-width: 96px;
+        min-height: 96px;
+        max-width: 96px;
+        max-height: 96px;
+        padding: 12px;
+    }
+
+    @keyframes clientsContinuousScroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(calc(-50% - 9px));
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .clients-carousel-track,
+    .clients-carousel-group {
+        gap: 14px;
+    }
+
+    .client-circle-card,
+    .client-card {
+        width: 84px;
+        height: 84px;
+        min-width: 84px;
+        min-height: 84px;
+        max-width: 84px;
+        max-height: 84px;
+        padding: 10px;
+    }
+
+    @keyframes clientsContinuousScroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(calc(-50% - 7px));
+        }
+    }
+}
+
+
+
+@media (max-width: 480px) {
+    .testimonials-stats-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+}

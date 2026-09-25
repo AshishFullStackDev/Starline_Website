@@ -1,0 +1,6 @@
+{
+  "name": "Starline Adventures",
+  "description": "Adventure ride manufacturer and installation specialist delivering adventure rides, safety equipment, and professional installation solutions across India.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

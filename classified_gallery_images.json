@@ -1,0 +1,539 @@
+[
+  {
+    "filename": "360_square.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "3bar.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "Giant swing.jpeg",
+    "has_people_doing_activity": true,
+    "activity_type": "Giant Swing",
+    "title": "Giant Swing Adventure Ride",
+    "category": "extreme",
+    "categoryLabel": "Extreme Rides",
+    "reason": "The image shows two people wearing helmets and safety harnesses actively riding a giant swing setup attached to a high steel frame."
+  },
+  {
+    "filename": "Glass Bridge.jpg",
+    "has_people_doing_activity": true,
+    "activity_type": "Glass Skywalk",
+    "title": "Glass Skywalk Bridge",
+    "category": "aerial",
+    "categoryLabel": "Aerial Adventure",
+    "reason": "People are actively walking on a high-altitude transparent glass bridge."
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.29.jpeg",
+    "has_people_doing_activity": false,
+    "activity_type": "Tire Wall Climbing",
+    "title": "Colorful Tire Wall Obstacle",
+    "category": "climbing",
+    "categoryLabel": "Climbing",
+    "reason": "The image shows an empty tire climbing wall structure with no people actively participating or using the obstacle."
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.30.jpeg",
+    "has_people_doing_activity": false,
+    "activity_type": "Tire Climbing Wall",
+    "title": "Empty Tire Climbing Wall Obstacle",
+    "category": "climbing",
+    "categoryLabel": "Climbing",
+    "reason": "The image shows an empty tire climbing wall structure with no people actively participating or climbing."
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.31 (2).jpeg",
+    "has_people_doing_activity": false,
+    "activity_type": "Adventure Tower",
+    "title": "Empty Adventure Tower",
+    "category": "towers",
+    "categoryLabel": "Adventure Towers",
+    "reason": "The image shows a metal tower structure with a person standing on the ground looking at it, but nobody is actively participating in or doing an adventure activity."
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.33 (1).jpeg",
+    "has_people_doing_activity": false,
+    "activity_type": "human_gyro",
+    "title": "Human Gyroscope",
+    "category": "extreme",
+    "categoryLabel": "Extreme Adventure",
+    "reason": "The image shows an empty human gyroscope ride with no people actively participating or sitting in the equipment."
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.33.jpeg",
+    "has_people_doing_activity": false,
+    "activity_type": "360 Degree Loop Bicycle",
+    "title": "Empty 360 Degree Loop Bicycle Setup",
+    "category": "extreme",
+    "categoryLabel": "Extreme Rides",
+    "reason": "The image shows an outdoor 360-degree loop bicycle ride equipment, but there are no people actively riding or using the setup."
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.38.jpeg",
+    "has_people_doing_activity": true,
+    "activity_type": "Mechanical Bull Ride",
+    "title": "Mechanical Bull Ride",
+    "category": "extreme",
+    "categoryLabel": "Extreme Rides",
+    "reason": "A real person is actively riding a mechanical bull setup inside an inflatable arena."
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.48.jpeg",
+    "has_people_doing_activity": true,
+    "activity_type": "Human Slingshot / Reverse Bungee",
+    "title": "Reverse Bungee Slingshot",
+    "category": "extreme",
+    "categoryLabel": "Extreme Sports",
+    "reason": "A person wearing a safety helmet and harness is suspended high in mid-air actively riding a reverse bungee / human slingshot adventure setup."
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.49 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.49 (2).jpeg",
+    "has_people_doing_activity": false,
+    "activity_type": "Rope Bridge Obstacle",
+    "title": "Colorful Hanging Rope Bridge",
+    "category": "ropes",
+    "categoryLabel": "Ropes Course",
+    "reason": "The image shows an empty colorful rope bridge obstacle; there are no people actively participating in the activity."
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.49.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.50 (1).jpeg",
+    "has_people_doing_activity": false,
+    "activity_type": "Cargo Net Climbing",
+    "title": "Empty Cargo Net Climbing Structure",
+    "category": "climbing",
+    "categoryLabel": "Climbing Activities",
+    "reason": "The image shows an empty outdoor cargo rope climbing net structure without any people climbing or using the equipment."
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.50.jpeg",
+    "has_people_doing_activity": true,
+    "activity_type": "Tire Wall Climbing",
+    "title": "Tire Climbing Wall",
+    "category": "climbing",
+    "categoryLabel": "Climbing Wall",
+    "reason": "A person wearing safety gear including a helmet and harness is actively climbing up a wall made of colorful tires."
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.51.jpeg",
+    "has_people_doing_activity": false,
+    "activity_type": "Human Hamster Wheel",
+    "title": "Equipment Manufacturing Workshop",
+    "category": "extreme",
+    "categoryLabel": "Extreme Adventure",
+    "reason": "The image shows a worker assembling or inspecting equipment inside a workshop or manufacturing facility, rather than a participant engaged in an active adventure activity."
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.52 (2).jpeg",
+    "has_people_doing_activity": false,
+    "activity_type": "Human Gyro",
+    "title": "Empty Human Gyroscope Ride",
+    "category": "extreme",
+    "categoryLabel": "Extreme Thrills",
+    "reason": "The image shows an empty human gyroscope ride with no people seated or participating in the activity."
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.52 (3).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.52.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.53 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.53 (2).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.53.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.54 (2).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.55 (2).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.55 (3).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.56 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.56 (2).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.56 (3).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.56 (4).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.56.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.57 (2).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.57 (3).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.57.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.58 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.58 (2).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.58.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.49.59.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.50.01 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.50.01 (2).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.50.01.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.50.02.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.53.12 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.53.12 (3).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-08 at 09.53.12.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-02-21 at 11.20.54 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-11 at 19.14.26 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-11 at 19.14.26.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-11 at 19.14.27.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-11 at 19.18.00.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-11 at 19.18.01 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-11 at 19.18.01 (2).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-11 at 19.18.01.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-11 at 19.18.51 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-11 at 19.18.51.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-11 at 19.18.52 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-11 at 19.18.52 (2).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-11 at 19.18.52.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.54.32 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.54.32.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.54.33.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.54.35 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.54.35.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.54.36.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.54.37 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.54.37.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.54.38 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.54.38.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.54.40.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.05 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.05.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.07 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.08 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.08.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.09.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.15.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.18.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.44.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.46.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.48 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.48.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.49 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.49.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "WhatsApp Image 2026-06-20 at 15.55.50 (1).jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "bungee_square.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "cup_square.jpg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "ejector_square1.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "gyro_square.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "multi-tower.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "multi_tower.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "rocket_ejector.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "rope_course_square.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "sky_cycle_square.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "sky_roller_square.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "wall_climbing_square.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  },
+  {
+    "filename": "zipline_square.jpeg",
+    "has_people_doing_activity": false,
+    "error": true
+  }
+]

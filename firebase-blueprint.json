@@ -1,0 +1,160 @@
+{
+  "entities": {
+    "Enquiry": {
+      "title": "Enquiry",
+      "description": "Contact and quote requests submitted by website visitors",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "formType": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 120
+        },
+        "phone": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "company": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "location": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "product": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "createdAt": {
+          "type": "string",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "id",
+        "formType",
+        "name",
+        "email",
+        "phone",
+        "location",
+        "product",
+        "createdAt"
+      ]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "Customer feedback and reviews",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "company": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "location": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "rating": {
+          "type": "number"
+        },
+        "comment": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "createdAt": {
+          "type": "string",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "rating",
+        "comment",
+        "createdAt"
+      ]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile records",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 120
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "photoURL": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "createdAt": {
+          "type": "string",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "uid",
+        "email",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/enquiries/{enquiryId}": {
+      "schema": {
+        "$ref": "#/entities/Enquiry"
+      },
+      "description": "Collection of incoming quote requests and contact form submissions"
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": {
+        "$ref": "#/entities/Testimonial"
+      },
+      "description": "Collection of customer testimonials"
+    },
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/User"
+      },
+      "description": "User profile records"
+    }
+  }
+}
