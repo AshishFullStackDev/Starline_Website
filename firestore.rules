@@ -23,7 +23,7 @@ service cloud.firestore {
     // Bootstrapped Admin: Only verified owner email is permitted admin privileges
     function isAdmin() {
       return isSignedIn()
-        && request.auth.token.email in ['ashishnaik1386@gmail.com', 'starlineadventure@gmail.com']
+        && request.auth.token.email in ['ashishnaik1386@gmail.com', 'starlineadventure@gmail.com', 'starlineadventuresales@gmail.com']
         && request.auth.token.email_verified == true;
     }
 
