@@ -231,9 +231,9 @@
 },
          // Activities with no existing photos:
         "roller-coaster zipline  ": {
-            image: "images/roller coaster.jpg",
+            image: "images/zip-line-roller-coaster.jpg",
             alt: "Roller Coaster Adventure Ride",
-            title: "Roller Coaster",
+            title: "Zipline Roller Coaster",
             category: "activities",
             categoryLabel: "Activities",
             desc: "An exciting roller coaster experience designed to deliver thrilling rides, fun and adventure."

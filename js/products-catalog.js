@@ -189,9 +189,9 @@ const STARLINE_PRODUCTS = [
         ]
     },
     {
-        id: "roller-coaster",
-        name: "Roller Coaster",
-        image: "", // Empty for user image upload
+        id: "zipline roller-coaster",
+        name: "Zipline Roller Coaster",
+        image: "images/zip-line-roller-coaster.jpg", 
         shortDesc: "A suspended rail ride that carries seated riders on loops and curves through the sky.",
         fullDesc: "A high-speed suspended tubular rail adventure coaster customized to your resort or park topography. Riders glide through scenic banked curves, dips, and accelerating downhill sweeps in individual or connected train coaches.",
         specs: [
