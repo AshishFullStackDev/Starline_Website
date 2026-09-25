@@ -220,9 +220,24 @@
             desc: "A traditional bow-and-arrow skill range with professional targets, recurve bows, and perimeter backdrop netting."
         },
 
-        // Activities with no existing photos:
-        "suspension-bridge": null,
-        "roller-coaster": null,
+      
+       "suspension-bridge": {
+            image: "images/suspension bridge.jpg",
+            alt: "Suspension Bridge Adventure Activity",
+            title: "Suspension Bridge",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "A thrilling bridge experience that tests balance, confidence and adventure."
+},
+         // Activities with no existing photos:
+        "roller-coaster zipline  ": {
+            image: "images/roller coaster.jpg",
+            alt: "Roller Coaster Adventure Ride",
+            title: "Roller Coaster",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "An exciting roller coaster experience designed to deliver thrilling rides, fun and adventure."
+},
 
         // 15 Main Equipment Categories (mapped to authentic images in images/equipment/ by their name):
         "open-gym-equipment": {

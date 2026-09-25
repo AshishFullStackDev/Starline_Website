@@ -125,10 +125,18 @@ function isOriginAllowed(origin) {
   // Allow preview & local development environments
   const isDevOrPreview = NODE_ENV !== 'production' ||
     normalized.includes('.run.app') ||
+    normalized.includes('.google.com') ||
+    normalized.includes('googleusercontent.com') ||
     normalized.includes('localhost') ||
     normalized.includes('127.0.0.1');
 
-  if (isDevOrPreview && (normalized.includes('.run.app') || normalized.includes('localhost') || normalized.includes('127.0.0.1'))) {
+  if (isDevOrPreview && (
+    normalized.includes('.run.app') ||
+    normalized.includes('.google.com') ||
+    normalized.includes('googleusercontent.com') ||
+    normalized.includes('localhost') ||
+    normalized.includes('127.0.0.1')
+  )) {
     return true;
   }
 
