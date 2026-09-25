@@ -32,7 +32,7 @@
     const productImageMap = {
         // 1. Giant Swing
         "giant-swing": {
-            image: "images/Giant swing new.jpeg",
+            image: "images/Giant swing.jpeg",
             alt: "Giant Pendulum Swing High-Altitude Ride - Starline Adventures",
             title: "Giant Swing",
             category: "activities",
@@ -160,54 +160,122 @@
             desc: "Turnkey engineering, structural fabrication, proof testing, and certified on-site rigging."
         },
 
-        // Items with no existing photos - strictly mapped to null so no unrelated image is used:
-        "4-in-1-bungee-jumping": null,
-        "net-climbing": null,
+        // 14. Net Climbing
+        "net-climbing": {
+            image: "images/Net_Climbing.jpeg",
+            alt: "Net Climbing Cargo Obstacle Course - Starline Adventures",
+            title: "Net Climbing",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "A tensioned heavy-duty rope cargo net for participants to climb up, across, or through."
+        },
+
+        // 15. Rifle Shooting
+        "rifle-shooting": {
+            image: "images/Rifale_shooting.jpeg",
+            alt: "Precision Target Air Rifle Shooting Range - Starline Adventures",
+            title: "Rifle Shooting",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "A dedicated target skill range for precision target shooting with calibre 0.177 air rifles and safety containment."
+        },
+
+        // 16. Bull Ride
+        "bull-ride": {
+            image: "images/Bull_ride.jpeg",
+            alt: "Mechanical Rodeo Bull Ride Inflatable Arena - Starline Adventures",
+            title: "Bull Ride",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "Mechanical rodeo bull ride with adjustable dual-axis spin speeds and a cushioned commercial inflatable ring."
+        },
+
+        // 17. Trampoline
+        "trampoline": {
+            image: "images/trampoline.jpeg",
+            alt: "Commercial Adventure Trampoline Setup - Starline Adventures",
+            title: "Trampoline",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "Commercial high-rebound trampoline and bungee trampoline arena allowing jumpers to flip and bounce safely."
+        },
+
+        // 18. 4 in 1 Bungee Jumping (Trampoline)
+        "4-in-1-bungee-jumping": {
+            image: "images/trampoline.jpeg",
+            alt: "4 in 1 Bungee Jumping Trampoline Station - Starline Adventures",
+            title: "4 in 1 Bungee Jumping",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "Four-station bungee trampolines that let a group bounce and flip together in total harness security."
+        },
+
+        // 19. Archery
+        "archery": {
+            image: "images/Archery.jpeg",
+            alt: "Traditional Bow and Arrow Archery Range - Starline Adventures",
+            title: "Archery",
+            category: "activities",
+            categoryLabel: "Activities",
+            desc: "A traditional bow-and-arrow skill range with professional targets, recurve bows, and perimeter backdrop netting."
+        },
+
+        // Activities with no existing photos:
         "suspension-bridge": null,
         "roller-coaster": null,
-        "bull-ride": null,
-        "rifle-shooting": null,
-        "archery": null,
-        "open-gym-equipment": null,
-        "climbing-wall-equipment": null,
+
+        // 15 Main Equipment Categories (mapped to authentic images in images/equipment/ by their name):
+        "open-gym-equipment": {
+            image: "images/equipment/Open Gym Equipment.jpeg",
+            alt: "Commercial Outdoor Open Gym Fitness Equipment - Starline Adventures",
+            desc: "Heavy-gauge galvanized steel outdoor open gym fitness machines and exercise stations."
+        },
+        "climbing-wall-equipment": {
+            image: "images/equipment/Climbing Wall Equipment.jpeg",
+            alt: "Climbing Wall Equipment, Holds & Auto-Belay Units - Starline Adventures",
+            desc: "CE / EN 12572 compliant climbing wall hardware, modular climbing holds, top anchors, and safety auto-belays."
+        },
         "rope-course-equipment": null,
-        "safety-nets": null,
-        "safety-harness-belts": null,
-        "zipline-safety-equipment": null,
-        "climbing-ropes": null,
-        "carabiners-connectors": null,
-        "belay-devices": null,
-        "climbing-holds": null,
-        "climbing-wall-panels": null,
-        "climbing-wall-anchors": null,
-        "rope-course-platforms": null,
-        "rope-course-obstacles": null,
-        "zipline-trolleys": null,
-        "zipline-pulleys": null,
-        "zipline-cables": null,
-        "zipline-braking-systems": null,
-        "adventure-safety-lanyards": null,
-        "safety-helmets": null,
-        "fall-arrest-systems": null,
-        "rescue-equipment": null,
-        "steel-cable-rigging-equipment": null,
-        "anchoring-fixing-systems": null,
-        "protective-padding": null,
-        "adventure-park-signage-safety-boards": null,
-        "cargo-nets": null,
-        "tyre-obstacles": null,
-        "balance-beams": null,
-        "monkey-bars": null,
-        "parallel-bars": null,
-        "pull-up-bars": null,
-        "horizontal-ladders": null,
-        "rope-ladders": null,
-        "suspension-bridges-equipment": null,
-        "net-bridges": null,
-        "tarzan-swings": null,
+        "safety-nets": {
+            image: "images/equipment/Safety Nets.jpeg",
+            alt: "High-Tensile Safety Catch Nets - Starline Adventures",
+            desc: "Heavy-duty UV-stabilized nylon and polypropylene safety fall-arrest and debris containment catch nets."
+        },
+        "safety-harness-belts": {
+            image: "images/equipment/Safety Harness & Belts.jpeg",
+            alt: "Certified Commercial Safety Harnesses & Belts - Starline Adventures",
+            desc: "Full-body and sit-in commercial adventure safety harnesses with forged alloy steel D-rings and rapid-adjust buckles."
+        },
+        "zipline-equipment": {
+            image: "images/equipment/Zipline Equipment.webp",
+            alt: "Commercial Zipline Rigging, Pulleys & Brakes - Starline Adventures",
+            desc: "Precision dual-bearing tandem stainless steel zipline trolleys, impact brake spring buffers, cables, and certified lanyards."
+        },
+        "climbing-ropes-carabiners": null,
+        "climbing-holds-wall-panels": null,
+        "rope-course-platforms-obstacles": {
+            image: "images/equipment/Rope Course Platforms & Obstacles.jpeg",
+            alt: "Rope Course Platforms & Challenge Elements - Starline Adventures",
+            desc: "Modular aerial staging platforms, Burma bridges, swinging logs, and high/low rope challenge course obstacles."
+        },
         "adventure-park-platforms": null,
-        "ground-anchors": null,
-        "structural-support-components": null
+        "cargo-nets-net-bridges": {
+            image: "images/equipment/Cargo Nets & Net Bridges.jpeg",
+            alt: "Braided Cargo Scrambling Nets & Net Bridges - Starline Adventures",
+            desc: "Industrial-strength braided nylon cargo climbing nets, commando crawls, and enclosed cylindrical suspended net bridges."
+        },
+        "tyre-balance-obstacles": null,
+        "adventure-park-ladders-bridges": null,
+        "safety-helmets-fall-arrest-systems": {
+            image: "images/equipment/Safety Helmets & Fall-Arrest Systems.jpeg",
+            alt: "Adventure Safety Helmets & Fall-Arrest PPE - Starline Adventures",
+            desc: "Impact-resistant dial-fit ABS helmets, self-retracting lifelines (SRLs), and dynamic energy-absorbing twin lanyards."
+        },
+        "steel-cables-anchors-rigging-equipment": {
+            image: "images/equipment/Steel Cables, Anchors & Rigging Equipment.jpeg",
+            alt: "Galvanized Steel Cables, Turnbuckles & Rigging - Starline Adventures",
+            desc: "High-tensile IWRC galvanized steel wire ropes, drop-forged turnbuckles, tiger clamps, and chemical anchor studs."
+        }
     };
 
     /**
@@ -248,7 +316,54 @@
         // Convert delimiters to hyphens
         key = key.replace(/[\s/_]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
 
-        // Canonical alias mapping
+        // Equipment specific canonical checks (checked first so they are not captured by generic ride names)
+        if (key.includes("open-gym")) {
+            return "open-gym-equipment";
+        }
+        if (key.includes("climbing-wall-equipment")) {
+            return "climbing-wall-equipment";
+        }
+        if (key.includes("rope-course-platforms") || key.includes("platforms-obstacles") || key.includes("course-obstacles")) {
+            return "rope-course-platforms-obstacles";
+        }
+        if (key.includes("rope-course-equipment")) {
+            return "rope-course-equipment";
+        }
+        if (key.includes("safety-nets") || key === "safety-net") {
+            return "safety-nets";
+        }
+        if (key.includes("harness") || key.includes("belts")) {
+            return "safety-harness-belts";
+        }
+        if (key.includes("zipline-equipment") || key.includes("zipline-safety")) {
+            return "zipline-equipment";
+        }
+        if (key.includes("ropes-carabiners") || key.includes("climbing-ropes") || key.includes("carabiner")) {
+            return "climbing-ropes-carabiners";
+        }
+        if (key.includes("holds-wall-panels") || key.includes("climbing-holds") || key.includes("wall-panels")) {
+            return "climbing-holds-wall-panels";
+        }
+        if (key.includes("adventure-park-platforms") || key === "park-platforms") {
+            return "adventure-park-platforms";
+        }
+        if (key.includes("cargo-nets") || key.includes("net-bridges")) {
+            return "cargo-nets-net-bridges";
+        }
+        if (key.includes("tyre") || key.includes("balance-obstacles") || key.includes("balance-beams")) {
+            return "tyre-balance-obstacles";
+        }
+        if (key.includes("ladders-bridges") || key.includes("monkey-bars") || key.includes("horizontal-ladders") || key.includes("suspension-bridges-equipment")) {
+            return "adventure-park-ladders-bridges";
+        }
+        if (key.includes("helmets") || key.includes("fall-arrest") || key.includes("rescue-equipment")) {
+            return "safety-helmets-fall-arrest-systems";
+        }
+        if (key.includes("steel-cables") || key.includes("rigging-equipment") || key.includes("anchoring-fixing") || key.includes("ground-anchors")) {
+            return "steel-cables-anchors-rigging-equipment";
+        }
+
+        // Activity specific canonical alias mapping
         if (key === "zipline" || key === "zip-lines" || key === "ziplines" || key === "zip-line" || key === "zipline-square") {
             return "zip-line";
         }
@@ -288,6 +403,24 @@
         if (key.includes("working") || key.includes("turnkey-installation") || key.includes("manufacturing")) {
             return "turnkey-installation";
         }
+        if (key.includes("net-climbing") || key.includes("net_climbing") || key.includes("cargo-net-climb") || key === "net-climbing") {
+            return "net-climbing";
+        }
+        if (key.includes("rifle") || key.includes("rifale") || key.includes("shooting")) {
+            return "rifle-shooting";
+        }
+        if (key.includes("bull") || key.includes("rodeo")) {
+            return "bull-ride";
+        }
+        if (key.includes("trampoline")) {
+            return "trampoline";
+        }
+        if (key.includes("bungee-jumping") || key.includes("4-in-1")) {
+            return "4-in-1-bungee-jumping";
+        }
+        if (key.includes("archery") || key.includes("bow")) {
+            return "archery";
+        }
 
         return key;
     }
@@ -302,15 +435,14 @@
         let canonicalKey = "";
 
         if (typeof productOrNameOrId === "object") {
-            // Check direct image property if valid and existing
+            if (productOrNameOrId.image && typeof productOrNameOrId.image === "string" && productOrNameOrId.image.trim() !== "") {
+                return productOrNameOrId.image;
+            }
             if (productOrNameOrId.id) {
                 canonicalKey = normalizeKey(productOrNameOrId.id);
             }
             if (!productImageMap[canonicalKey] && productOrNameOrId.name) {
                 canonicalKey = normalizeKey(productOrNameOrId.name);
-            }
-            if (!productImageMap[canonicalKey] && productOrNameOrId.image) {
-                canonicalKey = normalizeKey(productOrNameOrId.image);
             }
         } else {
             canonicalKey = normalizeKey(productOrNameOrId);
@@ -430,8 +562,8 @@
             },
             {
                 id: "gallery-giant-swing",
-                filename: "Giant swing new.jpeg",
-                src: "images/Giant swing new.jpeg",
+                filename: "Giant swing.jpeg",
+                src: "images/Giant swing.jpeg",
                 title: "Giant Pendulum Swing Free-Fall Thrill",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -547,6 +679,56 @@
                 categoryLabel: "Installation",
                 desc: "Starline engineering specialists assembling and proof testing precision steel adventure components.",
                 alt: "Starline fabrication and installation engineering team at work - Starline Adventures"
+            },
+            {
+                id: "gallery-net-climbing",
+                filename: "Net_Climbing.jpeg",
+                src: "images/Net_Climbing.jpeg",
+                title: "Tensioned Net Climbing Obstacle",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "High-strength cargo net climb developing agility, grip, and upper-body balance on adventure towers.",
+                alt: "Net climbing obstacle on adventure park tower - Starline Adventures"
+            },
+            {
+                id: "gallery-rifle-shooting",
+                filename: "Rifale_shooting.jpeg",
+                src: "images/Rifale_shooting.jpeg",
+                title: "Precision Air Rifle Target Shooting Range",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "Supervised precision target range with safety backdrops and individual shooting booths.",
+                alt: "Target air rifle shooting skill range - Starline Adventures"
+            },
+            {
+                id: "gallery-bull-ride",
+                filename: "Bull_ride.jpeg",
+                src: "images/Bull_ride.jpeg",
+                title: "Mechanical Rodeo Bull Ride",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "Dual-axis motorized mechanical bull ride with operator speed controls in cushioned inflatable ring.",
+                alt: "Mechanical rodeo bull ride in inflatable arena - Starline Adventures"
+            },
+            {
+                id: "gallery-trampoline",
+                filename: "trampoline.jpeg",
+                src: "images/trampoline.jpeg",
+                title: "Commercial Bungee Trampoline Attraction",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "High-bounce bungee trampoline station allowing riders to soar and perform safe aerial flips.",
+                alt: "Participant bouncing on bungee trampoline - Starline Adventures"
+            },
+            {
+                id: "gallery-archery",
+                filename: "Archery.jpeg",
+                src: "images/Archery.jpeg",
+                title: "Traditional Archery Target Sports Range",
+                category: "activities",
+                categoryLabel: "Activities",
+                desc: "Target archery range with high-density straw bosses, recurve bows, and protective backstop netting.",
+                alt: "Archery bow and arrow target sports range - Starline Adventures"
             }
         ];
     }

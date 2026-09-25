@@ -1,6 +1,6 @@
 /**
  * STARLINE ADVENTURES - PRODUCTS CATALOGUE MODULE
- * Contains 58 verified products (18 Activities, 40 Equipment).
+ * Contains 34 verified products (19 Activities, 15 Equipment).
  * Images are assigned only when strictly matching. Otherwise empty for user upload.
  * Clicking "View Info" opens the dedicated product details page (product-details.html?product=id).
  */
@@ -23,7 +23,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "giant-swing",
         name: "Giant Swing",
-        image: "images/Giant swing new.jpeg",
+        image: "images/Giant swing.jpeg",
         shortDesc: "Massive A-frame pendulum swing providing exhilarating free-fall release and wide weightless arcs.",
         fullDesc: "The Giant Swing hoists 2 to 4 riders to great heights before an instantaneous mechanical release drops them in a high-speed pendulum swing over open valleys or resort grounds, offering unmatched weightless thrills.",
         specs: [
@@ -37,7 +37,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "4-in-1-bungee-jumping",
         name: "4 in 1 Bungee Jumping",
-        image: "", // Empty placeholder - no authentic image exists
+        image: "images/trampoline.jpeg",
         shortDesc: "Four-station bungee trampolines that let a group bounce and flip together.",
         fullDesc: "A high-throughput crowd favorite for amusement parks and family entertainment zones. Four motorized winch stations combined with elastic bungee cords allow jumpers to achieve heights up to 25 feet and execute flips safely.",
         specs: [
@@ -107,7 +107,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "net-climbing",
         name: "Net Climbing",
-        image: "", // Empty for user image upload
+        image: "images/Net_Climbing.jpeg",
         shortDesc: "A tensioned rope net for riders to climb up, across or through.",
         fullDesc: "Constructed with industrial-strength braided nylon and steel-core ropes, Net Climbing develops physical coordination, agility, and stamina. Can be mounted vertically or diagonally across towers and obstacle arenas.",
         specs: [
@@ -233,7 +233,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "rifle-shooting",
         name: "Rifle Shooting",
-        image: "", // Empty for user image upload
+        image: "images/Rifale_shooting.jpeg",
         shortDesc: "A dedicated target range for precision shooting with air rifles.",
         fullDesc: "A supervised skill range featuring target backdrops, pellet-catch boxes, and individual lane dividers. Engineered with strict ballistic safety containment for engaging resort target sports.",
         specs: [
@@ -247,7 +247,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "archery",
         name: "Archery",
-        image: "", // Empty for user image upload
+        image: "images/Archery.jpeg",
         shortDesc: "A traditional bow-and-arrow range for testing focus and accuracy.",
         fullDesc: "A complete archery range solution equipped with lightweight recurve and compound bows, safe fiberglass arrows, high-density layered foam and straw target stands, and perimeter safety backdrop netting.",
         specs: [
@@ -259,9 +259,24 @@ const STARLINE_PRODUCTS = [
         ]
     },
     {
+        id: "trampoline",
+        name: "Trampoline",
+        image: "images/trampoline.jpeg",
+        shortDesc: "Commercial heavy-duty adventure trampoline and bungee flip arena for all age groups.",
+        fullDesc: "Commercial grade high-bounce adventure trampolines and multi-station bungee jumping setups designed for resorts, adventure parks, and amusement destinations. Engineered with reinforced tubular steel frames, heavy-gauge steel springs, UV-resistant jump mats, and 360° padded enclosure nets.",
+        specs: [
+            { label: "Age Group", value: "4 years & above" },
+            { label: "Installation Type", value: "Indoor Arena / Outdoor Adventure Park" },
+            { label: "Capacity", value: "Single to multi-station trampoline arenas (Max 100 kg per jumper)" },
+            { label: "Dimensions", value: "Custom modular sizes from 10ft round to multi-bay continuous arenas" },
+            { label: "Materials & Components", value: "Heavy galvanized steel tubular frame, high-tensile carbon steel springs, polypropylene UV-stabilized jumping mat, 20mm high-density safety padding, safety enclosure net with steel uprights." }
+        ]
+    },
+    {
         id: "open-gym-equipment",
         name: "Open Gym Equipment",
-        image: "", // Empty for user image upload
+        category: "equipment",
+        image: "images/equipment/Open Gym Equipment.jpeg",
         shortDesc: "Heavy-duty outdoor fitness and workout stations for public parks, resorts, and open-air recreational spaces.",
         fullDesc: "High-durability commercial outdoor open gym and fitness stations designed for all age groups. Built with heavy-gauge galvanized mild steel pipes, anti-corrosive powder coating, self-lubricating nylon bearings, and ergonomic handles to withstand harsh outdoor weather conditions.",
         specs: [
@@ -275,7 +290,8 @@ const STARLINE_PRODUCTS = [
     {
         id: "climbing-wall-equipment",
         name: "Climbing Wall Equipment",
-        image: "", // Empty for user image upload
+        category: "equipment",
+        image: "images/equipment/Climbing Wall Equipment.jpeg",
         shortDesc: "Professional hardware, modular holds, safety belay devices, and mounting accessories for artificial climbing walls.",
         fullDesc: "Comprehensive commercial equipment and hardware packages for artificial rock climbing walls and bouldering facilities. Includes ergonomic textured modular holds, high-tensile T-nuts and socket cap bolts, magnetic/hydraulic auto-belay units, dynamic climbing ropes, and safety padding.",
         specs: [
@@ -289,7 +305,8 @@ const STARLINE_PRODUCTS = [
     {
         id: "rope-course-equipment",
         name: "Rope Course Equipment",
-        image: "", // Empty for user image upload
+        category: "equipment",
+        image: "",
         shortDesc: "Certified continuous belay lifelines, trolleys, clamps, harnesses, and hardware for high & low rope obstacle courses.",
         fullDesc: "Specialized rigging hardware and safety components engineered for high and low aerial rope challenge courses. Features continuous belay lifeline track trolleys, zinc-plated heavy-duty turnbuckles, galvanized steel wire ropes, forged wire rope clamps, heavy-duty thimbles, and safety tethers.",
         specs: [
@@ -303,7 +320,8 @@ const STARLINE_PRODUCTS = [
     {
         id: "safety-nets",
         name: "Safety Nets",
-        image: "", // Empty for user image upload
+        category: "equipment",
+        image: "images/equipment/Safety Nets.jpeg",
         shortDesc: "High-tensile UV-stabilized nylon and polypropylene safety fall-arrest and debris containment nets.",
         fullDesc: "Heavy-duty industrial and adventure-grade safety catch nets engineered for fall protection under rope courses, zip lines, suspension bridges, trampolines, and climbing structures. Made from knotted or knotless high-tenacity UV-stabilized nylon/polypropylene cordage with reinforced perimeter border ropes.",
         specs: [
@@ -317,7 +335,8 @@ const STARLINE_PRODUCTS = [
     {
         id: "safety-harness-belts",
         name: "Safety Harness & Belts",
-        image: "", // Empty for user image upload
+        category: "equipment",
+        image: "images/equipment/Safety Harness & Belts.jpeg",
         shortDesc: "Full-body and sit safety harnesses with adjustable padded straps and high-tensile alloy attachment points.",
         fullDesc: "Ergonomically designed commercial full-body and sit-in safety harnesses engineered for maximum comfort, security, and quick adjustment during adventure park operations. Fitted with heavy-duty polyester webbing, forged alloy steel D-rings, self-locking rapid-adjust buckles, and breathable padding.",
         specs: [
@@ -329,493 +348,153 @@ const STARLINE_PRODUCTS = [
         ]
     },
     {
-        id: "zipline-safety-equipment",
-        name: "Zipline Safety Equipment",
-        image: "", // Empty for user image upload
-        shortDesc: "High-speed tandem dual-bearing trolleys, zip stoppers, impact brake springs, and lanyard assemblies.",
-        fullDesc: "Complete commercial zipline operations safety kit containing high-speed tandem wire-cable trolleys with stainless steel ball bearings, magnetic or spring-loaded progressive zip braking blocks, bungee deceleration systems, secondary safety backup lanyards, and high-strength oval/pear carabiners.",
+        id: "zipline-equipment",
+        name: "Zipline Equipment",
+        category: "equipment",
+        image: "images/equipment/Zipline Equipment.webp",
+        shortDesc: "Commercial high-speed tandem wire-rope trolleys, spring brakes, zipline cables, pulleys, and impact deceleration systems.",
+        fullDesc: "Complete commercial zipline hardware, rigging, and safety deceleration packages. Includes precision sealed-bearing tandem stainless steel trolleys, aircraft-grade galvanized steel wire ropes, multi-stage spring impact banks, bungee deceleration return catches, and secondary backup safety tethers.",
         specs: [
-            { label: "Compatibility", value: "Steel wire cables from 8mm to 16mm diameter" },
-            { label: "Key Components", value: "High-speed tandem pulleys / trolleys, progressive spring brake buffers, zip stop blocks, dynamic lanyard slings, heavy-duty carabiners" },
-            { label: "Pulley Speed Rating", value: "High-velocity sealed ball bearings rated up to 25 m/s (90 km/h)" },
-            { label: "Breaking Strength", value: "Trolley and carabiner systems rated at 25 kN to 30 kN minimum" },
-            { label: "Safety Standards", value: "CE / EN 12278 & UIAA certified components for commercial zip tours" }
+            { label: "Cable Compatibility", value: "8mm to 16mm high-tensile galvanized / stainless steel wire ropes" },
+            { label: "Key Components", value: "Dual-sheave sealed-bearing trolleys, progressive compression spring buffers, tandem pulleys, impact brake catch blocks" },
+            { label: "Speed Rating", value: "Precision high-RPM bearings certified for speeds up to 100 km/h (28 m/s)" },
+            { label: "Breaking Strength", value: "Minimum 25 kN to 40 kN breaking capacity on all load-bearing components" },
+            { label: "Standards", value: "CE EN 12278 & ACCT commercial zipline standards compliant" }
         ]
     },
     {
-        id: "climbing-ropes",
-        name: "Climbing Ropes",
-        image: "", // Empty for user image upload
-        shortDesc: "Certified static and dynamic kernmantle climbing, rappelling, and safety rigging ropes.",
-        fullDesc: "Premium kernmantle construction adventure ropes suitable for rock climbing walls, multi-activity towers, rappelling, rescue rigging, and obstacle course ascents. Available in both low-stretch static configurations for rappelling/hauling and dynamic high-energy absorption options for lead climbing.",
+        id: "climbing-ropes-carabiners",
+        name: "Climbing Ropes & Carabiners",
+        category: "equipment",
+        image: "",
+        shortDesc: "Certified static and dynamic kernmantle ropes, auto-locking alloy carabiners, belay controllers, and connector hardware.",
+        fullDesc: "Professional height-safety connection and rigging kit combining low-stretch static and energy-absorbing dynamic kernmantle climbing ropes with hot-forged alloy steel and aluminium screw/auto-locking carabiners, figure-8 descenders, and assisted-braking belay controllers.",
         specs: [
-            { label: "Rope Types", value: "Static Low-Stretch Kernmantle Ropes & Dynamic Climbing Ropes" },
-            { label: "Diameters Available", value: "9.5mm, 10.5mm, 11mm, 12mm & 14mm" },
-            { label: "Core & Sheath", value: "High-grade 100% polyamide (nylon) with braided abrasion-resistant outer sheath" },
-            { label: "Breaking Strength", value: "Minimum breaking strength 28 kN to 35 kN (depending on diameter)" },
-            { label: "Standards & Certification", value: "CE / EN 1891 Type A (Static) & EN 892 (Dynamic), UIAA certified" }
+            { label: "Rope Diameters", value: "9.5mm, 10.5mm, 11mm, 12mm & 14mm CE/UIAA certified kernmantle ropes" },
+            { label: "Connector Types", value: "Auto-lock (3-stage), twist-lock, screw-lock alloy carabiners & quick links" },
+            { label: "Breaking Strengths", value: "Ropes rated 28 kN - 35 kN; Carabiners rated 25 kN - 50 kN major axis" },
+            { label: "Belay Hardware", value: "Assisted-braking devices, Figure-8 descenders, tubular ATC belay plates" },
+            { label: "Certifications", value: "CE EN 1891, EN 892, EN 362, EN 12275, UIAA certified" }
         ]
     },
     {
-        id: "carabiners-connectors",
-        name: "Carabiners & Connectors",
-        image: "", // Empty for user image upload
-        shortDesc: "High-strength alloy steel and aluminium screw-lock, twist-lock, and auto-locking connector carabiners.",
-        fullDesc: "Certified heavy-duty connector hardware engineered for adventure park zip lines, belay lines, harness connections, and rope rescue. Features high-tensile hot-forged aluminium alloy and zinc-plated alloy steel construction with snag-free keylock noses and rapid triple-action auto-locking sleeves.",
+        id: "climbing-holds-wall-panels",
+        name: "Climbing Holds & Wall Panels",
+        category: "equipment",
+        image: "",
+        shortDesc: "Ergonomic textured polyurethane modular climbing holds, 3D FRP panels, and pre-drilled multiplex bouldering boards.",
+        fullDesc: "Modular climbing wall surface and route-setting systems for commercial indoor and outdoor climbing arenas. Features high-friction micro-textured polyurethane holds (jugs, slopers, crimps, pinches), heavy-duty 3D FRP realistic rock panels, multi-ply birch multiplex boards with dense M10 T-nut grids, and multi-directional top anchors.",
         specs: [
-            { label: "Locking Types", value: "Screw-lock, Twist-lock (2-stage), Auto-lock (3-stage), Quick-link (Mailon Rapide)" },
-            { label: "Gate Opening", value: "18mm to 28mm wide gate clearance" },
-            { label: "Breaking Strength", value: "Major axis 25 kN to 50 kN; Minor axis 8 kN to 15 kN; Gate open 8 kN to 12 kN" },
-            { label: "Materials", value: "Hot-forged 7075 aviation aluminium alloy / Heat-treated drop-forged alloy steel" },
-            { label: "Standards", value: "CE EN 362, EN 12275, UIAA 121 certified" }
+            { label: "Hold Types & Shapes", value: "Jugs, Slopers, Pinches, Pockets, Crimps, Edges, Footholds & Macro Volumes" },
+            { label: "Panel Materials", value: "3D Realistic FRP Rock Panels / 18mm-21mm Birch Multiplex Plywood with quartz friction finish" },
+            { label: "Grid Matrix", value: "Standard 100mm x 100mm to 150mm x 150mm stainless steel M10 T-nut spacing" },
+            { label: "Fasteners & Anchors", value: "Grade 8.8 / 304 stainless steel socket cap Allen bolts & dual-point top anchor stations" },
+            { label: "Safety Standards", value: "Complies with EN 12572-1 (Wall Structures) & EN 12572-3 (Holds)" }
         ]
     },
     {
-        id: "belay-devices",
-        name: "Belay Devices",
-        image: "", // Empty for user image upload
-        shortDesc: "Assisted-braking, manual friction belay devices, and descent controllers for climbing and rappelling.",
-        fullDesc: "Professional manual and assisted-braking belay and descent control devices for climbing walls, rope towers, and rappelling operations. Provides smooth rope feed, progressive cam friction, and anti-panic locking mechanisms to ensure failsafe belayer control.",
+        id: "rope-course-platforms-obstacles",
+        name: "Rope Course Platforms & Obstacles",
+        category: "equipment",
+        image: "images/equipment/Rope Course Platforms & Obstacles.jpeg",
+        shortDesc: "Modular aerial tree and pole staging platforms, Burma bridges, swinging logs, wobble boards, and crossing elements.",
+        fullDesc: "Pre-engineered modular challenge elements and aerial resting stations for multi-tier low and high rope courses. Includes hexagonal, octagonal, and square steel/hardwood tree and pole platforms with continuous safety guardrails, Burma bridges, swinging logs, zigzag balance beams, rolling barrels, and obstacle connectors.",
         specs: [
-            { label: "Device Types", value: "Assisted-braking devices (GRI-GRI type), Figure-8 descenders, Tubular ATC belay plates, Auto-locking descenders" },
-            { label: "Rope Compatibility", value: "Single ropes from 8.5mm to 11mm; Figure-8 up to 13mm" },
-            { label: "Material Build", value: "High-strength hot-forged aluminium side plates with stainless steel cam & friction pads" },
-            { label: "Maximum Working Load", value: "150 kg to 200 kg rated operational load" },
-            { label: "Standards", value: "CE EN 15151-1 / EN 15151-2, UIAA certified" }
-        ]
-    },
-    {
-        id: "climbing-holds",
-        name: "Climbing Holds",
-        image: "", // Empty for user image upload
-        shortDesc: "Ergonomic textured polyurethane and composite modular hand & foot holds in diverse route shapes.",
-        fullDesc: "High-grip textured modular climbing holds and volume grips designed for artificial climbing walls and bouldering arenas. Available in varying sizes and gripping styles (jugs, pinches, slopers, crimps, and footholds) with dual-attachment bolt and screw-hole configurations.",
-        specs: [
-            { label: "Grip Shapes", value: "Jugs, Slopers, Pinches, Pockets, Crimps, Edges, Footholds & Macro Volumes" },
-            { label: "Materials", value: "UV-stabilized polyurethane (PU) resin / Non-toxic fiberglass reinforced composite" },
-            { label: "Fastening System", value: "M10 / 3/8\" socket cap Allen bolt with secondary anti-spin screw holes" },
-            { label: "Surface Finish", value: "Skin-friendly micro-textured friction surface with anti-fade vibrant pigments" },
-            { label: "Compliance", value: "EN 12572-3 climbing hold safety specification" }
-        ]
-    },
-    {
-        id: "climbing-wall-panels",
-        name: "Climbing Wall Panels",
-        image: "", // Empty for user image upload
-        shortDesc: "Heavy-duty FRP, ply-resin composite, and textured 3D climbing wall panels with pre-drilled T-nut grids.",
-        fullDesc: "Structural artificial rock panels and bouldering wall surfaces engineered for high impact and weather durability. Manufactured in 3D realistic rock face textures or flat geometric multiplex plywood coated with quartz-sand friction resin, featuring dense grids of stainless steel T-nut insert anchors.",
-        specs: [
-            { label: "Panel Types", value: "3D Realistic FRP Rock Panels, Birch Multiplex Plywood, Modular Bouldering Panels" },
-            { label: "Standard Thickness", value: "18mm to 21mm engineered structural multi-ply / 6mm FRP with rear rib reinforcements" },
-            { label: "Grid Spacing", value: "100mm x 100mm to 150mm x 150mm standard matrix of M10 T-nuts" },
-            { label: "Texture & Coating", value: "High-friction UV-resistant polyurethane quartz grit coating (Class 1 fire rated option)" },
-            { label: "Standards", value: "Conforms to EN 12572-1 artificial climbing wall structural standards" }
-        ]
-    },
-    {
-        id: "climbing-wall-anchors",
-        name: "Climbing Wall Anchors",
-        image: "", // Empty for user image upload
-        shortDesc: "Top-rope anchor stations, lower-off rings, stainless steel hanger plates, and heavy expansion anchor bolts.",
-        fullDesc: "Engineered top-rope and lead climbing anchor stations manufactured from marine-grade 304/316 stainless steel. Includes dual-point equalized chain assemblies, heavy-duty lower-off steel carabiners/rings, and high-tensile structural expansion bolt anchors.",
-        specs: [
-            { label: "Assembly", value: "Dual hanger plates, stainless steel chain link equalizer, wear-resistant steel carabiner / solid ring" },
-            { label: "Bolt Specifications", value: "M10 / M12 304/316 stainless steel expansion bolts and chemical resin anchors" },
-            { label: "Minimum Breaking Strength", value: "25 kN to 30 kN multi-directional load capacity" },
-            { label: "Corrosion Resistance", value: "Class 1 marine and outdoor environmental corrosion protection" },
-            { label: "Standards", value: "CE EN 959, EN 795 (Type A), EN 12572-1 certified anchor systems" }
-        ]
-    },
-    {
-        id: "rope-course-platforms",
-        name: "Rope Course Platforms",
-        image: "", // Empty for user image upload
-        shortDesc: "Modular hexagonal, square, and octagonal tree/pole aerial staging platforms with safety railings.",
-        fullDesc: "Robust aerial staging and resting platforms built for installation on steel poles, structural columns, or living trees. Built with structural steel subframes, anti-slip treated hardwood/FRP grating decks, and continuous perimeter safety guardrails with integrated lanyard anchor attachments.",
-        specs: [
-            { label: "Geometries", value: "Hexagonal, Octagonal, Square & Wrap-Around Tree Platform designs" },
-            { label: "Structural Frame", value: "Hot-dip galvanized mild steel framing / Heavy treated hardwood timber" },
-            { label: "Decking Material", value: "Anti-slip chequered FRP composite grating or treated kiln-dried pine/hardwood planks" },
-            { label: "Guardrail Height", value: "1.1m (1100mm) continuous perimeter railing with safety kick-plates" },
-            { label: "Load Rating", value: "Engineered for distributed live loads up to 500 kg/m² (Multiple concurrent users)" }
-        ]
-    },
-    {
-        id: "rope-course-obstacles",
-        name: "Rope Course Obstacles",
-        image: "", // Empty for user image upload
-        shortDesc: "Modular challenge elements including Burma bridges, swinging logs, wobble boards, and spider webs.",
-        fullDesc: "Turnkey aerial obstacle modules designed to challenge balance, coordination, and agility on low and high rope courses. Includes Burma bridges, suspended wooden logs, rolling barrels, zigzag balance beams, cargo net crawls, and aerial crossing bridges.",
-        specs: [
-            { label: "Element Types", value: "Burma Bridge, Commando Bridge, Swinging Planks, Wobble Logs, Spider Web, Horizontal Net Crawl" },
-            { label: "Materials", value: "Heavy-duty treated hardwood, UV-resistant reinforced composite rope, steel wire core rigging" },
-            { label: "Span Length", value: "4m to 15m modular crossing spans" },
-            { label: "Hardware Included", value: "Stainless steel shackles, zinc-plated eye bolts, turnbuckles, and safety tethers" },
-            { label: "Standards", value: "EN 15567-1 / EN 15567-2 compliant obstacle elements" }
-        ]
-    },
-    {
-        id: "zipline-trolleys",
-        name: "Zipline Trolleys",
-        image: "", // Empty for user image upload
-        shortDesc: "High-velocity dual-sheave steel and aluminium zipline cable trolleys with sealed precision ball bearings.",
-        fullDesc: "Industrial-grade high-speed zipline trolleys designed for commercial canopy tours and long-span zip rides. Built with stainless steel sheaves, sealed high-RPM ball bearings, reinforced alloy cheeks, secondary backup tether connection points, and integrated handlebar grip options.",
-        specs: [
-            { label: "Sheave Material", value: "High-grade stainless steel with deep cable grooving for wire rope tracking" },
-            { label: "Bearing Type", value: "Dual sealed high-precision stainless steel ball bearings per sheave" },
-            { label: "Cable Range", value: "Suitable for 9.5mm, 12mm, 14mm, and 16mm galvanized / stainless wire ropes" },
-            { label: "Maximum Speed", value: "Rated for line speeds up to 100 km/h (28 m/s)" },
-            { label: "Breaking Strength", value: "25 kN to 40 kN certified breaking strength (CE EN 12278)" }
-        ]
-    },
-    {
-        id: "zipline-pulleys",
-        name: "Zipline Pulleys",
-        image: "", // Empty for user image upload
-        shortDesc: "Heavy-duty single and tandem rigging pulleys for zip line retrieval, tensioning, and cable guidance.",
-        fullDesc: "Specialized high-efficiency tandem and single-sheave pulleys for zipline setup, counterweight return systems, and cable tensioning rigs. Crafted from anodized aviation-grade alloy or stainless steel with rotating side plates for fast midline rope and cable insertion.",
-        specs: [
-            { label: "Pulley Styles", value: "Tandem Cable Pulleys, Single Swivel Pulleys, Prusik-Minding Pulleys, Snatch Blocks" },
-            { label: "Sheave Diameter", value: "38mm to 75mm precision-machined aluminium / stainless steel sheaves" },
-            { label: "Efficiency", value: "91% to 97% mechanical rolling efficiency" },
-            { label: "Working Load Limit", value: "5 kN to 15 kN (Breaking strength 24 kN to 36 kN)" },
-            { label: "Standards", value: "CE EN 12278 certified" }
-        ]
-    },
-    {
-        id: "zipline-cables",
-        name: "Zipline Cables",
-        image: "", // Empty for user image upload
-        shortDesc: "High-tensile galvanized and stainless steel wire ropes engineered for commercial long-span ziplines.",
-        fullDesc: "Heavy-duty aircraft-grade and crane-grade steel wire cables designed specifically for high-tension zip lines. Manufactured with 6x19, 6x36, or 7x19 IWRC (Independent Wire Rope Core) construction offering exceptional tensile strength, minimal stretch, and smooth trolley tracking.",
-        specs: [
-            { label: "Wire Construction", value: "6x19 / 6x36 IWRC (Steel Core) & 7x19 Galvanized Aircraft Cable" },
-            { label: "Diameters", value: "8mm, 10mm, 12mm, 14mm, and 16mm options" },
-            { label: "Material Grade", value: "1770 / 1960 N/mm² High-Tensile Hot-Dip Galvanized Steel (Usha Martin / equivalent)" },
-            { label: "Breaking Load", value: "80 kN to 180+ kN minimum breaking load capacity" },
-            { label: "Standards", value: "IS 2266 / ISO 2408 / EN 12385 wire rope standards" }
-        ]
-    },
-    {
-        id: "zipline-braking-systems",
-        name: "Zipline Braking Systems",
-        image: "", // Empty for user image upload
-        shortDesc: "Progressive spring impact brakes, magnetic zip stoppers, and bungee deceleration catch blocks.",
-        fullDesc: "Comprehensive multi-tier deceleration and emergency stopping systems for commercial zipline landings. Combines primary progressive compression spring banks, heavy-duty polyurethane catch blocks, bungee cord rebound absorbers, and magnetic eddy-current ZipStop units for smooth, fail-safe rider deceleration.",
-        specs: [
-            { label: "Brake Types", value: "Multi-stage Spring Banks, Bungee Deceleration Systems, Magnetic ZipStop Arrester Blocks" },
-            { label: "Materials", value: "High-tensile stainless steel compression springs, ultra-high-molecular-weight (UHMW) polyethylene stop blocks" },
-            { label: "Spring Bank Length", value: "3m to 9m progressive spring assemblies" },
-            { label: "Rider Capacity", value: "Smooth deceleration for riders weighing 20 kg to 120 kg at entry speeds up to 60 km/h" },
-            { label: "Redundancy", value: "Dual primary and secondary fail-safe emergency arrest mechanism" }
-        ]
-    },
-    {
-        id: "adventure-safety-lanyards",
-        name: "Adventure Safety Lanyards",
-        image: "", // Empty for user image upload
-        shortDesc: "Dynamic rope and webbing Y-shaped dual safety lanyards with integrated energy absorption.",
-        fullDesc: "Twin-leg Y-lanyards and single connection tethers designed for 100% continuous tie-off on high rope courses, ziplines, and climbing towers. Made from dynamic kernmantle rope or heavy polyester tubular webbing with stitched termination loops and protective transparent wear sleeves.",
-        specs: [
-            { label: "Lanyard Config", value: "Y-type twin leg (dual arm) & Single leg connection lanyards" },
-            { label: "Cord Construction", value: "11mm dynamic energy-absorbing kernmantle rope / 30mm heavy tubular webbing" },
-            { label: "Length Options", value: "60cm, 85cm, 100cm, and 120cm leg lengths" },
-            { label: "Breaking Strength", value: "22 kN minimum breaking force" },
-            { label: "Standards", value: "CE EN 354, EN 355 (Energy Absorber), EN 15567 compliant" }
-        ]
-    },
-    {
-        id: "safety-helmets",
-        name: "Safety Helmets",
-        image: "", // Empty for user image upload
-        shortDesc: "Impact-resistant ABS ventilated adventure helmets with rapid dial-fit adjustment systems.",
-        fullDesc: "High-durability mountaineering and adventure park safety helmets engineered for superior crown and side impact protection. Features rugged injection-molded ABS outer shells, high-density expanded polypropylene/polystyrene liners, side ventilation channels, and quick-turn dial adjustment wheels.",
-        specs: [
-            { label: "Shell Material", value: "High-impact Injection Molded ABS Thermoplastic" },
-            { label: "Inner Liner", value: "High-density shock-absorbing Expanded Polystyrene (EPS) / EPP foam" },
-            { label: "Fit Range", value: "Universal adjustable size (Head circumference 48cm to 62cm) with rear ratchet wheel" },
-            { label: "Retention System", value: "4-point chin strap with quick-release buckle and soft chin pad" },
-            { label: "Standards", value: "CE EN 12492 (Mountaineering & Height Safety), UIAA 106 certified" }
-        ]
-    },
-    {
-        id: "fall-arrest-systems",
-        name: "Fall-Arrest Systems",
-        image: "", // Empty for user image upload
-        shortDesc: "Retractable wire-rope fall arresters, guided-type fall blocks, and vertical lifeline rail assemblies.",
-        fullDesc: "Automatic self-retracting lifelines (SRL) and vertical fall-arrest systems for climbing towers, ladder ascents, and high-altitude activity maintenance. Features rapid centrifugal dual-pawl locking brakes and internal energy absorbing packs that arrest freefalls within centimetres.",
-        specs: [
-            { label: "System Types", value: "Self-Retracting Lifelines (SRL / Inertia Reels), Guided Fall Arresters on rope/cable, Vertical Safety Rails" },
-            { label: "Line Lengths", value: "6m, 10m, 15m, 20m, and 30m galvanised wire cable / Dyneema webbing lines" },
-            { label: "Arrest Force", value: "Max arrest impact force below 6 kN to protect human anatomy" },
-            { label: "Maximum User Weight", value: "136 kg to 150 kg (Single user capacity)" },
-            { label: "Standards", value: "CE EN 360 (Retractable Type), EN 353-1 / EN 353-2 certified" }
-        ]
-    },
-    {
-        id: "rescue-equipment",
-        name: "Rescue Equipment",
-        image: "", // Empty for user image upload
-        shortDesc: "Evacuation descent devices, rescue reach poles, haul kits, and stretcher systems for park emergencies.",
-        fullDesc: "Professional aerial park evacuation and emergency retrieval kit. Contains auto-controlled descenders with rescue lifting wheels, telescoping rescue reach poles for mid-line zip rescue, 3:1/4:1 mechanical advantage pulley haul kits, and rollable rescue stretchers.",
-        specs: [
-            { label: "Kit Contents", value: "Automatic descent rescuer unit, telescopic retrieval pole (3m-6m), 4:1 mechanical haul kit, rescue harness, static rescue rope (50m-100m)" },
-            { label: "Evacuation Speed", value: "Controlled auto-descent rate between 0.8 m/s and 1.5 m/s" },
-            { label: "Rope Length", value: "50m to 150m pre-rigged kernmantle static line" },
-            { label: "Maximum Rescue Load", value: "Rated for two-person rescue loads up to 225 kg" },
-            { label: "Standards", value: "CE EN 341 (Descent Devices for Rescue), EN 1496 (Rescue Lifting)" }
-        ]
-    },
-    {
-        id: "steel-cable-rigging-equipment",
-        name: "Steel Cable & Rigging Equipment",
-        image: "", // Empty for user image upload
-        shortDesc: "Heavy drop-forged turnbuckles, wire rope clamps, thimbles, bow shackles, and rigging hardware.",
-        fullDesc: "Industrial-grade rigging and cable termination hardware for anchoring, tensioning, and maintaining structural cables on adventure attractions. Manufactured from drop-forged carbon steel and hot-dip galvanized for extreme weather and tensile resilience.",
-        specs: [
-            { label: "Components", value: "Drop-forged open/closed turnbuckles (Jaw & Eye / Jaw & Jaw), Tiger wire rope U-clamps, heavy steel thimbles, forged bow shackles" },
-            { label: "Sizes Available", value: "1/2\", 5/8\", 3/4\", 7/8\", and 1\" threading and pin dimensions" },
-            { label: "Finish", value: "Hot-dip galvanized to ASTM A153 / Electro-galvanized anti-corrosion finish" },
-            { label: "Working Load Limit", value: "1 Tonne to 15 Tonne certified WLL per component" },
-            { label: "Standards", value: "US Federal Spec FF-T-791b (Turnbuckles), FF-C-450 (Clamps), RR-C-271 (Shackles)" }
-        ]
-    },
-    {
-        id: "anchoring-fixing-systems",
-        name: "Anchoring & Fixing Systems",
-        image: "", // Empty for user image upload
-        shortDesc: "Heavy-duty chemical anchor studs, mechanical expansion anchors, through-bolts, and base fixing hardware.",
-        fullDesc: "High-strength structural concrete and rock anchoring systems engineered for securing tower base plates, climbing walls, guy wires, and adventure platform columns into reinforced concrete footings or natural bedrock.",
-        specs: [
-            { label: "Fixing Types", value: "Pure epoxy chemical injection anchor studs, heavy wedge expansion anchors, high-tensile foundation J-bolts, rock expansion shield anchors" },
-            { label: "Thread Sizes", value: "M12, M16, M20, M24, and M30 diameter studs in grade 8.8 and 316 stainless steel" },
-            { label: "Embedment Depth", value: "100mm to 500mm engineered embedment depths" },
-            { label: "Tensile / Shear Capacity", value: "Tested pull-out resistance from 35 kN up to 200+ kN per anchor point" },
-            { label: "Certifications", value: "ETA (European Technical Assessment) Option 1 for cracked/uncracked concrete" }
-        ]
-    },
-    {
-        id: "protective-padding",
-        name: "Protective Padding",
-        image: "", // Empty for user image upload
-        shortDesc: "High-density EPE/PU impact safety pads, pole wraps, and landing crash mats for adventure zones.",
-        fullDesc: "Custom-fabricated shock-absorbing safety protective padding and impact-cushioning wraps for steel columns, tree trunks, landing zones, and obstacle corners. Made with high-density closed-cell EPE foam or high-resilience polyurethane foam covered in heavy 650 GSM fire-retardant, waterproof PVC tarpaulin.",
-        specs: [
-            { label: "Core Foam", value: "50mm to 200mm high-density closed-cell Expanded Polyethylene (EPE) / bonded PU foam" },
-            { label: "Outer Fabric", value: "Heavy-duty 550 - 680 GSM UV-resistant, tear-proof PVC coated fabric with reinforced stitching" },
-            { label: "Fastening", value: "Heavy industrial Velcro hook-and-loop straps and eyelet lace-up systems" },
-            { label: "Weather Resistance", value: "100% waterproof, fungal resistant, UV-stabilized for outdoor exposure" },
-            { label: "Customization", value: "Available in custom diameters, column wrap profiles, and high-visibility safety colors" }
-        ]
-    },
-    {
-        id: "adventure-park-signage-safety-boards",
-        name: "Adventure Park Signage & Safety Boards",
-        image: "", // Empty for user image upload
-        shortDesc: "UV-resistant reflective safety instruction boards, warning signs, and activity briefing panels.",
-        fullDesc: "Weatherproof commercial signage, activity rules boards, directional markers, and operator safety notices designed for adventure parks and resort attractions. Fabricated on heavy ACP (Aluminium Composite Panel) or retro-reflective vinyl with clear pictograms and bilingual instructions.",
-        specs: [
-            { label: "Board Material", value: "3mm to 4mm heavy Aluminium Composite Panel (ACP) / 3M Retro-Reflective Vinyl / Acrylic" },
-            { label: "Printing & Coating", value: "UV-cured digital printing with scratch-resistant matte/gloss protective overlaminate" },
-            { label: "Sign Types", value: "General Park Rules, Activity Entry Restrictions (Height/Weight), Step-by-Step Harness Instructions, Emergency Contact Boards, Directional Markers" },
-            { label: "Weather Rating", value: "5-year outdoor non-fading warranty against harsh sun and rain exposure" },
-            { label: "Compliance", value: "Compliant with ISO 7010 international safety sign standards" }
-        ]
-    },
-    {
-        id: "cargo-nets",
-        name: "Cargo Nets",
-        image: "", // Empty for user image upload
-        shortDesc: "Heavy-duty braided nylon and PP climbing, scrambling, and obstacle transition cargo nets.",
-        fullDesc: "Industrial-strength adventure cargo climb nets manufactured with knotted or interwoven high-tenacity polypropylene and nylon ropes. Ideal for multi-activity towers, low/high obstacle courses, net scrambles, and commando crawls.",
-        specs: [
-            { label: "Rope Diameter", value: "12mm, 14mm, 16mm, and 18mm braided multi-strand ropes" },
-            { label: "Mesh Aperture", value: "150mm x 150mm to 250mm x 250mm square grid openings" },
-            { label: "Border Finishing", value: "Reinforced 18mm-20mm perimeter border rope with integrated steel eye thimbles" },
-            { label: "Breaking Strength", value: "High tensile load support capable of multi-person concurrent climbing" },
-            { label: "UV Protection", value: "UV-stabilized synthetic yarn engineered for prolonged outdoor sun exposure" }
-        ]
-    },
-    {
-        id: "tyre-obstacles",
-        name: "Tyre Obstacles",
-        image: "", // Empty for user image upload
-        shortDesc: "Suspended horizontal and vertical tyre crawl, bridge, and swing obstacle challenge assemblies.",
-        fullDesc: "Engaging adventure obstacle assemblies utilizing treated heavy-duty industrial tyres linked with galvanized chains and high-tensile wire rope rigging. Configured as swinging tyre steps, vertical tyre climb walls, or suspended horizontal tyre crawl tunnels.",
-        specs: [
-            { label: "Tyre Types", value: "Reinforced clean industrial/automobile radial tyres with drainage weep holes" },
-            { label: "Suspension Rigging", value: "8mm to 10mm calibrated galvanized short-link steel chain with nylon outer protective sleeves" },
-            { label: "Hardware Included", value: "Drop-forged eye bolts, high-tensile shackles, nyloc safety nuts, backing plates" },
-            { label: "Configuration Options", value: "Swinging Tyre Steps, Horizontal Tyre Tunnel, Tyre Wall Climb, Suspended Tyre Bridge" },
-            { label: "Safety Factor", value: "5:1 structural safety factor on all suspension connections" }
-        ]
-    },
-    {
-        id: "balance-beams",
-        name: "Balance Beams",
-        image: "", // Empty for user image upload
-        shortDesc: "Elevated and ground-level timber and steel balance beams with anti-slip friction surfaces.",
-        fullDesc: "Precision-crafted balance beam obstacles for ninja courses, low rope challenges, and tactical fitness arenas. Constructed from treated seasoned hardwood, steel-reinforced structural composites, or tubular steel with non-slip textured polyurethane coatings.",
-        specs: [
-            { label: "Beam Dimensions", value: "100mm to 200mm beam walking width; 3m to 6m span length" },
-            { label: "Materials", value: "Seasoned weather-treated hardwood / Galvanized structural steel core with composite cap" },
-            { label: "Surface Finish", value: "Anti-slip sanded quartz polyurethane coating for secure grip under wet and dry conditions" },
-            { label: "Mounting Hardware", value: "Swivel hinge brackets or rigid foundation pedestal mounting plates" },
-            { label: "Height Levels", value: "Available in ground-level (300mm-500mm) and aerial elevated (3m-8m) configurations" }
-        ]
-    },
-    {
-        id: "monkey-bars",
-        name: "Monkey Bars",
-        image: "", // Empty for user image upload
-        shortDesc: "Overhead horizontal and inclined steel monkey bar rigs with ergonomic powder-coated rungs.",
-        fullDesc: "Classic upper-body obstacle course and calisthenics monkey bar assemblies designed for adventure parks, obstacle races, and open-air workout arenas. Built with heavy-gauge tubular steel framing and smooth grip-textured rungs spaced for optimal reach and safety.",
-        specs: [
-            { label: "Rung Diameter", value: "32mm to 38mm ergonomic grip diameter" },
-            { label: "Rung Spacing", value: "300mm to 400mm center-to-center distance" },
-            { label: "Frame Structure", value: "100mm x 100mm / 80mm x 80mm heavy MS structural hollow sections (SHS)" },
-            { label: "Finish", value: "Zinc-rich primer with outdoor UV-resistant textured powder coating" },
-            { label: "Layouts", value: "Horizontal straight run, inclined ladder, wave monkey bars, and alternating height bars" }
-        ]
-    },
-    {
-        id: "parallel-bars",
-        name: "Parallel Bars",
-        image: "", // Empty for user image upload
-        shortDesc: "Commercial dual-rail parallel fitness bars for dips, hand walks, and bodyweight training.",
-        fullDesc: "Commercial-grade outdoor parallel bars engineered for calisthenics zones, obstacle fitness trails, and resort sports parks. Features continuous seamless tubular rails, reinforced foundation stanchions, and anti-corrosive dual-layer weather shielding.",
-        specs: [
-            { label: "Bar Diameter", value: "42mm to 48mm heavy-wall steel tube (comfortable palm grip)" },
-            { label: "Bar Length & Height", value: "2.5m to 3.5m length; 1.2m to 1.4m height from ground" },
-            { label: "Bar Separation", value: "550mm to 650mm standard ergonomic shoulder width" },
-            { label: "Material", value: "B-Class heavy galvanized mild steel pipe with rounded smooth corner bends" },
-            { label: "Foundation", value: "Direct embedded concrete footing / Base plate bolted connection" }
-        ]
-    },
-    {
-        id: "pull-up-bars",
-        name: "Pull-Up Bars",
-        image: "", // Empty for user image upload
-        shortDesc: "Multi-height commercial outdoor pull-up and chin-up stations with multi-grip options.",
-        fullDesc: "Robust multi-height pull-up stations suitable for outdoor fitness circuits, military obstacle courses, and adventure camp training grounds. Available in single, triple, and four-tier height configurations to accommodate participants of different heights.",
-        specs: [
-            { label: "Bar Heights", value: "Triple tier heights: 1.8m, 2.1m, and 2.4m above ground level" },
-            { label: "Grip Diameter", value: "32mm - 34mm seamless round steel tube" },
-            { label: "Upright Columns", value: "80mm to 100mm heavy structural MS steel box section" },
-            { label: "Surface Coating", value: "Thermoset exterior powder coat with micro-texture for superior hand grip" },
-            { label: "Weight Capacity", value: "Tested for dynamic user loads up to 250 kg per station" }
-        ]
-    },
-    {
-        id: "horizontal-ladders",
-        name: "Horizontal Ladders",
-        image: "", // Empty for user image upload
-        shortDesc: "Heavy-duty overhead horizontal hand-traverse ladder rigs for obstacle courses and fitness parks.",
-        fullDesc: "Elevated horizontal overhead ladder structures engineered for challenging hand-over-hand traverses in ninja arenas, boot camps, and adventure playgrounds. Constructed from heavy structural steel with high-grade weld joints and anti-slip rungs.",
-        specs: [
-            { label: "Overall Length", value: "3m to 6m traverse span" },
-            { label: "Overhead Height", value: "2.2m to 2.6m clearance above safety landing surface" },
-            { label: "Rung Specifications", value: "32mm round steel bar welded at 300mm intervals" },
-            { label: "Support Uprights", value: "100mm x 100mm heavy square steel columns with gusseted base plates" },
-            { label: "Finish", value: "Galvanized + dual-coat epoxy polyurethane outdoor finish" }
-        ]
-    },
-    {
-        id: "rope-ladders",
-        name: "Rope Ladders",
-        image: "", // Empty for user image upload
-        shortDesc: "Flexible suspended climbing ladders with hardwood or aluminium rungs and synthetic side ropes.",
-        fullDesc: "Commercial flexible climbing ladders for multi-activity towers, high rope course access, and caving/tree obstacles. Features high-tensile braided synthetic side ropes with weather-treated hardwood or textured non-slip aluminium rungs.",
-        specs: [
-            { label: "Side Ropes", value: "14mm to 16mm high-tenacity braided polypropylene / polyester rope" },
-            { label: "Rung Material", value: "40mm diameter seasoned sal/teak hardwood rungs or fluted aluminium tube" },
-            { label: "Rung Width", value: "400mm to 500mm step width; 300mm rung-to-rung spacing" },
-            { label: "Termination", value: "Spliced eye thimbles with heavy steel carabiners / screw-lock connectors at top and bottom" },
-            { label: "Breaking Strength", value: "Ropes and rung assemblies rated to 15 kN breaking load" }
-        ]
-    },
-    {
-        id: "suspension-bridges-equipment",
-        name: "Suspension Bridges",
-        image: "", // Empty for user image upload
-        shortDesc: "Modular steel cable suspended pedestrian walkway kits for canopy trails, valleys, and parks.",
-        fullDesc: "Turnkey suspension bridge assemblies and hardware kits designed for crossing gorges, water bodies, and forest canopy routes. Includes heavy galvanized main suspension cables, vertical hanger assemblies, treated decking planks, and high-tensile safety side netting.",
-        specs: [
-            { label: "Span Capability", value: "10m to 150m+ engineered customized clear spans" },
-            { label: "Deck Width", value: "1.0m to 1.8m wide pedestrian walking surface" },
-            { label: "Cables", value: "Main suspension wire ropes (16mm-24mm), stay cables (12mm-16mm), floor cables (14mm)" },
-            { label: "Decking Options", value: "Hardwood planks, chequered aluminium sheet, or FRP anti-slip composite grating" },
-            { label: "Load Rating", value: "Designed for pedestrian live loads of 400 to 500 kg/m²" }
-        ]
-    },
-    {
-        id: "net-bridges",
-        name: "Net Bridges",
-        image: "", // Empty for user image upload
-        shortDesc: "Enclosed tunnel and V-shaped safety rope net bridges for thrilling aerial canopy crossings.",
-        fullDesc: "Fun, enclosed aerial net bridges suspended high between trees, towers, or platforms. Formed with heavy braided rope mesh in full cylindrical tunnel, V-trough, or U-channel designs allowing participants to bounce and walk safely surrounded by protective netting.",
-        specs: [
-            { label: "Bridge Profiles", value: "Cylindrical Tunnel Bridge, V-Profile Net Bridge, U-Shaped Trough Walkway" },
-            { label: "Netting Material", value: "10mm to 14mm high-tenacity UV-stabilized braided nylon/polypropylene cordage" },
-            { label: "Main Tension Cables", value: "12mm to 16mm galvanized steel wire ropes inside bottom and top edges" },
-            { label: "Walkway Base", value: "Interwoven high-density footbed rope or internal suspended wooden tread slats" },
-            { label: "Span Lengths", value: "5m to 25m modular spans" }
-        ]
-    },
-    {
-        id: "tarzan-swings",
-        name: "Tarzan Swings",
-        image: "", // Empty for user image upload
-        shortDesc: "Suspended pendulum rope swing launch systems with landing cargo nets and safety tethers.",
-        fullDesc: "Exciting pendulum swing adventure modules where participants leap from a takeoff platform holding or attached to a suspended dynamic rope swing, arcing across a gap to latch onto a vertical cargo catch net.",
-        specs: [
-            { label: "Swing Rope", value: "24mm to 30mm thick braided synthetic hemp / poly-dacron grip rope with internal safety steel wire core" },
-            { label: "Suspension Hardware", value: "Heavy-duty sealed bearing swivel and top shackle anchor assembly rated at 35 kN" },
-            { label: "Catch Target", value: "Heavy-duty vertical cargo net with perimeter tensioning cables and lower impact mats" },
-            { label: "Launch Span", value: "6m to 12m swing arc distance" },
-            { label: "Safety Systems", value: "Continuous top belay lanyard or redundant safety catch line connection" }
+            { label: "Platform Geometries", value: "Hexagonal, Octagonal, Square & Wrap-around pole/tree collar mounts with 1.1m guardrails" },
+            { label: "Obstacle Types", value: "Burma Bridge, Commando Crossing, Swinging Planks, Wobble Logs, Zigzag Beams, Spider Webs" },
+            { label: "Decking & Wood", value: "Anti-slip FRP grating / Kiln-dried seasoned treated hardwood with drainage gaps" },
+            { label: "Hardware Included", value: "Galvanized shackles, drop-forged eye bolts, turnbuckles, and safety tethers" },
+            { label: "Safety Compliance", value: "Engineered to EN 15567-1 and EN 15567-2 aerial adventure park standards" }
         ]
     },
     {
         id: "adventure-park-platforms",
         name: "Adventure Park Platforms",
-        image: "", // Empty for user image upload
-        shortDesc: "Pre-engineered steel and timber staging platforms, takeoff hubs, and intermediate towers.",
-        fullDesc: "Pre-fabricated structural staging and connection platforms for adventure parks, zipline launches, and multi-tier rope courses. Built with structural steel subframes, corrosion-resistant coatings, anti-slip decking, and integrated anchor points.",
+        category: "equipment",
+        image: "",
+        shortDesc: "Pre-engineered structural steel staging platforms, zipline takeoff hubs, and intermediate activity towers.",
+        fullDesc: "Heavy structural steel takeoff, landing, and intermediate staging platforms for adventure parks, zipline terminals, and multi-activity hubs. Built with hot-dip galvanized structural steel sections, anti-slip diamond decking, certified PPE multi-directional anchor points, and integrated safety balustrades with self-closing entry gates.",
         specs: [
-            { label: "Structural Frame", value: "Heavy structural MS I-beams, hollow square sections, and diagonal bracing trusses" },
-            { label: "Deck Surface", value: "Weather-treated timber, heavy FRP grating, or anti-slip diamond steel plate" },
-            { label: "Safety Enclosure", value: "1.2m high steel balustrade with wire mesh infill panels and self-closing entry gates" },
+            { label: "Structural Framework", value: "IS 2062 Grade E250 / E350 Structural MS I-beams, SHS columns, and diagonal truss bracing" },
+            { label: "Deck Surface", value: "Anti-slip chequered diamond steel plate / Heavy-duty FRP composite grating" },
+            { label: "Guardrails & Gates", value: "1.2m continuous perimeter steel balustrade with mesh infill and self-closing gravity gates" },
             { label: "Anchor Points", value: "Certified multi-directional PPE safety anchor eyelets rated to 22 kN each" },
-            { label: "Modularity", value: "Available in freestanding multi-leg tower models or tree/pole mounted collars" }
+            { label: "Load Rating", value: "Designed for distributed live loads up to 500 kg/m² for simultaneous group staging" }
         ]
     },
     {
-        id: "ground-anchors",
-        name: "Ground Anchors",
-        image: "", // Empty for user image upload
-        shortDesc: "High-capacity earth screw anchors, duckbill percussion anchors, and concrete deadman anchor systems.",
-        fullDesc: "Heavy-duty ground and earth anchoring solutions for securing guy wires, tower stay cables, suspension bridge ends, and zipline tension lines into varying soil, sand, or gravel ground conditions without extensive excavation.",
+        id: "cargo-nets-net-bridges",
+        name: "Cargo Nets & Net Bridges",
+        category: "equipment",
+        image: "images/equipment/Cargo Nets & Net Bridges.jpeg",
+        shortDesc: "Industrial-strength braided nylon cargo climbing nets, scrambling walls, and cylindrical enclosed net bridges.",
+        fullDesc: "Turnkey rope netting solutions for obstacle courses, adventure towers, commando crawls, and canopy walks. Includes heavy braided UV-stabilized nylon/polypropylene cargo nets with reinforced border ropes and steel eye thimbles, as well as enclosed cylindrical tunnel and V-trough net bridges suspended on heavy steel cables.",
         specs: [
-            { label: "Anchor Types", value: "Helical Screw Earth Anchors, Percussion Duckbill Anchors, Deadman Concrete Anchor Plates, Rock Expansion Anchors" },
-            { label: "Shaft / Rod Size", value: "20mm to 32mm solid steel / heavy tube shaft with single or double helix blades" },
-            { label: "Installation Depth", value: "1.5m to 4.5m deep soil penetration" },
-            { label: "Holding Capacity", value: "30 kN to 150+ kN tensile pull-out resistance (depending on soil type)" },
-            { label: "Corrosion Coating", value: "Hot-dip galvanized to BS EN ISO 1461 for long-term subsurface lifespan" }
+            { label: "Cordage & Diameters", value: "12mm to 18mm high-tenacity UV-stabilized braided nylon and polypropylene ropes" },
+            { label: "Mesh Apertures", value: "150mm x 150mm to 250mm x 250mm square grid openings with knotted or spliced junctions" },
+            { label: "Bridge Styles", value: "Full Cylindrical Tunnel Bridge, V-Profile Net Walkway, U-Channel Suspended Net Bridge" },
+            { label: "Main Cables", value: "12mm - 16mm galvanized steel wire ropes inside bottom tread and top handrail channels" },
+            { label: "UV & Weather Rating", value: "100% rot-proof, mildew resistant, and UV-stabilized for multi-year exterior durability" }
         ]
     },
     {
-        id: "structural-support-components",
-        name: "Structural Support Components",
-        image: "", // Empty for user image upload
-        shortDesc: "Heavy structural MS columns, cross-bracing trusses, base plates, and connection gussets.",
-        fullDesc: "Engineered structural steel fabrication components designed for assembling multi-activity towers, adventure park frames, giant swings, and canopy structures. Precision cut, welded, and drilled for modular bolt-together on-site assembly.",
+        id: "tyre-balance-obstacles",
+        name: "Tyre & Balance Obstacles",
+        category: "equipment",
+        image: "",
+        shortDesc: "Suspended swinging tyre steps, horizontal tyre crawl tunnels, and elevated anti-slip balance beams.",
+        fullDesc: "Challenging agility and balance elements designed for ninja courses, tactical fitness tracks, and low/high rope challenge arenas. Features reinforced industrial automobile tyres with drainage weep holes suspended by calibrated short-link chains and sleeved cables, paired with treated timber or steel balance beams coated with non-slip quartz grit.",
         specs: [
-            { label: "Components", value: "Tubular and SHS structural columns, diagonal cross-bracing ties, foundation base plates, tower apex trusses, connection gussets" },
-            { label: "Steel Grades", value: "IS 2062 Grade E250 / E350 Structural Mild Steel" },
-            { label: "Welding Standards", value: "Full penetration continuous welding compliant with AWS D1.1 structural welding code" },
-            { label: "Protective Coating", value: "Sand-blasting to Sa 2.5, zinc-rich epoxy primer (75 microns), and dual polyurethane finish coats (100+ microns)" },
-            { label: "Hardware Included", value: "High-tensile Grade 8.8 / 10.9 structural bolts, nuts, and spring washers" }
+            { label: "Obstacle Configurations", value: "Swinging Tyre Steps, Horizontal Tyre Crawl Tunnel, Tyre Climb Wall, Suspended Walkway" },
+            { label: "Suspension Rigging", value: "8mm to 10mm calibrated galvanized short-link steel chain with protective nylon outer sleeves" },
+            { label: "Beam Dimensions", value: "100mm to 200mm walking width; 3m to 6m span length with quartz friction coating" },
+            { label: "Mounting Hardware", value: "Swivel hinge brackets, drop-forged eye bolts, nyloc safety nuts, and backing plates" },
+            { label: "Safety Factor", value: "5:1 structural safety factor on all dynamic suspension connections" }
+        ]
+    },
+    {
+        id: "adventure-park-ladders-bridges",
+        name: "Adventure Park Ladders & Bridges",
+        category: "equipment",
+        image: "",
+        shortDesc: "Horizontal overhead ladder rigs, monkey bars, flexible rope ladders, and modular suspension pedestrian bridges.",
+        fullDesc: "Comprehensive upper-body obstacle and pedestrian crossing systems for adventure parks and tactical fitness courses. Includes straight, inclined, and wave monkey bar rigs, multi-tier pull-up and parallel bars, flexible timber-rung climbing rope ladders, and long-span steel cable suspended pedestrian walkway bridges.",
+        specs: [
+            { label: "Rig Structures", value: "Horizontal Monkey Bars, Wave Ladders, Parallel Dip Bars, Multi-Height Pull-Up Stations" },
+            { label: "Suspension Bridges", value: "Modular pedestrian suspension bridge assemblies from 10m to 150m+ spans" },
+            { label: "Rope Ladders", value: "14mm-16mm synthetic side ropes with 40mm seasoned hardwood / fluted aluminium rungs" },
+            { label: "Materials & Finish", value: "Heavy-gauge galvanized steel tubes (32mm-48mm diameter) with textured exterior powder coating" },
+            { label: "Live Load Capacity", value: "Bridges rated for 400-500 kg/m²; Fitness bars tested for dynamic user loads up to 250 kg" }
+        ]
+    },
+    {
+        id: "safety-helmets-fall-arrest-systems",
+        name: "Safety Helmets & Fall-Arrest Systems",
+        category: "equipment",
+        image: "images/equipment/Safety Helmets & Fall-Arrest Systems.jpeg",
+        shortDesc: "Impact-resistant ABS adventure helmets, automatic self-retracting lifelines, energy-absorbing lanyards, and rescue kits.",
+        fullDesc: "Comprehensive personal protective equipment (PPE) and rapid emergency retrieval systems. Includes ventilated dial-fit ABS adventure helmets, dual-pawl self-retracting lifelines (SRLs), twin-leg Y-shaped dynamic rope energy-absorbing lanyards for 100% tie-off, and auto-controlled descent rescue haul kits with telescoping reach poles.",
+        specs: [
+            { label: "Helmets", value: "High-impact ABS shell with EPS foam liner and universal dial-fit ratchet (48cm - 62cm)" },
+            { label: "Fall Arresters", value: "Self-Retracting Lifelines (SRL / Inertia Reels) with galvanized steel wire cable (6m - 30m)" },
+            { label: "Lanyards", value: "11mm dynamic kernmantle rope / 30mm heavy tubular webbing Y-lanyards with energy absorbers" },
+            { label: "Rescue Kit", value: "Automatic controlled descent device (0.8-1.5 m/s), 4:1 mechanical haul kit, 50m-100m rescue line" },
+            { label: "Standards", value: "CE EN 12492 (Helmets), EN 360 (Fall Arrest), EN 355 (Lanyards), EN 341 (Rescue Devices)" }
+        ]
+    },
+    {
+        id: "steel-cables-anchors-rigging-equipment",
+        name: "Steel Cables, Anchors & Rigging Equipment",
+        category: "equipment",
+        image: "images/equipment/Steel Cables, Anchors & Rigging Equipment.jpeg",
+        shortDesc: "High-tensile galvanized wire ropes, drop-forged turnbuckles, clamps, chemical anchor studs, and earth ground anchors.",
+        fullDesc: "Industrial-grade structural rigging, tensioning, and foundational anchoring systems for high-altitude adventure rides, towers, ziplines, and bridges. Features 6x19 / 6x36 IWRC steel core wire ropes, drop-forged open/closed turnbuckles, Tiger wire rope clamps, heavy steel thimbles, pure epoxy chemical injection anchor studs, and helical screw earth ground anchors.",
+        specs: [
+            { label: "Steel Cables", value: "8mm to 24mm 1770/1960 N/mm² High-Tensile Hot-Dip Galvanized IWRC Steel Wire Ropes" },
+            { label: "Rigging Hardware", value: "Drop-forged turnbuckles (Jaw & Eye / Jaw & Jaw), Tiger U-clamps, bow shackles, thimbles" },
+            { label: "Concrete Anchors", value: "M12 to M30 pure epoxy chemical injection studs & heavy expansion wedge anchors (ETA Option 1)" },
+            { label: "Earth Anchors", value: "Heavy-duty helical screw ground anchors & percussion duckbill anchors (1.5m - 4.5m depth)" },
+            { label: "Compliance", value: "IS 2266 / ISO 2408 (Wire Ropes), ASTM A153 Galvanizing, US Fed Spec FF-T-791b (Turnbuckles)" }
         ]
     }
 ];
@@ -826,41 +505,16 @@ const EQUIPMENT_IDS = [
     'rope-course-equipment',
     'safety-nets',
     'safety-harness-belts',
-    'zipline-safety-equipment',
-    'climbing-ropes',
-    'carabiners-connectors',
-    'belay-devices',
-    'climbing-holds',
-    'climbing-wall-panels',
-    'climbing-wall-anchors',
-    'rope-course-platforms',
-    'rope-course-obstacles',
-    'zipline-trolleys',
-    'zipline-pulleys',
-    'zipline-cables',
-    'zipline-braking-systems',
-    'adventure-safety-lanyards',
-    'safety-helmets',
-    'fall-arrest-systems',
-    'rescue-equipment',
-    'steel-cable-rigging-equipment',
-    'anchoring-fixing-systems',
-    'protective-padding',
-    'adventure-park-signage-safety-boards',
-    'cargo-nets',
-    'tyre-obstacles',
-    'balance-beams',
-    'monkey-bars',
-    'parallel-bars',
-    'pull-up-bars',
-    'horizontal-ladders',
-    'rope-ladders',
-    'suspension-bridges-equipment',
-    'net-bridges',
-    'tarzan-swings',
+    'zipline-equipment',
+    'climbing-ropes-carabiners',
+    'climbing-holds-wall-panels',
+    'rope-course-platforms-obstacles',
     'adventure-park-platforms',
-    'ground-anchors',
-    'structural-support-components'
+    'cargo-nets-net-bridges',
+    'tyre-balance-obstacles',
+    'adventure-park-ladders-bridges',
+    'safety-helmets-fall-arrest-systems',
+    'steel-cables-anchors-rigging-equipment'
 ];
 
 // Curated 8 core items for homepage display representing core manufacturing and installation
@@ -1102,10 +756,12 @@ function initProductsCatalog() {
 }
 
 // Run immediately if DOM is ready, or listen for DOMContentLoaded
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initProductsCatalog);
-} else {
-    initProductsCatalog();
+if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initProductsCatalog);
+    } else {
+        initProductsCatalog();
+    }
 }
 
 // Open Product Enquiry Modal

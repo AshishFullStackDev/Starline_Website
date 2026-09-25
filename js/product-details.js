@@ -21,6 +21,10 @@ function initProductDetailsPage() {
     // Find product in catalog
     const productList = typeof STARLINE_PRODUCTS !== 'undefined' ? STARLINE_PRODUCTS : [];
     let product = productList.find(p => p.id === productId || p.id.toLowerCase() === productId.toLowerCase());
+    if (!product && typeof window !== 'undefined' && typeof window.normalizeActivityKey === 'function') {
+        const canonical = window.normalizeActivityKey(productId);
+        product = productList.find(p => p.id.toLowerCase() === canonical.toLowerCase());
+    }
 
     if (!product && productList.length > 0) {
         product = productList[0];
