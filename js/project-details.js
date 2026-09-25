@@ -44,7 +44,7 @@ const projectDetails = {
             'Operator technical certification and maintenance support'
         ],
         gallery: [
-            ['Ikya Island Mussoorie Logo', 'images/logos/ikya_island.jpg']
+            ['Ikya Island Mussoorie Logo', 'images/logos/IKYA ISLAND photo.jpg']
         ]
     },
     'forest-department': {
@@ -116,7 +116,7 @@ const projectDetails = {
             'Full operator certification, harness safety inspections, and rescue protocol training'
         ],
         gallery: [
-            ['Flying Kokan Zipline Logo', 'images/logos/flying_kokan.jpeg']
+            ['Flying Kokan Zipline Logo', 'images/logos/flying_kokan.webg']
         ]
     },
     'maniratna-resort': {
@@ -164,7 +164,7 @@ const projectDetails = {
             'Operational training and preventative maintenance guidelines for farm staff'
         ],
         gallery: [
-            ['Srushti Farms Logo', 'images/logos/srushti_farm.png']
+            ['Srushti Farms Logo', 'images/logos/srushti farm.png']
         ]
     }
 };

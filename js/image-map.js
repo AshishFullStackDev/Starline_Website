@@ -311,15 +311,15 @@
     const projectLogoMap = {
         "the-grand-machal-resorts": "images/logos/grand_machal.jpg",
         "grand-machal": "images/logos/grand_machal.jpg",
-        "ikya-island-mussoorie": "images/logos/ikya_island.jpg",
-        "ikya-island": "images/logos/ikya_island.jpg",
+        "ikya-island-mussoorie": "images/logos/IKYA ISLAND photo.jpg",
+        "ikya-island": "images/logos/IKYA ISLAND photo.jpg",
         "forest-department": "images/logos/forest_department.svg",
         "pench-tiger-reserve": "images/logos/pench_logo.webp",
         "devgad-zipline": "images/logos/flying_kokan.jpeg",
         "devgad-adventure": "images/logos/flying_kokan.jpeg",
         "maniratna-resort": "images/logos/maniratna.jpeg",
-        "srushti-farms": "images/logos/srushti_farm.png",
-        "srushti-farm": "images/logos/srushti_farm.png"
+        "srushti-farms": "images/logos/srushti farm.png",
+        "srushti-farm": "images/logos/srushti farm.png"
     };
 
     /**
