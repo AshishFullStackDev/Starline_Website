@@ -1106,6 +1106,16 @@ app.use('/logos', express.static(path.join(__dirname, 'images', 'logos'), {
   }
 }));
 
+app.use('/logos', express.static(path.join(__dirname, 'logos'), {
+  maxAge: '30d',
+  etag: true,
+  lastModified: true,
+  dotfiles: 'ignore',
+  setHeaders: (res) => {
+    res.setHeader('Cache-Control', 'public, max-age=2592000, immutable');
+  }
+}));
+
 // Images with WebP content negotiation and 30-day immutable caching
 const safeImagesRoot = path.resolve(__dirname, 'images');
 

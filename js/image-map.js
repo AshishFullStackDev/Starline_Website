@@ -235,14 +235,18 @@
             alt: "Climbing Wall Equipment, Holds & Auto-Belay Units - Starline Adventures",
             desc: "CE / EN 12572 compliant climbing wall hardware, modular climbing holds, top anchors, and safety auto-belays."
         },
-        "rope-course-equipment": null,
+        "rope-course-equipment": {
+            image: "images/equipment/Rope Course Equipment.webp",
+            alt: "Rope Course Continuous Belay Equipment & Hardware - Starline Adventures",
+            desc: "Certified continuous belay lifelines, trolleys, clamps, harnesses, and hardware for high & low rope obstacle courses."
+        },
         "safety-nets": {
             image: "images/equipment/Safety Nets.jpeg",
             alt: "High-Tensile Safety Catch Nets - Starline Adventures",
             desc: "Heavy-duty UV-stabilized nylon and polypropylene safety fall-arrest and debris containment catch nets."
         },
         "safety-harness-belts": {
-            image: "images/equipment/Safety Harness & Belts.jpeg",
+            image: "images/equipment/Safety Harness & Belts.jpg",
             alt: "Certified Commercial Safety Harnesses & Belts - Starline Adventures",
             desc: "Full-body and sit-in commercial adventure safety harnesses with forged alloy steel D-rings and rapid-adjust buckles."
         },
@@ -258,14 +262,22 @@
             alt: "Rope Course Platforms & Challenge Elements - Starline Adventures",
             desc: "Modular aerial staging platforms, Burma bridges, swinging logs, and high/low rope challenge course obstacles."
         },
-        "adventure-park-platforms": null,
+        "adventure-park-platforms": {
+            image: "images/equipment/Adventure Park Platforms.jpeg",
+            alt: "Adventure Park Structural Platforms & Towers - Starline Adventures",
+            desc: "Pre-engineered structural steel staging platforms, zipline takeoff hubs, and intermediate activity towers."
+        },
         "cargo-nets-net-bridges": {
             image: "images/equipment/Cargo Nets & Net Bridges.jpeg",
             alt: "Braided Cargo Scrambling Nets & Net Bridges - Starline Adventures",
             desc: "Industrial-strength braided nylon cargo climbing nets, commando crawls, and enclosed cylindrical suspended net bridges."
         },
         "tyre-balance-obstacles": null,
-        "adventure-park-ladders-bridges": null,
+        "adventure-park-ladders-bridges": {
+            image: "images/equipment/Adventure Park Ladders & Bridges.jpeg",
+            alt: "Adventure Park Ladders & Bridges - Starline Adventures",
+            desc: "Horizontal overhead ladder rigs, monkey bars, flexible rope ladders, and modular suspension pedestrian bridges."
+        },
         "safety-helmets-fall-arrest-systems": {
             image: "images/equipment/Safety Helmets & Fall-Arrest Systems.jpeg",
             alt: "Adventure Safety Helmets & Fall-Arrest PPE - Starline Adventures",
@@ -729,6 +741,66 @@
                 categoryLabel: "Activities",
                 desc: "Target archery range with high-density straw bosses, recurve bows, and protective backstop netting.",
                 alt: "Archery bow and arrow target sports range - Starline Adventures"
+            },
+            {
+                id: "gallery-adventure-platforms",
+                filename: "Adventure Park Platforms.jpeg",
+                src: "images/equipment/Adventure Park Platforms.jpeg",
+                title: "Adventure Park Platforms & Takeoff Hubs",
+                category: "installation",
+                categoryLabel: "Installation",
+                desc: "Heavy structural steel staging platforms, zipline takeoff hubs, and intermediate activity towers.",
+                alt: "Adventure park takeoff platform fabrication and installation - Starline Adventures"
+            },
+            {
+                id: "gallery-ladders-bridges",
+                filename: "Adventure Park Ladders & Bridges.jpeg",
+                src: "images/equipment/Adventure Park Ladders & Bridges.jpeg",
+                title: "Adventure Park Ladders & Bridges",
+                category: "installation",
+                categoryLabel: "Installation",
+                desc: "Horizontal overhead ladder rigs, monkey bars, flexible rope ladders, and modular suspension pedestrian bridges.",
+                alt: "Adventure park ladders and suspension bridges - Starline Adventures"
+            },
+            {
+                id: "gallery-rope-course-equipment",
+                filename: "Rope Course Equipment.webp",
+                src: "images/equipment/Rope Course Equipment.webp",
+                title: "Rope Course Continuous Belay Equipment",
+                category: "installation",
+                categoryLabel: "Installation",
+                desc: "Certified continuous belay lifelines, trolleys, clamps, harnesses, and hardware for high & low rope obstacle courses.",
+                alt: "Rope course continuous belay equipment and rigging hardware - Starline Adventures"
+            },
+            {
+                id: "gallery-rope-course-platforms",
+                filename: "Rope Course Platforms & Obstacles.jpeg",
+                src: "images/equipment/Rope Course Platforms & Obstacles.jpeg",
+                title: "Rope Course Platforms & Obstacles",
+                category: "installation",
+                categoryLabel: "Installation",
+                desc: "Modular aerial staging platforms, Burma bridges, swinging logs, and high/low rope challenge course obstacles.",
+                alt: "Modular rope course challenge platforms and obstacle crossings - Starline Adventures"
+            },
+            {
+                id: "gallery-cargo-nets-bridges",
+                filename: "Cargo Nets & Net Bridges.jpeg",
+                src: "images/equipment/Cargo Nets & Net Bridges.jpeg",
+                title: "Cargo Nets & Suspended Net Bridges",
+                category: "installation",
+                categoryLabel: "Installation",
+                desc: "Industrial-strength braided nylon cargo climbing nets, commando crawls, and enclosed cylindrical suspended net bridges.",
+                alt: "Braided cargo nets and net bridges installation - Starline Adventures"
+            },
+            {
+                id: "gallery-rigging-equipment",
+                filename: "Steel Cables, Anchors & Rigging Equipment.jpeg",
+                src: "images/equipment/Steel Cables, Anchors & Rigging Equipment.jpeg",
+                title: "Steel Cables, Anchors & Rigging Equipment",
+                category: "installation",
+                categoryLabel: "Installation",
+                desc: "High-tensile IWRC galvanized steel wire ropes, drop-forged turnbuckles, tiger clamps, and chemical anchor studs.",
+                alt: "High tensile steel cables turnbuckles and rigging equipment - Starline Adventures"
             }
         ];
     }

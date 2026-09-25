@@ -306,7 +306,7 @@ const STARLINE_PRODUCTS = [
         id: "rope-course-equipment",
         name: "Rope Course Equipment",
         category: "equipment",
-        image: "",
+        image: "images/equipment/Rope Course Equipment.webp",
         shortDesc: "Certified continuous belay lifelines, trolleys, clamps, harnesses, and hardware for high & low rope obstacle courses.",
         fullDesc: "Specialized rigging hardware and safety components engineered for high and low aerial rope challenge courses. Features continuous belay lifeline track trolleys, zinc-plated heavy-duty turnbuckles, galvanized steel wire ropes, forged wire rope clamps, heavy-duty thimbles, and safety tethers.",
         specs: [
@@ -336,7 +336,7 @@ const STARLINE_PRODUCTS = [
         id: "safety-harness-belts",
         name: "Safety Harness & Belts",
         category: "equipment",
-        image: "images/equipment/Safety Harness & Belts.jpeg",
+        image: "images/equipment/Safety Harness & Belts.jpg",
         shortDesc: "Full-body and sit safety harnesses with adjustable padded straps and high-tensile alloy attachment points.",
         fullDesc: "Ergonomically designed commercial full-body and sit-in safety harnesses engineered for maximum comfort, security, and quick adjustment during adventure park operations. Fitted with heavy-duty polyester webbing, forged alloy steel D-rings, self-locking rapid-adjust buckles, and breathable padding.",
         specs: [
@@ -411,7 +411,7 @@ const STARLINE_PRODUCTS = [
         id: "adventure-park-platforms",
         name: "Adventure Park Platforms",
         category: "equipment",
-        image: "",
+        image: "images/equipment/Adventure Park Platforms.jpeg",
         shortDesc: "Pre-engineered structural steel staging platforms, zipline takeoff hubs, and intermediate activity towers.",
         fullDesc: "Heavy structural steel takeoff, landing, and intermediate staging platforms for adventure parks, zipline terminals, and multi-activity hubs. Built with hot-dip galvanized structural steel sections, anti-slip diamond decking, certified PPE multi-directional anchor points, and integrated safety balustrades with self-closing entry gates.",
         specs: [
@@ -456,7 +456,7 @@ const STARLINE_PRODUCTS = [
         id: "adventure-park-ladders-bridges",
         name: "Adventure Park Ladders & Bridges",
         category: "equipment",
-        image: "",
+        image: "images/equipment/Adventure Park Ladders & Bridges.jpeg",
         shortDesc: "Horizontal overhead ladder rigs, monkey bars, flexible rope ladders, and modular suspension pedestrian bridges.",
         fullDesc: "Comprehensive upper-body obstacle and pedestrian crossing systems for adventure parks and tactical fitness courses. Includes straight, inclined, and wave monkey bar rigs, multi-tier pull-up and parallel bars, flexible timber-rung climbing rope ladders, and long-span steel cable suspended pedestrian walkway bridges.",
         specs: [
