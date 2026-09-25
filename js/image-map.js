@@ -271,18 +271,20 @@
             desc: "Precision dual-bearing tandem stainless steel zipline trolleys, impact brake spring buffers, cables, and certified lanyards."
         },
         "climbing-ropes-carabiners": {
-            image: "images/equipment/",
+            image: "images/equipment/Climbing Ropes & Carabiner.jpg",
             alt: "Climbing Ropes & Carabiners",
             desc: "High-quality climbing ropes, carabiners and connectors designed for adventure activities and rope course safety."
         },
            
          "climbing-holds-wall-panels": {
-            image: "images/equipment/Climbing Holds & Wall Panels.18.19 PM.jpeg",
+            image: "images/equipment/Climbing Holds & Wall Panels.jpeg",
             alt: "Climbing Holds & Wall Panels",
             desc: "Durable climbing holds and wall panels designed for climbing walls, training areas, and adventure parks."
         },
         "rope-course-platforms-obstacles": {
-           image:"images/equipment/Rope Course Platforms & Obstacles.jpeg"
+            image: "images/equipment/Rope Course Platforms & Obstacles.jpeg",
+            alt: "Rope Course Platforms & Obstacles",
+            desc: "Durable rope course platforms and obstacles designed for adventure parks, rope courses, and outdoor challenge activities."
         },
         "adventure-park-platforms": {
             image: "images/equipment/Adventure Park Platforms.jpeg",
