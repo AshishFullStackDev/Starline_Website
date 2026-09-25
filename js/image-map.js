@@ -270,12 +270,19 @@
             alt: "Commercial Zipline Rigging, Pulleys & Brakes - Starline Adventures",
             desc: "Precision dual-bearing tandem stainless steel zipline trolleys, impact brake spring buffers, cables, and certified lanyards."
         },
-        "climbing-ropes-carabiners": null,
-        "climbing-holds-wall-panels": null,
+        "climbing-ropes-carabiners": {
+            image: "images/equipment/",
+            alt: "Climbing Ropes & Carabiners",
+            desc: "High-quality climbing ropes, carabiners and connectors designed for adventure activities and rope course safety."
+        },
+           
+         "climbing-holds-wall-panels": {
+            image: "images/equipment/Climbing Holds & Wall Panels.18.19 PM.jpeg",
+            alt: "Climbing Holds & Wall Panels",
+            desc: "Durable climbing holds and wall panels designed for climbing walls, training areas, and adventure parks."
+        },
         "rope-course-platforms-obstacles": {
-            image: "images/equipment/Rope Course Platforms & Obstacles.jpeg",
-            alt: "Rope Course Platforms & Challenge Elements - Starline Adventures",
-            desc: "Modular aerial staging platforms, Burma bridges, swinging logs, and high/low rope challenge course obstacles."
+           image:"images/equipment/Rope Course Platforms & Obstacles.jpeg"
         },
         "adventure-park-platforms": {
             image: "images/equipment/Adventure Park Platforms.jpeg",
@@ -287,7 +294,11 @@
             alt: "Braided Cargo Scrambling Nets & Net Bridges - Starline Adventures",
             desc: "Industrial-strength braided nylon cargo climbing nets, commando crawls, and enclosed cylindrical suspended net bridges."
         },
-        "tyre-balance-obstacles": null,
+        "tyre-balance-obstacles": {
+             image: "images/equipment/Tyre Balance Obstacles.jpeg",
+             alt: "Tyre Balance Obstacles",
+              desc: "Durable tyre balance obstacles designed for adventure parks, obstacle courses, and outdoor training areas."
+        },
         "adventure-park-ladders-bridges": {
             image: "images/equipment/Adventure Park Ladders & Bridges.jpeg",
             alt: "Adventure Park Ladders & Bridges - Starline Adventures",
@@ -315,8 +326,8 @@
         "ikya-island": "images/logos/IKYA ISLAND photo.jpg",
         "forest-department": "images/logos/forest_department.svg",
         "pench-tiger-reserve": "images/logos/pench_logo.webp",
-        "devgad-zipline": "images/logos/flying_kokan.jpeg",
-        "devgad-adventure": "images/logos/flying_kokan.jpeg",
+        "devgad-zipline": "images/logos/flying_kokan.webg",
+        "devgad-adventure": "images/logos/flying_kokan.webp",
         "maniratna-resort": "images/logos/maniratna.jpeg",
         "srushti-farms": "images/logos/srushti farm.png",
         "srushti-farm": "images/logos/srushti farm.png"
