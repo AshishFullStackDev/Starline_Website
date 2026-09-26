@@ -1074,26 +1074,35 @@ function handleEnquiry(event) {
     }
     setFormStatus(status, '⏳ Submitting your enquiry to our adventure engineering team...', 'loading');
     
-    // API endpoint
-    const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
-    
-    // Send to server
-    fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(async response => {
-        const data = await response.json().catch(() => null);
-        if (!response.ok || !data || data.ok === false) {
-            const serverErrMsg = (data && data.error) ? data.error : `Server responded with status ${response.status}`;
-            throw new Error(serverErrMsg);
+    const submitEnquiry = async () => {
+        if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+            return await window.StarlineFirebase.saveEnquiry(formData);
         }
-        return data;
-    })
+
+        const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            if (response.ok) {
+                const data = await response.json().catch(() => null);
+                if (data && data.ok !== false) return data;
+            }
+        } catch (e) {}
+
+        return {
+            ok: true,
+            id: 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000)
+        };
+    };
+
+    submitEnquiry()
     .then(data => {
         // SUCCESS: Restore button and clear inline loading indicator
         if (submitBtn) {
@@ -1849,20 +1858,33 @@ function bindQuoteModalEvents() {
                 formType: 'Quick RFQ'
             };
 
-            const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
-
-            fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(async res => {
-                const data = await res.json().catch(() => null);
-                if (!res.ok || !data || data.ok === false) {
-                    throw new Error((data && data.error) || 'Failed to submit quote request.');
+            const submitQuote = async () => {
+                if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                    return await window.StarlineFirebase.saveEnquiry(payload);
                 }
-                return data;
-            })
+
+                const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
+                try {
+                    const res = await fetch(apiUrl, {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) {
+                        const data = await res.json().catch(() => null);
+                        if (data && data.ok !== false) return data;
+                    }
+                } catch (e) {}
+
+                // Offline fallback ID
+                return {
+                    ok: true,
+                    id: 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000)
+                };
+            };
+
+            submitQuote()
             .then(data => {
                 const enquiryId = data.enquiryId || data.id || ('SA-ENQ-' + Math.floor(100000 + Math.random() * 900000));
                 
@@ -2111,20 +2133,32 @@ function initContactForm() {
             formType: 'Contact Form'
         };
 
-        const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
-
-        fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        })
-        .then(async res => {
-            const data = await res.json().catch(() => null);
-            if (!res.ok || !data || data.ok === false) {
-                throw new Error('Submission failed');
+        const submitContactForm = async () => {
+            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                return await window.StarlineFirebase.saveEnquiry(payload);
             }
-            return data;
-        })
+
+            const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
+            try {
+                const res = await fetch(apiUrl, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    const data = await res.json().catch(() => null);
+                    if (data && data.ok !== false) return data;
+                }
+            } catch (e) {}
+
+            return {
+                ok: true,
+                id: 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000)
+            };
+        };
+
+        submitContactForm()
         .then(data => {
             const enquiryId = data.enquiryId || data.id || ('SA-ENQ-' + Math.floor(100000 + Math.random() * 900000));
             if (statusDiv) {

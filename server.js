@@ -867,9 +867,9 @@ async function handleSubmission(req, res, defaultFormType = 'Contact Form') {
       console.warn(`[Customer Mail Warning]: Confirmation notice for [${enquiryId}]:`, safeErrMsg);
     });
 
-    // Support standard browser form redirection
-    if (req.headers.accept && req.headers.accept.includes('text/html') && !req.xhr) {
-      return res.redirect('/thank-you.html');
+    // Support standard browser form redirection (only for classic HTML form POSTs, not JSON API fetches)
+    if (!req.is('json') && req.headers.accept && req.headers.accept.includes('text/html') && !req.xhr) {
+      return res.redirect(303, '/thank-you.html');
     }
 
     return res.json({
@@ -1459,8 +1459,8 @@ app.get('/:productSlug/', (req, res, next) => {
   next();
 });
 
-// HTML page routing with validation
-app.get('/:page', (req, res, next) => {
+// HTML page routing with validation (supports GET and POST redirects)
+app.all('/:page', (req, res, next) => {
   let pageName = req.params.page;
   if (pageName.endsWith('.html')) {
     pageName = pageName.slice(0, -5);

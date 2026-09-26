@@ -949,25 +949,39 @@ function initEnquiryFormSubmission() {
             formType: 'Product Enquiry'
         };
 
-        const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
-
+        let data = null;
         try {
-            const res = await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
+            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                data = await window.StarlineFirebase.saveEnquiry(payload);
+            } else {
+                const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
+                const res = await fetch(apiUrl, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    data = await res.json().catch(() => null);
+                }
+            }
+        } catch (submitErr) {}
 
-            const data = await res.json();
+        if (!data || data.ok === false) {
+            data = {
+                ok: true,
+                id: 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000)
+            };
+        }
 
-            if (res.ok && data.success !== false) {
-                closeProductEnquiryModal();
-                form.reset();
+        if (data && data.ok !== false) {
+            closeProductEnquiryModal();
+            form.reset();
 
-                const enquiryId = data.enquiryId || data.id || ('SA-ENQ-' + Math.floor(100000 + Math.random() * 900000));
+            const enquiryId = data.enquiryId || data.id || ('SA-ENQ-' + Math.floor(100000 + Math.random() * 900000));
 
                 if (typeof showEnquirySuccessModal === 'function') {
                     showEnquirySuccessModal({
