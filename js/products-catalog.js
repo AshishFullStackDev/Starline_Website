@@ -517,6 +517,50 @@ const EQUIPMENT_IDS = [
     'steel-cables-anchors-rigging-equipment'
 ];
 
+const PRODUCT_CLEAN_SLUGS = {
+    'rocket-ejection': 'rocket-ejection-ride-manufacturer',
+    'giant-swing': 'giant-swing-manufacturer',
+    '4-in-1-bungee-jumping': 'bungee-jumping-setup-manufacturer',
+    'zip-line': 'zipline-manufacturer',
+    'zip-bike-sky-cycle': 'sky-cycling-manufacturer',
+    'sky-roller': 'sky-roller-ride-manufacturer',
+    'wall-climbing': 'climbing-wall-manufacturer',
+    'net-climbing': 'net-climbing-manufacturer',
+    'ninja-rope-courses': 'rope-course-manufacturer',
+    'multi-activity-tower': 'multi-activity-tower-manufacturer',
+    'glass-bridge': 'glass-bridge-manufacturer',
+    'suspension-bridge': 'suspension-bridge-manufacturer',
+    'human-gyro': 'human-gyro-ride-manufacturer',
+    'zipline roller-coaster': 'zipline-roller-coaster-manufacturer',
+    '360-degree-cycle': '360-degree-cycle-manufacturer',
+    'bull-ride': 'mechanical-bull-ride-manufacturer',
+    'rifle-shooting': 'rifle-shooting-range-setup',
+    'archery': 'archery-range-setup',
+    'trampoline': 'trampoline-park-manufacturer',
+    'open-gym-equipment': 'open-gym-equipment-manufacturer',
+    'climbing-wall-equipment': 'climbing-wall-equipment-manufacturer',
+    'rope-course-equipment': 'rope-course-equipment-manufacturer',
+    'safety-nets': 'adventure-safety-nets-manufacturer',
+    'safety-harness-belts': 'adventure-safety-harness-manufacturer',
+    'zipline-equipment': 'zipline-equipment-manufacturer',
+    'climbing-ropes-carabiners': 'climbing-ropes-carabiners-supplier',
+    'climbing-holds-wall-panels': 'climbing-holds-wall-panels-manufacturer',
+    'rope-course-platforms-obstacles': 'rope-course-platforms-obstacles-manufacturer',
+    'adventure-park-platforms': 'adventure-park-platforms-manufacturer',
+    'cargo-nets-net-bridges': 'cargo-nets-net-bridges-manufacturer',
+    'tyre-balance-obstacles': 'tyre-balance-obstacles-manufacturer',
+    'adventure-park-ladders-bridges': 'adventure-park-ladders-bridges-manufacturer',
+    'safety-helmets-fall-arrest-systems': 'safety-helmets-fall-arrest-systems',
+    'steel-cables-anchors-rigging-equipment': 'steel-cables-anchors-rigging-equipment'
+};
+
+function getProductCleanUrl(productId) {
+    if (!productId) return '/products.html';
+    const key = String(productId).toLowerCase().trim();
+    const slug = PRODUCT_CLEAN_SLUGS[key] || key;
+    return `/${slug}/`;
+}
+
 // Curated 8 core items for homepage display representing core manufacturing and installation
 const HOMEPAGE_CURATED_IDS = [
     'giant-swing',
@@ -719,7 +763,7 @@ function renderProductsGrid(categoryFilter) {
                 <h3 class="product-item-title">${escapeHtml(product.name)}</h3>
                 <p class="product-item-desc">${escapeHtml(product.shortDesc)}</p>
                 <div class="product-item-actions">
-                    <a href="product-details.html?product=${product.id}"
+                    <a href="${getProductCleanUrl(product.id)}"
                        class="btn-product-info"
                        aria-label="View Info for ${escapeHtml(product.name)}">
                         View Info

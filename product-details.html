@@ -24,6 +24,61 @@
     <link rel="icon" type="image/jpeg" href="images/logo.jpeg">
     <link rel="apple-touch-icon" href="images/logo.jpeg">
 
+    <script>
+        (function() {
+            var slugMap = {
+                'giant-swing': '/giant-swing-manufacturer/',
+                'zipline': '/zipline-manufacturer/',
+                'zip-line': '/zipline-manufacturer/',
+                'rocket-ejection': '/rocket-ejection-ride-manufacturer/',
+                'glass-bridge': '/glass-bridge-manufacturer/',
+                'rope-course': '/rope-course-manufacturer/',
+                'ninja-rope-courses': '/rope-course-manufacturer/',
+                'climbing-wall': '/climbing-wall-manufacturer/',
+                'wall-climbing': '/climbing-wall-manufacturer/',
+                'sky-cycling': '/sky-cycling-manufacturer/',
+                'zip-bike-sky-cycle': '/sky-cycling-manufacturer/',
+                'sky-roller': '/sky-roller-ride-manufacturer/',
+                'human-gyro': '/human-gyro-ride-manufacturer/',
+                'multi-activity-tower': '/multi-activity-tower-manufacturer/',
+                'suspension-bridge': '/suspension-bridge-manufacturer/',
+                'zipline roller-coaster': '/zipline-roller-coaster-manufacturer/',
+                'zipline-roller-coaster': '/zipline-roller-coaster-manufacturer/',
+                '360-degree-cycle': '/360-degree-cycle-manufacturer/',
+                'bull-ride': '/mechanical-bull-ride-manufacturer/',
+                '4-in-1-bungee-jumping': '/bungee-jumping-setup-manufacturer/',
+                'net-climbing': '/net-climbing-manufacturer/',
+                'rifle-shooting': '/rifle-shooting-range-setup/',
+                'archery': '/archery-range-setup/',
+                'trampoline': '/trampoline-park-manufacturer/',
+                'open-gym-equipment': '/open-gym-equipment-manufacturer/',
+                'climbing-wall-equipment': '/climbing-wall-equipment-manufacturer/',
+                'rope-course-equipment': '/rope-course-equipment-manufacturer/',
+                'safety-nets': '/adventure-safety-nets-manufacturer/',
+                'safety-harness-belts': '/adventure-safety-harness-manufacturer/',
+                'zipline-equipment': '/zipline-equipment-manufacturer/',
+                'climbing-ropes-carabiners': '/climbing-ropes-carabiners-supplier/',
+                'climbing-holds-wall-panels': '/climbing-holds-wall-panels-manufacturer/',
+                'rope-course-platforms-obstacles': '/rope-course-platforms-obstacles-manufacturer/',
+                'adventure-park-platforms': '/adventure-park-platforms-manufacturer/',
+                'cargo-nets-net-bridges': '/cargo-nets-net-bridges-manufacturer/',
+                'tyre-balance-obstacles': '/tyre-balance-obstacles-manufacturer/',
+                'adventure-park-ladders-bridges': '/adventure-park-ladders-bridges-manufacturer/',
+                'safety-helmets-fall-arrest-systems': '/safety-helmets-fall-arrest-systems/',
+                'steel-cables-anchors-rigging-equipment': '/steel-cables-anchors-rigging-equipment/'
+            };
+            try {
+                var params = new URLSearchParams(window.location.search);
+                var product = (params.get('product') || '').toLowerCase().trim();
+                if (product && slugMap[product]) {
+                    window.location.replace(slugMap[product]);
+                } else if (!product && window.location.pathname.includes('product-details')) {
+                    window.location.replace('/products.html');
+                }
+            } catch(e) {}
+        })();
+    </script>
+
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",

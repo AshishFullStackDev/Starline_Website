@@ -1242,13 +1242,68 @@ const ALLOWED_PAGES = new Set([
   'contact',
   'gallery',
   'portfolio',
-  'product-details',
   'products',
   'project-details',
   'team',
   'testimonials',
   'thank-you'
 ]);
+
+// SEO Clean URL Product Redirects Map (Old query URLs & aliases -> Final Canonical SEO URLs)
+const SEO_REDIRECTS_MAP = {
+  'giant-swing': 'giant-swing-manufacturer',
+  'zipline': 'zipline-manufacturer',
+  'zip-line': 'zipline-manufacturer',
+  'rocket-ejection': 'rocket-ejection-ride-manufacturer',
+  'glass-bridge': 'glass-bridge-manufacturer',
+  'rope-course': 'rope-course-manufacturer',
+  'ninja-rope-courses': 'rope-course-manufacturer',
+  'climbing-wall': 'climbing-wall-manufacturer',
+  'wall-climbing': 'climbing-wall-manufacturer',
+  'sky-cycling': 'sky-cycling-manufacturer',
+  'zip-bike-sky-cycle': 'sky-cycling-manufacturer',
+  'sky-cycle': 'sky-cycling-manufacturer',
+  'sky-roller': 'sky-roller-ride-manufacturer',
+  'human-gyro': 'human-gyro-ride-manufacturer',
+  'multi-activity-tower': 'multi-activity-tower-manufacturer',
+  'tower': 'multi-activity-tower-manufacturer',
+  'suspension-bridge': 'suspension-bridge-manufacturer',
+  'zipline-roller-coaster': 'zipline-roller-coaster-manufacturer',
+  'zipline roller-coaster': 'zipline-roller-coaster-manufacturer',
+  '360-degree-cycle': '360-degree-cycle-manufacturer',
+  'bull-ride': 'mechanical-bull-ride-manufacturer',
+  '4-in-1-bungee-jumping': 'bungee-jumping-setup-manufacturer',
+  'bungee-jumping': 'bungee-jumping-setup-manufacturer',
+  'net-climbing': 'net-climbing-manufacturer',
+  'rifle-shooting': 'rifle-shooting-range-setup',
+  'archery': 'archery-range-setup',
+  'trampoline': 'trampoline-park-manufacturer',
+  'open-gym-equipment': 'open-gym-equipment-manufacturer',
+  'climbing-wall-equipment': 'climbing-wall-equipment-manufacturer',
+  'rope-course-equipment': 'rope-course-equipment-manufacturer',
+  'safety-nets': 'adventure-safety-nets-manufacturer',
+  'safety-harness-belts': 'adventure-safety-harness-manufacturer',
+  'zipline-equipment': 'zipline-equipment-manufacturer',
+  'climbing-ropes-carabiners': 'climbing-ropes-carabiners-supplier',
+  'climbing-holds-wall-panels': 'climbing-holds-wall-panels-manufacturer',
+  'rope-course-platforms-obstacles': 'rope-course-platforms-obstacles-manufacturer',
+  'adventure-park-platforms': 'adventure-park-platforms-manufacturer',
+  'cargo-nets-net-bridges': 'cargo-nets-net-bridges-manufacturer',
+  'tyre-balance-obstacles': 'tyre-balance-obstacles-manufacturer',
+  'adventure-park-ladders-bridges': 'adventure-park-ladders-bridges-manufacturer',
+  'safety-helmets-fall-arrest-systems': 'safety-helmets-fall-arrest-systems',
+  'steel-cables-anchors-rigging-equipment': 'steel-cables-anchors-rigging-equipment'
+};
+
+// 1. 301 Permanent Redirects for legacy product-details URLs
+app.get(['/product-details.html', '/product-details'], (req, res) => {
+  const productKey = (req.query.product || '').toLowerCase().trim();
+  if (productKey && SEO_REDIRECTS_MAP[productKey]) {
+    return res.redirect(301, `/${SEO_REDIRECTS_MAP[productKey]}/`);
+  }
+  // Default redirect to products catalog if no query provided
+  return res.redirect(301, '/products.html');
+});
 
 // SEO endpoints
 app.get('/robots.txt', (req, res) => {
@@ -1264,6 +1319,49 @@ app.get('/sitemap.xml', (req, res) => {
 // Root landing page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Clean SEO Product URLs handling (supports both /slug/ and /slug with 301 redirect to canonical trailing slash)
+app.get('/:productSlug', (req, res, next) => {
+  const rawParam = req.params.productSlug || '';
+  const slug = rawParam.toLowerCase().trim();
+
+  // If this matches an alias, 301 redirect to final canonical URL
+  if (SEO_REDIRECTS_MAP[slug] && SEO_REDIRECTS_MAP[slug] !== slug) {
+    return res.redirect(301, `/${SEO_REDIRECTS_MAP[slug]}/`);
+  }
+
+  const targetDir = path.resolve(__dirname, slug);
+  const targetFile = path.resolve(targetDir, 'index.html');
+
+  if (targetFile.startsWith(__dirname + path.sep) && fs.existsSync(targetFile)) {
+    // If request URL does not end with trailing slash, 301 redirect to canonical trailing slash URL
+    if (!req.path.endsWith('/')) {
+      return res.redirect(301, `/${slug}/`);
+    }
+    return res.sendFile(targetFile);
+  }
+
+  next();
+});
+
+// Clean SEO Product URLs with trailing slash
+app.get('/:productSlug/', (req, res, next) => {
+  const rawParam = req.params.productSlug || '';
+  const slug = rawParam.toLowerCase().trim();
+
+  if (SEO_REDIRECTS_MAP[slug] && SEO_REDIRECTS_MAP[slug] !== slug) {
+    return res.redirect(301, `/${SEO_REDIRECTS_MAP[slug]}/`);
+  }
+
+  const targetDir = path.resolve(__dirname, slug);
+  const targetFile = path.resolve(targetDir, 'index.html');
+
+  if (targetFile.startsWith(__dirname + path.sep) && fs.existsSync(targetFile)) {
+    return res.sendFile(targetFile);
+  }
+
+  next();
 });
 
 // HTML page routing with validation
@@ -1295,9 +1393,13 @@ app.get('/working.png', (req, res) => {
   res.status(404).send('Not Found');
 });
 
-// 404 handler for unmapped routes
+// Proper 404 handler for unmapped routes
 app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, 'index.html'));
+  const notFoundPath = path.join(__dirname, '404.html');
+  if (fs.existsSync(notFoundPath)) {
+    return res.status(404).sendFile(notFoundPath);
+  }
+  return res.status(404).send('<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>404 Not Found</h1><p><a href="/">Return Home</a></p></body></html>');
 });
 
 // ============================================================
