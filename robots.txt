@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /logos/
 Disallow: /api/
 Disallow: /.secure_store/
 

@@ -1268,8 +1268,6 @@ const SEO_REDIRECTS_MAP = {
   'multi-activity-tower': 'multi-activity-tower-manufacturer',
   'tower': 'multi-activity-tower-manufacturer',
   'suspension-bridge': 'suspension-bridge-manufacturer',
-  'zipline-roller-coaster': 'zipline-roller-coaster-manufacturer',
-  'zipline roller-coaster': 'zipline-roller-coaster-manufacturer',
   '360-degree-cycle': '360-degree-cycle-manufacturer',
   'bull-ride': 'mechanical-bull-ride-manufacturer',
   '4-in-1-bungee-jumping': 'bungee-jumping-setup-manufacturer',

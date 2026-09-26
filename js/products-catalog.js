@@ -1,6 +1,6 @@
 /**
  * STARLINE ADVENTURES - PRODUCTS CATALOGUE MODULE
- * Contains 34 verified products (19 Activities, 15 Equipment).
+ * Contains 33 verified products (18 Activities, 15 Equipment).
  * Images are assigned only when strictly matching. Otherwise empty for user upload.
  * Clicking "View Info" opens the dedicated product details page (product-details.html?product=id).
  */
@@ -186,20 +186,6 @@ const STARLINE_PRODUCTS = [
             { label: "Seater Capacity", value: "2-Seater (200 kg) up to 6-Seater (600 kg)" },
             { label: "Footprint", value: "8ft x 15ft" },
             { label: "Materials & Components", value: "Heavy MS tubular concentric rings, foam padded bucket seats, 3HP gearbox with electric motor and control panel, high-tension fasteners, 4-point safety harnesses, PU/powder-coated anti-rust finish." }
-        ]
-    },
-    {
-        id: "zipline roller-coaster",
-        name: "Zipline Roller Coaster",
-        image: "images/zip-line-roller-coaster.jpg", 
-        shortDesc: "A suspended rail ride that carries seated riders on loops and curves through the sky.",
-        fullDesc: "A high-speed suspended tubular rail adventure coaster customized to your resort or park topography. Riders glide through scenic banked curves, dips, and accelerating downhill sweeps in individual or connected train coaches.",
-        specs: [
-            { label: "Age Group", value: "8 years & above" },
-            { label: "Installation Type", value: "Outdoor Landscape / Indoor Complex" },
-            { label: "Weight Capacity", value: "Max 110 kg per rider" },
-            { label: "Track Length", value: "Custom engineered as per site acreage" },
-            { label: "Materials & Components", value: "Precision tubular structural steel track, heavy-duty foundation columns, galvanized wire ropes, locking lap-bar seat assemblies, pneumatic braking stations, roller-coaster bogie pulleys." }
         ]
     },
     {
@@ -531,7 +517,6 @@ const PRODUCT_CLEAN_SLUGS = {
     'glass-bridge': 'glass-bridge-manufacturer',
     'suspension-bridge': 'suspension-bridge-manufacturer',
     'human-gyro': 'human-gyro-ride-manufacturer',
-    'zipline roller-coaster': 'zipline-roller-coaster-manufacturer',
     '360-degree-cycle': '360-degree-cycle-manufacturer',
     'bull-ride': 'mechanical-bull-ride-manufacturer',
     'rifle-shooting': 'rifle-shooting-range-setup',

@@ -32,11 +32,34 @@ function initProductDetailsPage() {
 
     if (!product) return;
 
-    // Update document title and headers
-    document.title = `${product.name} - Technical Specifications | STARLINE ADVENTURES`;
+    // Update document title, headers, meta description and canonical
+    document.title = `${product.name} Specifications & Engineering | Starline Adventures`;
     
     const pageTitle = document.getElementById('pageTitle');
-    if (pageTitle) pageTitle.textContent = `${product.name} - Technical Specifications | STARLINE ADVENTURES`;
+    if (pageTitle) pageTitle.textContent = `${product.name} Specifications & Engineering | Starline Adventures`;
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+        metaDesc.setAttribute('content', `${product.name} technical specifications, engineering parameters, and turnkey installation requirements by Starline Adventures Pvt Ltd.`);
+    }
+
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', `${product.name} Specifications & Engineering | Starline Adventures`);
+
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) {
+        ogDesc.setAttribute('content', `${product.name} technical specifications, engineering parameters, and turnkey installation requirements by Starline Adventures Pvt Ltd.`);
+    }
+
+    const canonicalEl = document.querySelector('link[rel="canonical"]');
+    if (canonicalEl) {
+        const cleanSlug = (typeof PRODUCT_CLEAN_SLUGS !== 'undefined' && PRODUCT_CLEAN_SLUGS[product.id]) ? PRODUCT_CLEAN_SLUGS[product.id] : null;
+        if (cleanSlug) {
+            canonicalEl.setAttribute('href', `https://starlineadventures.com/${cleanSlug}/`);
+        } else {
+            canonicalEl.setAttribute('href', `https://starlineadventures.com/product-details.html?product=${product.id}`);
+        }
+    }
 
     const breadcrumbName = document.getElementById('breadcrumbProductName');
     if (breadcrumbName) breadcrumbName.textContent = product.name;

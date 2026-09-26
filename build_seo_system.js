@@ -27,7 +27,6 @@ const PRODUCT_SLUGS = {
   'glass-bridge': 'glass-bridge-manufacturer',
   'suspension-bridge': 'suspension-bridge-manufacturer',
   'human-gyro': 'human-gyro-ride-manufacturer',
-  'zipline roller-coaster': 'zipline-roller-coaster-manufacturer',
   '360-degree-cycle': '360-degree-cycle-manufacturer',
   'bull-ride': 'mechanical-bull-ride-manufacturer',
   'rifle-shooting': 'rifle-shooting-range-setup',
@@ -69,8 +68,6 @@ const REDIRECT_ALIASES = {
   'multi-activity-tower': 'multi-activity-tower-manufacturer',
   'tower': 'multi-activity-tower-manufacturer',
   'suspension-bridge': 'suspension-bridge-manufacturer',
-  'zipline-roller-coaster': 'zipline-roller-coaster-manufacturer',
-  'zipline roller-coaster': 'zipline-roller-coaster-manufacturer',
   '360-degree-cycle': '360-degree-cycle-manufacturer',
   'bull-ride': 'mechanical-bull-ride-manufacturer',
   '4-in-1-bungee-jumping': 'bungee-jumping-setup-manufacturer',
@@ -539,7 +536,7 @@ function generateProductHtml(product, seo, allProducts) {
     "image": product.image ? `https://starlineadventures.com/${product.image}` : "https://starlineadventures.com/images/logo.jpeg",
     "brand": {
       "@type": "Brand",
-      "name": "Starline Adventures"
+      "name": "Starline Adventures Pvt Ltd"
     },
     "manufacturer": {
       "@type": "Organization",
@@ -952,6 +949,7 @@ function generateProductHtml(product, seo, allProducts) {
     </style>
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
 
     <!-- TOP INFO BAR -->
     <div class="top-info-bar">
@@ -1077,6 +1075,13 @@ function generateProductHtml(product, seo, allProducts) {
                     <div class="seo-apps-grid">
                         ${appsHtml}
                     </div>
+
+                    <h2 class="seo-section-h2">Warranty &amp; Maintenance Support</h2>
+                    <p class="seo-prose-text">Starline Adventures stands behind the engineering integrity and durability of every commercial installation:</p>
+                    <ul class="seo-prose-text" style="padding-left: 20px; margin-bottom: 24px;">
+                        <li><strong>6-month structural replacement</strong> covering manufacturing and structural assembly defects.</li>
+                        <li><strong>1-year maintenance support</strong> providing scheduled inspection guidelines, technical consultations, and engineering assistance.</li>
+                    </ul>
 
                     <h2 class="seo-section-h2">Frequently Asked Questions</h2>
                     <div class="seo-faq-list">
@@ -1548,6 +1553,18 @@ let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
     <lastmod>2026-09-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starlineadventures.com/product-details.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://starlineadventures.com/project-details.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 `;
 
