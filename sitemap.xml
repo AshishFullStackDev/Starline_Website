@@ -9,14 +9,14 @@
   <url>
     <loc>https://starlineadventures.com/about.html</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://starlineadventures.com/products.html</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://starlineadventures.com/portfolio.html</loc>
@@ -33,217 +33,229 @@
   <url>
     <loc>https://starlineadventures.com/team.html</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://starlineadventures.com/testimonials.html</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://starlineadventures.com/contact.html</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/zipline.html</loc>
+    <loc>https://starlineadventures.com/product-details.html</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://starlineadventures.com/project-details.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://starlineadventures.com/rocket-ejection-ride-manufacturer/</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/giant-swing.html</loc>
+    <loc>https://starlineadventures.com/giant-swing-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/suspension-bridge.html</loc>
+    <loc>https://starlineadventures.com/bungee-jumping-setup-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/climbing-wall.html</loc>
+    <loc>https://starlineadventures.com/zipline-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/sky-cycling.html</loc>
+    <loc>https://starlineadventures.com/sky-cycling-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/trampoline-park.html</loc>
+    <loc>https://starlineadventures.com/sky-roller-ride-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/bungee-jumping.html</loc>
+    <loc>https://starlineadventures.com/climbing-wall-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/human-gyro-ride.html</loc>
+    <loc>https://starlineadventures.com/net-climbing-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/rocket-ejection.html</loc>
+    <loc>https://starlineadventures.com/rope-course-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/sky-roller-ride.html</loc>
+    <loc>https://starlineadventures.com/multi-activity-tower-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/net-climbing.html</loc>
+    <loc>https://starlineadventures.com/glass-bridge-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/rope-course.html</loc>
+    <loc>https://starlineadventures.com/suspension-bridge-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/multi-activity-tower.html</loc>
+    <loc>https://starlineadventures.com/human-gyro-ride-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/glass-bridge.html</loc>
+    <loc>https://starlineadventures.com/360-degree-cycle-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/360-degree-cycle.html</loc>
+    <loc>https://starlineadventures.com/mechanical-bull-ride-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/mechanical-bull-ride.html</loc>
+    <loc>https://starlineadventures.com/rifle-shooting-range-setup/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/rifle-shooting-range.html</loc>
+    <loc>https://starlineadventures.com/archery-range-setup/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/archery-range.html</loc>
+    <loc>https://starlineadventures.com/trampoline-park-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/open-gym-equipment.html</loc>
+    <loc>https://starlineadventures.com/open-gym-equipment-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/climbing-wall-equipment.html</loc>
+    <loc>https://starlineadventures.com/climbing-wall-equipment-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/rope-course-equipment.html</loc>
+    <loc>https://starlineadventures.com/rope-course-equipment-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/safety-nets.html</loc>
+    <loc>https://starlineadventures.com/adventure-safety-nets-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/safety-harness-belts.html</loc>
+    <loc>https://starlineadventures.com/adventure-safety-harness-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/zipline-equipment.html</loc>
+    <loc>https://starlineadventures.com/zipline-equipment-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/climbing-ropes-carabiners.html</loc>
+    <loc>https://starlineadventures.com/climbing-ropes-carabiners-supplier/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/climbing-holds-wall-panels.html</loc>
+    <loc>https://starlineadventures.com/climbing-holds-wall-panels-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/rope-course-platforms-obstacles.html</loc>
+    <loc>https://starlineadventures.com/rope-course-platforms-obstacles-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/adventure-park-platforms.html</loc>
+    <loc>https://starlineadventures.com/adventure-park-platforms-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/cargo-nets-net-bridges.html</loc>
+    <loc>https://starlineadventures.com/cargo-nets-net-bridges-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/tyre-balance-obstacles.html</loc>
+    <loc>https://starlineadventures.com/tyre-balance-obstacles-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/adventure-park-ladders-bridges.html</loc>
+    <loc>https://starlineadventures.com/adventure-park-ladders-bridges-manufacturer/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/safety-helmets-fall-arrest-systems.html</loc>
+    <loc>https://starlineadventures.com/safety-helmets-fall-arrest-systems/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://starlineadventures.com/product/steel-cables-anchors-rigging-equipment.html</loc>
+    <loc>https://starlineadventures.com/steel-cables-anchors-rigging-equipment/</loc>
     <lastmod>2026-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 </urlset>

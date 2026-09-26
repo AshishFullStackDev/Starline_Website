@@ -1147,8 +1147,9 @@ function handleEnquiry(event) {
 
 // Attach form submit listeners to all enquiry forms on the page
 function initEnquiryForms() {
-    const forms = document.querySelectorAll('.enquiry-form, .enquiry-form-fs, #contactEnquiryForm, #sidebarProductEnquiryForm, #productEnquiryForm');
+    const forms = document.querySelectorAll('.enquiry-form, #sidebarProductEnquiryForm, #productEnquiryForm');
     forms.forEach(form => {
+        if (form.id === 'contactEnquiryForm') return;
         form.removeEventListener('submit', handleEnquiry);
         form.addEventListener('submit', handleEnquiry);
     });
@@ -1969,7 +1970,8 @@ if (document.readyState === 'loading') {
 // ==========================================
 function initContactForm() {
     const form = document.getElementById('contactEnquiryForm');
-    if (!form) return;
+    if (!form || form.dataset.bound === 'true') return;
+    form.dataset.bound = 'true';
 
     // Auto-select product from URL if provided (e.g., ?product=Zip%20Line)
     const urlParams = new URLSearchParams(window.location.search);
@@ -2142,6 +2144,20 @@ function initContactForm() {
                 `;
                 statusDiv.className = 'form-status success';
                 statusDiv.style.display = 'block';
+            }
+
+            if (typeof showEnquirySuccessModal === 'function') {
+                showEnquirySuccessModal({
+                    id: enquiryId,
+                    name,
+                    email,
+                    phone,
+                    company,
+                    location,
+                    product: product || 'General Adventure Project Enquiry',
+                    message,
+                    customerMessage: data.customerMessage || "Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly. We appreciate your interest and look forward to working with you."
+                });
             }
 
             form.reset();
