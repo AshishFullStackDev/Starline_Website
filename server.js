@@ -399,12 +399,7 @@ async function sendNotificationEmail(record) {
     }
   });
 
-  const isRfq = record.formType === 'Quick RFQ' ||
-    (record.subject && record.subject.toLowerCase().includes('rfq')) ||
-    (record.message && record.message.toLowerCase().includes('quote request'));
-
-  const formLabel = isRfq ? 'Quick RFQ' : 'Contact Form Enquiry';
-  const emailSubject = `[${formLabel}] ${record.name} - ${record.product}`;
+  const emailSubject = `NEW WEBSITE ENQUIRY - ${record.product} - ${record.name}`;
   const cleanPhone = (record.phone || '').replace(/[^\d+]/g, '');
   const formattedDate = new Date(record.createdAt).toLocaleString('en-IN', {
     timeZone: 'Asia/Kolkata',
@@ -413,38 +408,31 @@ async function sendNotificationEmail(record) {
   });
 
   const plainText = `
-============================================================
-STARLINE ADVENTURES - ${formLabel.toUpperCase()}
-============================================================
+STARLINE ADVENTURE
+New Website Enquiry
 
-A new ${formLabel.toLowerCase()} has been received through the website.
+Enquiry ID: ${record.id}
+Date & Time: ${formattedDate} (IST)
 
-Lead Reference ID: ${record.id}
-Date & Time:       ${formattedDate} (IST)
-Submission Source: ${record.formType}
+Customer Name: ${record.name}
+Phone: ${record.phone}
+Email: ${record.email}
+Project Location: ${record.location}
+Company / Org: ${record.company || 'N/A'}
 
-CUSTOMER DETAILS:
-------------------------------------------------------------
-- Name:             ${record.name}
-- Email:            ${record.email}
-- Phone:            ${record.phone}
-- Company/Org:      ${record.company || 'N/A'}
-- Project Location: ${record.location}
+Product / Activity: ${record.product}
+Form Source: ${record.formType}
 
-PROJECT / ACTIVITY INTEREST:
-------------------------------------------------------------
-- Product/Activity: ${record.product}
-
-MESSAGE / PROJECT REQUIREMENTS:
-------------------------------------------------------------
+Project Requirements:
 ${record.message || 'No additional message provided.'}
 
+Page URL: ${record.pageUrl || 'Direct'}
+Referrer: ${record.referrer || 'Direct'}
+
 ------------------------------------------------------------
-To respond directly to this customer, reply to this email or contact:
+To reply to customer:
 Phone/WhatsApp: ${record.phone}
 Email: ${record.email}
-
-Notification sent by Starline Adventures Website Backend.
 `;
 
   const htmlBody = `
@@ -797,6 +785,12 @@ async function handleSubmission(req, res, defaultFormType = 'Contact Form') {
       status: 'new'
     };
 
+    const fullRecord = {
+      ...enquiryRecord,
+      pageUrl: sanitizeInput(req.body.pageUrl || req.headers.referer || 'Website Direct'),
+      referrer: sanitizeInput(req.body.referrer || req.headers.referer || 'Direct')
+    };
+
     // 6. Save Permanently in Firestore
     if (db) {
       try {
@@ -810,12 +804,12 @@ async function handleSubmission(req, res, defaultFormType = 'Contact Form') {
     }
 
     // Also persist in server-side secure store
-    saveEnquirySecurely(enquiryRecord);
+    saveEnquirySecurely(fullRecord);
 
     // 7. Dispatch Notification Email
     let emailSent = false;
     try {
-      const emailStatus = await sendNotificationEmail(enquiryRecord);
+      const emailStatus = await sendNotificationEmail(fullRecord);
       emailSent = emailStatus.sent;
       if (emailSent) {
         console.log(`[Email Sent]: Dispatched ${formType} notification for [${enquiryId}]`);

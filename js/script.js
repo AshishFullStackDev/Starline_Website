@@ -756,33 +756,42 @@ function getURLParameter(param) {
     return div.innerHTML;
 }
 
-// Pre-fill product field from URL parameter
+// Pre-fill product field from URL parameter (Requirement #19)
 function preselectProductFromURL() {
     const productParam = getURLParameter('product');
     if (productParam) {
-        const productSelect = document.getElementById('product');
+        const productSelect = document.getElementById('contactProduct') ||
+                              document.getElementById('product') ||
+                              document.getElementById('quoteModalProduct') ||
+                              document.querySelector('select[name="product"]');
         if (productSelect) {
-            // Normalize the product name to match select options
-            const productMap = {
-                'zipline': 'zipline',
-                'zip line': 'zipline',
-                'rope': 'rope',
-                'rope course': 'rope',
-                'swing': 'swing',
-                'giant swing': 'swing',
-                'climbing': 'climbing',
-                'wall climbing': 'climbing',
-                'safety': 'safety',
-                'safety equipment': 'safety',
-                'custom': 'custom',
-                'custom solution': 'custom'
-            };
-            const normalizedProduct = productMap[productParam.toLowerCase()] || productParam;
-            productSelect.value = normalizedProduct;
-            // Scroll to product field to show pre-selection
+            const target = productParam.toLowerCase().trim();
+            let found = false;
+            for (let i = 0; i < productSelect.options.length; i++) {
+                const optVal = productSelect.options[i].value.toLowerCase().trim();
+                const optText = productSelect.options[i].text.toLowerCase().trim();
+                if (optVal === target || optText === target || optVal.includes(target) || target.includes(optVal)) {
+                    productSelect.selectedIndex = i;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                const newOpt = document.createElement('option');
+                newOpt.value = productParam;
+                newOpt.textContent = productParam;
+                newOpt.selected = true;
+                productSelect.appendChild(newOpt);
+            }
             setTimeout(() => {
                 productSelect.focus();
             }, 300);
+        }
+
+        const productInput = document.getElementById('detailEnquiryProduct') ||
+                             document.querySelector('input[name="product"]:not([type="hidden"])');
+        if (productInput) {
+            productInput.value = productParam;
         }
     }
 }
@@ -943,28 +952,59 @@ function showEnquirySuccessModal(info) {
     }, 120);
 }
 
+// Helper to get form fields by name or fallback IDs
+function getFormField(form, name, ...fallbackIds) {
+    if (form.elements && form.elements[name]) return form.elements[name];
+    for (const id of fallbackIds) {
+        const el = form.querySelector('#' + id);
+        if (el) return el;
+    }
+    return form.querySelector(`[name="${name}"]`);
+}
+
+function setFormStatus(statusEl, message, state) {
+    if (!statusEl) return;
+    if (state === 'clean') {
+        statusEl.innerHTML = '';
+        statusEl.className = 'form-status';
+        statusEl.style.display = 'none';
+        return;
+    }
+    statusEl.style.display = 'block';
+    statusEl.className = `form-status ${state}`;
+    statusEl.innerHTML = message;
+}
+
 // Main form submission handler - Send to Node.js server with validation, loading state, error handling, and confirmation modal
 function handleEnquiry(event) {
     event.preventDefault();
     
     const form = event.target;
-    const status = form.querySelector('.form-status');
-    const submitBtn = form.querySelector('button[type="submit"]');
-    
-    if (!status || !submitBtn) return;
+    const status = form.querySelector('.form-status') || document.getElementById('contactFormStatus');
+    const submitBtn = form.querySelector('button[type="submit"]') || form.querySelector('.submit-btn');
     
     // Prevent duplicate clicks
-    if (submitBtn.disabled) return;
+    if (submitBtn && submitBtn.disabled) return;
 
-    const nameInput = form.querySelector('#name');
-    const emailInput = form.querySelector('#email');
-    const phoneInput = form.querySelector('#phone');
-    const companyInput = form.querySelector('#company');
-    const locationInput = form.querySelector('#location');
-    const productInput = form.querySelector('#product');
-    const messageInput = form.querySelector('#message');
+    const nameInput = getFormField(form, 'name', 'contactName', 'detailEnquiryName', 'name');
+    const emailInput = getFormField(form, 'email', 'contactEmail', 'detailEnquiryEmail', 'email');
+    const phoneInput = getFormField(form, 'phone', 'contactPhone', 'detailEnquiryPhone', 'phone');
+    const companyInput = getFormField(form, 'company', 'contactCompany', 'company');
+    const locationInput = getFormField(form, 'location', 'contactLocation', 'detailEnquiryLocation', 'location');
+    const productInput = getFormField(form, 'product', 'contactProduct', 'detailEnquiryProduct', 'product');
+    const messageInput = getFormField(form, 'message', 'contactMessage', 'detailEnquiryMessage', 'message');
+    const formTypeInput = getFormField(form, 'formType');
 
-    // Collect and trim form data
+    // Honeypot check (Requirement #15)
+    const hpInput = form.querySelector('input[name="website_hp"], input.hp-field');
+    if (hpInput && hpInput.value) {
+        return;
+    }
+
+    let defaultFormType = 'Contact Form';
+    if (form.id === 'sidebarProductEnquiryForm') defaultFormType = 'Product Page RFQ';
+    else if (form.id === 'quoteModalForm') defaultFormType = 'Quick RFQ';
+
     const formData = {
         name: nameInput ? nameInput.value.trim() : '',
         email: emailInput ? emailInput.value.trim() : '',
@@ -973,57 +1013,66 @@ function handleEnquiry(event) {
         location: locationInput ? locationInput.value.trim() : '',
         product: productInput ? productInput.value.trim() : '',
         message: messageInput ? messageInput.value.trim() : '',
-        formType: 'Contact Form'
+        formType: (formTypeInput && formTypeInput.value) ? formTypeInput.value : defaultFormType,
+        pageUrl: window.location.href,
+        referrer: document.referrer || 'Direct'
     };
+
+    if (!formData.product) {
+        const pageTitle = document.querySelector('h1')?.textContent.trim();
+        formData.product = pageTitle || 'General Adventure Project Enquiry';
+    }
+
+    if (!formData.message) {
+        formData.message = `Project quote request for ${formData.product} at ${formData.location || 'India'}.`;
+    }
     
-    // Client-side Validation
-    if (!formData.name) {
-        status.className = 'form-status error';
-        status.textContent = '❌ Please enter your full name.';
+    // Client-side Validation (Requirement #14)
+    if (!formData.name || formData.name.length < 2) {
+        setFormStatus(status, '❌ Please enter your full name (minimum 2 characters).', 'error');
         nameInput?.focus();
         return;
     }
 
-    if (!formData.email || !formData.email.includes('@') || !formData.email.includes('.')) {
-        status.className = 'form-status error';
-        status.textContent = '❌ Please enter a valid email address (e.g. you@example.com).';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email || !emailRegex.test(formData.email)) {
+        setFormStatus(status, '❌ Please enter a valid email address (e.g. you@example.com).', 'error');
         emailInput?.focus();
         return;
     }
 
-    if (!formData.phone || formData.phone.length < 7) {
-        status.className = 'form-status error';
-        status.textContent = '❌ Please enter a valid contact phone number.';
+    const digitsOnly = formData.phone.replace(/[^\d]/g, '');
+    if (!formData.phone || digitsOnly.length < 8) {
+        setFormStatus(status, '❌ Please enter a valid contact phone number (minimum 8 digits).', 'error');
         phoneInput?.focus();
         return;
     }
 
-    if (!formData.location) {
-        status.className = 'form-status error';
-        status.textContent = '❌ Please enter your project location (City, State).';
+    if (!formData.location || formData.location.length < 2) {
+        setFormStatus(status, '❌ Please enter your project location (City, State).', 'error');
         locationInput?.focus();
         return;
     }
 
     if (!formData.product) {
-        status.className = 'form-status error';
-        status.textContent = '❌ Please select an activity or solution of interest.';
+        setFormStatus(status, '❌ Please select or enter an activity or solution of interest.', 'error');
         productInput?.focus();
         return;
     }
 
-    if (!formData.message) {
-        status.className = 'form-status error';
-        status.textContent = '❌ Please provide some details about your project requirements.';
+    if (!formData.message || formData.message.length < 5) {
+        setFormStatus(status, '❌ Please provide some details about your project requirements.', 'error');
         messageInput?.focus();
         return;
     }
 
-    // Show professional loading state & prevent duplicate submissions
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span> Sending Enquiry...';
-    status.className = 'form-status loading';
-    status.textContent = '⏳ Submitting your enquiry to our adventure engineering team...';
+    // Show professional loading state & prevent duplicate submissions (Requirement #16)
+    const originalBtnHtml = submitBtn ? submitBtn.innerHTML : 'Submit Enquiry';
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span> Submitting...';
+    }
+    setFormStatus(status, '⏳ Submitting your enquiry to our adventure engineering team...', 'loading');
     
     // API endpoint
     const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
@@ -1033,6 +1082,7 @@ function handleEnquiry(event) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json'
         },
         body: JSON.stringify(formData)
     })
@@ -1046,14 +1096,15 @@ function handleEnquiry(event) {
     })
     .then(data => {
         // SUCCESS: Restore button and clear inline loading indicator
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Send Enquiry <span aria-hidden="true">&#8594;</span>';
-        status.className = 'form-status';
-        status.textContent = '';
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
+        }
+        setFormStatus(status, '', 'clean');
         
         const enquiryId = data.enquiryId || data.id || ('SA-ENQ-' + Math.floor(100000 + Math.random() * 900000));
         
-        // Display the professional success confirmation modal popup
+        // Display the professional success confirmation modal popup (Requirement #12)
         showEnquirySuccessModal({
             id: enquiryId,
             name: formData.name,
@@ -1071,23 +1122,43 @@ function handleEnquiry(event) {
     })
     .catch(error => {
         console.error('Enquiry submission failure:', error);
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Send Enquiry <span aria-hidden="true">&#8594;</span>';
-        status.className = 'form-status error';
-        status.innerHTML = `❌ We could not submit your enquiry: <strong>${escapeHtmlString(error.message)}</strong>. Please check your information and try again, or contact us directly on WhatsApp/Phone.`;
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
+        }
+        // Failure Handling (Requirement #13)
+        if (status) {
+            status.style.display = 'block';
+            status.className = 'form-status error';
+            status.innerHTML = `
+                <div style="background: #fef2f2; border: 1.5px solid #f87171; border-radius: 8px; padding: 14px 16px; margin: 12px 0; color: #991b1b; text-align: left;">
+                    <p style="font-weight: 700; margin: 0 0 6px; font-size: 0.95rem;">⚠️ We couldn't submit your enquiry right now. Please try again or contact us directly on WhatsApp/phone.</p>
+                    <p style="font-size: 0.85rem; margin: 0 0 10px; color: #b91c1c;">${escapeHtmlString(error.message || 'Submission error')}</p>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <a href="tel:+919424904000" style="display: inline-flex; align-items: center; gap: 4px; background: #0284c7; color: #fff; padding: 7px 14px; border-radius: 6px; text-decoration: none; font-size: 0.84rem; font-weight: 700;">📞 Call Starline</a>
+                        <a href="https://wa.me/919424904000?text=${encodeURIComponent('Hello Starline Adventures, I was trying to submit an enquiry on your website regarding ' + (formData.product || 'an adventure project') + '. Please get in touch.')}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 4px; background: #25D366; color: #fff; padding: 7px 14px; border-radius: 6px; text-decoration: none; font-size: 0.84rem; font-weight: 700;">💬 WhatsApp Starline</a>
+                        <button type="button" class="btn-try-again" onclick="this.closest('form')?.querySelector('button[type=submit], .submit-btn')?.click()" style="background: #475569; color: #fff; border: 0; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 0.84rem; font-weight: 700;">🔄 Try Again</button>
+                    </div>
+                </div>
+            `;
+        }
     });
 }
 
-// Attach form submit listener
-const enquiryForm = document.querySelector('.enquiry-form, .enquiry-form-fs');
-if (enquiryForm) {
-    enquiryForm.addEventListener('submit', handleEnquiry);
-    // Pre-select product from URL parameter on page load
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', preselectProductFromURL);
-    } else {
-        preselectProductFromURL();
-    }
+// Attach form submit listeners to all enquiry forms on the page
+function initEnquiryForms() {
+    const forms = document.querySelectorAll('.enquiry-form, .enquiry-form-fs, #contactEnquiryForm, #sidebarProductEnquiryForm, #productEnquiryForm');
+    forms.forEach(form => {
+        form.removeEventListener('submit', handleEnquiry);
+        form.addEventListener('submit', handleEnquiry);
+    });
+    preselectProductFromURL();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initEnquiryForms);
+} else {
+    initEnquiryForms();
 }
 
 // Smooth scroll for navigation
@@ -1352,23 +1423,33 @@ if (document.readyState === 'loading') {
     createScrollProgressBar();
 }
 
-// ===== CURRENT PAGE HIGHLIGHT IN NAV =====
+// ===== CURRENT PAGE HIGHLIGHT IN NAV (Requirement #6) =====
 function updateNavActiveStates() {
-    let currentLocation = location.pathname.split('/').pop() || 'index.html';
-    if (!currentLocation || currentLocation === '') {
-        currentLocation = 'index.html';
+    const path = window.location.pathname;
+    const isProductDetailPage = path.includes('/product/');
+    let fileName = path.split('/').pop() || 'index.html';
+    if (!fileName || fileName === '') {
+        fileName = 'index.html';
     }
 
     const directNavLinks = document.querySelectorAll('.nav-menu > a');
     const navDropdownButtons = document.querySelectorAll('.nav-dropdown-toggle');
-    const currentHash = window.location.hash;
     
     // Check direct nav links
     directNavLinks.forEach(link => {
         if (link.classList.contains('nav-cta-btn')) return;
         const href = (link.getAttribute('href') || '').split('#')[0];
-        const isMatch = href === currentLocation || 
-            (currentLocation === 'index.html' && href === 'index.html');
+        const hrefFile = href.split('/').pop() || 'index.html';
+
+        let isMatch = false;
+        if (isProductDetailPage) {
+            // Requirement #6: /product/*.html -> Products active
+            isMatch = (hrefFile === 'products.html');
+        } else if (fileName === 'index.html') {
+            isMatch = (hrefFile === 'index.html' || href === '/' || href === '');
+        } else {
+            isMatch = (hrefFile === fileName);
+        }
 
         if (isMatch) {
             link.classList.add('active', 'current-page');
@@ -1379,56 +1460,41 @@ function updateNavActiveStates() {
         }
     });
     
-    // Check dropdown menus for current page and highlight button + active items
+    // Check Projects dropdown
+    const isProjectsActive = (fileName === 'portfolio.html' || fileName === 'gallery.html' || fileName === 'project-details.html');
     navDropdownButtons.forEach(button => {
         const dropdown = button.closest('.nav-dropdown');
         const dropdownMenu = button.nextElementSibling || dropdown?.querySelector('.nav-dropdown-menu');
-        const controls = button.getAttribute('aria-controls') || '';
-        const isProductsBtn = controls === 'products-navigation';
-        const isPortfolioBtn = controls === 'portfolio-navigation';
 
         if (dropdownMenu) {
             const links = dropdownMenu.querySelectorAll('a');
-            let hasActiveChild = false;
-
             links.forEach(link => {
                 const rawHref = link.getAttribute('href') || '';
-                const hrefFile = rawHref.split('#')[0] || 'index.html';
-                const hrefHash = rawHref.includes('#') ? '#' + rawHref.split('#')[1] : '';
+                const hrefFile = rawHref.split('/').pop().split('#')[0];
 
-                let isMatch = false;
-                if (isProductsBtn) {
-                    if (currentLocation === 'products.html') {
-                        if (currentHash) {
-                            isMatch = (hrefHash === currentHash);
-                        } else {
-                            isMatch = false;
-                        }
-                    }
-                } else if (isPortfolioBtn) {
-                    isMatch = hrefFile === currentLocation || (currentLocation === 'project-details.html' && hrefFile === 'portfolio.html');
+                let isChildMatch = false;
+                if (fileName === 'gallery.html' && hrefFile === 'gallery.html') {
+                    isChildMatch = true;
+                } else if ((fileName === 'portfolio.html' || fileName === 'project-details.html') && hrefFile === 'portfolio.html') {
+                    isChildMatch = true;
                 }
 
-                if (isMatch) {
+                if (isChildMatch) {
                     link.classList.add('active', 'current-page');
                     link.setAttribute('aria-current', 'page');
-                    hasActiveChild = true;
                 } else {
                     link.classList.remove('active', 'current-page');
                     link.removeAttribute('aria-current');
                 }
             });
+        }
 
-            const isPageActive = (isProductsBtn && (currentLocation === 'products.html' || currentLocation.startsWith('product/') || currentLocation.includes('/product/'))) ||
-                                 (isPortfolioBtn && (currentLocation === 'portfolio.html' || currentLocation === 'project-details.html' || currentLocation === 'gallery.html'));
-
-            if (hasActiveChild || isPageActive) {
-                button.classList.add('active', 'current-page');
-                dropdown?.classList.add('active');
-            } else {
-                button.classList.remove('active', 'current-page');
-                dropdown?.classList.remove('active');
-            }
+        if (isProjectsActive) {
+            button.classList.add('active', 'current-page');
+            dropdown?.classList.add('active');
+        } else {
+            button.classList.remove('active', 'current-page');
+            dropdown?.classList.remove('active');
         }
     });
 }
@@ -1448,9 +1514,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const button = form.querySelector('button[type="submit"]');
             const originalText = button.textContent;
             
-            // Validate email
+            // Validate email without window.alert
             if (!email || !email.includes('@')) {
-                alert('Please enter a valid email address');
+                if (button) {
+                    button.textContent = '⚠️ Invalid email';
+                    setTimeout(() => { button.textContent = originalText; }, 2500);
+                }
                 return;
             }
             
@@ -1458,16 +1527,10 @@ document.addEventListener('DOMContentLoaded', () => {
             button.disabled = true;
             button.textContent = 'Subscribing...';
             
-            // Simulate API call (you can replace with actual API endpoint)
             setTimeout(() => {
-                // Show success message
                 button.textContent = '✅ Subscribed!';
                 button.style.background = '#4caf50';
-                
-                // Reset form
                 form.reset();
-                
-                // Reset button after 3 seconds
                 setTimeout(() => {
                     button.disabled = false;
                     button.textContent = originalText;
@@ -1497,6 +1560,7 @@ function createQuoteModal() {
 
             <div class="quote-modal-body">
                 <form id="quoteModalForm" class="quote-modal-form" novalidate>
+                    <input type="hidden" name="formType" value="Quick RFQ">
                     <div class="quote-form-grid">
                         <div class="quote-field-group">
                             <label for="quoteModalName">Name <span class="quote-required">*</span></label>
@@ -1535,9 +1599,43 @@ function createQuoteModal() {
                             <div class="quote-input-wrap">
                                 <span class="quote-input-icon" aria-hidden="true">🎯</span>
                                 <select id="quoteModalProduct" name="product" required>
-                                    <option value="" disabled selected>Select Requirement *</option>
-                                    <option value="Adventure Rides & Equipment">Adventure Rides &amp; Equipment</option>
+                                    <option value="" disabled selected>Select Product / Solution *</option>
+                                    <option value="Rocket Ejection">Rocket Ejection</option>
+                                    <option value="Giant Swing">Giant Swing</option>
+                                    <option value="4 in 1 Bungee Jumping">4 in 1 Bungee Jumping</option>
+                                    <option value="Zip Line">Zip Line</option>
+                                    <option value="Zip Bike / Sky Cycle">Zip Bike / Sky Cycle</option>
+                                    <option value="Sky Roller">Sky Roller</option>
+                                    <option value="Wall Climbing">Wall Climbing</option>
+                                    <option value="Net Climbing">Net Climbing</option>
+                                    <option value="Ninja Rope Courses">Ninja Rope Courses</option>
+                                    <option value="Multi Activity Tower">Multi Activity Tower</option>
+                                    <option value="Glass Bridge">Glass Bridge</option>
+                                    <option value="Suspension Bridge">Suspension Bridge</option>
+                                    <option value="Human Gyro Ride">Human Gyro Ride</option>
+                                    <option value="360 Degree Cycle">360 Degree Cycle</option>
+                                    <option value="Mechanical Bull Ride">Mechanical Bull Ride</option>
+                                    <option value="Rifle Shooting Range">Rifle Shooting Range</option>
+                                    <option value="Archery Range">Archery Range</option>
+                                    <option value="Trampoline Park">Trampoline Park</option>
+                                    <option value="Open Gym Equipment">Open Gym Equipment</option>
+                                    <option value="Climbing Wall Equipment">Climbing Wall Equipment</option>
+                                    <option value="Rope Course Equipment">Rope Course Equipment</option>
+                                    <option value="Safety Nets">Safety Nets</option>
+                                    <option value="Safety Harness & Belts">Safety Harness &amp; Belts</option>
+                                    <option value="Zipline Equipment">Zipline Equipment</option>
+                                    <option value="Climbing Ropes & Carabiners">Climbing Ropes &amp; Carabiners</option>
+                                    <option value="Climbing Holds & Wall Panels">Climbing Holds &amp; Wall Panels</option>
+                                    <option value="Rope Course Platforms & Obstacles">Rope Course Platforms &amp; Obstacles</option>
+                                    <option value="Adventure Park Platforms">Adventure Park Platforms</option>
+                                    <option value="Cargo Nets & Net Bridges">Cargo Nets &amp; Net Bridges</option>
+                                    <option value="Tyre Balance Obstacles">Tyre Balance Obstacles</option>
+                                    <option value="Adventure Park Ladders & Bridges">Adventure Park Ladders &amp; Bridges</option>
+                                    <option value="Safety Helmets & Fall-Arrest Systems">Safety Helmets &amp; Fall-Arrest Systems</option>
+                                    <option value="Steel Cables, Anchors & Rigging Equipment">Steel Cables, Anchors &amp; Rigging Equipment</option>
                                     <option value="Turnkey Adventure Park Setup">Turnkey Adventure Park Setup</option>
+                                    <option value="Adventure Rides & Equipment">Adventure Rides &amp; Equipment</option>
+                                    <option value="Custom Engineering / Other">Custom Engineering / Other</option>
                                 </select>
                             </div>
                         </div>
@@ -1609,24 +1707,27 @@ function openQuoteModal(productName) {
         submitBtn.innerHTML = 'REQUEST A QUOTE <span aria-hidden="true">&rarr;</span>';
     }
 
-    // Preselect product if specified
+    // Preselect product if specified (Requirement #19)
     if (productName) {
         const productSelect = document.getElementById('quoteModalProduct');
         if (productSelect) {
-            const cleanTarget = productName.toLowerCase();
+            const cleanTarget = String(productName).toLowerCase().trim();
             let matched = false;
             for (let i = 0; i < productSelect.options.length; i++) {
-                const optText = productSelect.options[i].text.toLowerCase();
-                const optVal = productSelect.options[i].value.toLowerCase();
-                if (optText.includes(cleanTarget) || cleanTarget.includes(optVal) || optVal.includes(cleanTarget)) {
+                const optText = productSelect.options[i].text.toLowerCase().trim();
+                const optVal = productSelect.options[i].value.toLowerCase().trim();
+                if (optText === cleanTarget || optVal === cleanTarget || optText.includes(cleanTarget) || cleanTarget.includes(optText)) {
                     productSelect.selectedIndex = i;
                     matched = true;
                     break;
                 }
             }
             if (!matched) {
-                // If not in standard list, set to Custom Engineering
-                productSelect.value = "Custom Engineering / Other";
+                const newOpt = document.createElement('option');
+                newOpt.value = productName;
+                newOpt.textContent = productName;
+                newOpt.selected = true;
+                productSelect.appendChild(newOpt);
             }
         }
     }
@@ -1642,6 +1743,10 @@ function openQuoteModal(productName) {
         if (nameInput) nameInput.focus();
     }, 100);
 }
+
+// Global modal triggers and aliases (Requirement #29)
+window.openProductEnquiryModal = openQuoteModal;
+window.openQuoteModal = openQuoteModal;
 
 function closeQuoteModal() {
     const modal = document.getElementById('quoteModal');
