@@ -2,7 +2,7 @@
  * STARLINE ADVENTURES - PRODUCTS CATALOGUE MODULE
  * Contains 33 verified products (18 Activities, 15 Equipment).
  * Images are assigned only when strictly matching. Otherwise empty for user upload.
- * Clicking "View Info" opens the dedicated product details page (product-details.html?product=id).
+ * Clicking "View Info" opens the dedicated product details page (/product/<slug>.html).
  */
 
 const STARLINE_PRODUCTS = [
@@ -542,8 +542,57 @@ const PRODUCT_CLEAN_SLUGS = {
 function getProductCleanUrl(productId) {
     if (!productId) return '/products.html';
     const key = String(productId).toLowerCase().trim();
-    const slug = PRODUCT_CLEAN_SLUGS[key] || key;
-    return `/${slug}/`;
+    const slugMap = {
+        'zip-line': 'zipline',
+        'zipline': 'zipline',
+        'giant-swing': 'giant-swing',
+        'suspension-bridge': 'suspension-bridge',
+        'wall-climbing': 'climbing-wall',
+        'climbing-wall': 'climbing-wall',
+        'zip-bike-sky-cycle': 'sky-cycling',
+        'sky-cycling': 'sky-cycling',
+        'sky-cycle': 'sky-cycling',
+        'trampoline': 'trampoline-park',
+        'trampoline-park': 'trampoline-park',
+        '4-in-1-bungee-jumping': 'bungee-jumping',
+        'bungee-jumping': 'bungee-jumping',
+        'human-gyro': 'human-gyro-ride',
+        'human-gyro-ride': 'human-gyro-ride',
+        'rocket-ejection': 'rocket-ejection',
+        'sky-roller': 'sky-roller-ride',
+        'sky-roller-ride': 'sky-roller-ride',
+        'net-climbing': 'net-climbing',
+        'ninja-rope-courses': 'rope-course',
+        'rope-course': 'rope-course',
+        'multi-activity-tower': 'multi-activity-tower',
+        'glass-bridge': 'glass-bridge',
+        '360-degree-cycle': '360-degree-cycle',
+        'bull-ride': 'mechanical-bull-ride',
+        'mechanical-bull-ride': 'mechanical-bull-ride',
+        'rifle-shooting': 'rifle-shooting-range',
+        'rifle-shooting-range': 'rifle-shooting-range',
+        'archery': 'archery-range',
+        'archery-range': 'archery-range',
+        'open-gym-equipment': 'open-gym-equipment',
+        'climbing-wall-equipment': 'climbing-wall-equipment',
+        'rope-course-equipment': 'rope-course-equipment',
+        'safety-nets': 'safety-nets',
+        'adventure-safety-nets': 'safety-nets',
+        'safety-harness-belts': 'safety-harness-belts',
+        'adventure-safety-harness': 'safety-harness-belts',
+        'zipline-equipment': 'zipline-equipment',
+        'climbing-ropes-carabiners': 'climbing-ropes-carabiners',
+        'climbing-holds-wall-panels': 'climbing-holds-wall-panels',
+        'rope-course-platforms-obstacles': 'rope-course-platforms-obstacles',
+        'adventure-park-platforms': 'adventure-park-platforms',
+        'cargo-nets-net-bridges': 'cargo-nets-net-bridges',
+        'tyre-balance-obstacles': 'tyre-balance-obstacles',
+        'adventure-park-ladders-bridges': 'adventure-park-ladders-bridges',
+        'safety-helmets-fall-arrest-systems': 'safety-helmets-fall-arrest-systems',
+        'steel-cables-anchors-rigging-equipment': 'steel-cables-anchors-rigging-equipment'
+    };
+    const slug = slugMap[key] || key;
+    return '/product/' + slug + '.html';
 }
 
 // Curated 8 core items for homepage display representing core manufacturing and installation

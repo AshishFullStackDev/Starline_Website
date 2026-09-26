@@ -1419,7 +1419,7 @@ function updateNavActiveStates() {
                 }
             });
 
-            const isPageActive = (isProductsBtn && (currentLocation === 'products.html' || currentLocation === 'product-details.html')) ||
+            const isPageActive = (isProductsBtn && (currentLocation === 'products.html' || currentLocation.startsWith('product/') || currentLocation.includes('/product/'))) ||
                                  (isPortfolioBtn && (currentLocation === 'portfolio.html' || currentLocation === 'project-details.html' || currentLocation === 'gallery.html'));
 
             if (hasActiveChild || isPageActive) {

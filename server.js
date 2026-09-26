@@ -1249,57 +1249,132 @@ const ALLOWED_PAGES = new Set([
   'thank-you'
 ]);
 
-// SEO Clean URL Product Redirects Map (Old query URLs & aliases -> Final Canonical SEO URLs)
-const SEO_REDIRECTS_MAP = {
-  'giant-swing': 'giant-swing-manufacturer',
-  'zipline': 'zipline-manufacturer',
-  'zip-line': 'zipline-manufacturer',
-  'rocket-ejection': 'rocket-ejection-ride-manufacturer',
-  'glass-bridge': 'glass-bridge-manufacturer',
-  'rope-course': 'rope-course-manufacturer',
-  'ninja-rope-courses': 'rope-course-manufacturer',
-  'climbing-wall': 'climbing-wall-manufacturer',
-  'wall-climbing': 'climbing-wall-manufacturer',
-  'sky-cycling': 'sky-cycling-manufacturer',
-  'zip-bike-sky-cycle': 'sky-cycling-manufacturer',
-  'sky-cycle': 'sky-cycling-manufacturer',
-  'sky-roller': 'sky-roller-ride-manufacturer',
-  'human-gyro': 'human-gyro-ride-manufacturer',
-  'multi-activity-tower': 'multi-activity-tower-manufacturer',
-  'tower': 'multi-activity-tower-manufacturer',
-  'suspension-bridge': 'suspension-bridge-manufacturer',
-  '360-degree-cycle': '360-degree-cycle-manufacturer',
-  'bull-ride': 'mechanical-bull-ride-manufacturer',
-  '4-in-1-bungee-jumping': 'bungee-jumping-setup-manufacturer',
-  'bungee-jumping': 'bungee-jumping-setup-manufacturer',
-  'net-climbing': 'net-climbing-manufacturer',
-  'rifle-shooting': 'rifle-shooting-range-setup',
-  'archery': 'archery-range-setup',
-  'trampoline': 'trampoline-park-manufacturer',
-  'open-gym-equipment': 'open-gym-equipment-manufacturer',
-  'climbing-wall-equipment': 'climbing-wall-equipment-manufacturer',
-  'rope-course-equipment': 'rope-course-equipment-manufacturer',
-  'safety-nets': 'adventure-safety-nets-manufacturer',
-  'safety-harness-belts': 'adventure-safety-harness-manufacturer',
-  'zipline-equipment': 'zipline-equipment-manufacturer',
-  'climbing-ropes-carabiners': 'climbing-ropes-carabiners-supplier',
-  'climbing-holds-wall-panels': 'climbing-holds-wall-panels-manufacturer',
-  'rope-course-platforms-obstacles': 'rope-course-platforms-obstacles-manufacturer',
-  'adventure-park-platforms': 'adventure-park-platforms-manufacturer',
-  'cargo-nets-net-bridges': 'cargo-nets-net-bridges-manufacturer',
-  'tyre-balance-obstacles': 'tyre-balance-obstacles-manufacturer',
-  'adventure-park-ladders-bridges': 'adventure-park-ladders-bridges-manufacturer',
+// Map of all legacy clean URLs, aliases, and IDs to the new /product/<slug>.html destination
+const OLD_PRODUCT_MAP = {
+  'zipline-manufacturer': 'zipline',
+  'zipline': 'zipline',
+  'zip-line': 'zipline',
+  'giant-swing-manufacturer': 'giant-swing',
+  'giant-swing': 'giant-swing',
+  'suspension-bridge-manufacturer': 'suspension-bridge',
+  'suspension-bridge': 'suspension-bridge',
+  'climbing-wall-manufacturer': 'climbing-wall',
+  'climbing-wall': 'climbing-wall',
+  'wall-climbing': 'climbing-wall',
+  'sky-cycling-manufacturer': 'sky-cycling',
+  'sky-cycling': 'sky-cycling',
+  'zip-bike-sky-cycle': 'sky-cycling',
+  'sky-cycle': 'sky-cycling',
+  'trampoline-park-manufacturer': 'trampoline-park',
+  'trampoline': 'trampoline-park',
+  'trampoline-park': 'trampoline-park',
+  'bungee-jumping-setup-manufacturer': 'bungee-jumping',
+  'bungee-jumping': 'bungee-jumping',
+  '4-in-1-bungee-jumping': 'bungee-jumping',
+  'human-gyro-ride-manufacturer': 'human-gyro-ride',
+  'human-gyro-ride': 'human-gyro-ride',
+  'human-gyro': 'human-gyro-ride',
+  'rocket-ejection-ride-manufacturer': 'rocket-ejection',
+  'rocket-ejection': 'rocket-ejection',
+  'rocket-ejection-ride': 'rocket-ejection',
+  'sky-roller-ride-manufacturer': 'sky-roller-ride',
+  'sky-roller': 'sky-roller-ride',
+  'sky-roller-ride': 'sky-roller-ride',
+  'net-climbing-manufacturer': 'net-climbing',
+  'net-climbing': 'net-climbing',
+  'rope-course-manufacturer': 'rope-course',
+  'rope-course': 'rope-course',
+  'ninja-rope-courses': 'rope-course',
+  'multi-activity-tower-manufacturer': 'multi-activity-tower',
+  'multi-activity-tower': 'multi-activity-tower',
+  'tower': 'multi-activity-tower',
+  'glass-bridge-manufacturer': 'glass-bridge',
+  'glass-bridge': 'glass-bridge',
+  '360-degree-cycle-manufacturer': '360-degree-cycle',
+  '360-degree-cycle': '360-degree-cycle',
+  'mechanical-bull-ride-manufacturer': 'mechanical-bull-ride',
+  'mechanical-bull-ride': 'mechanical-bull-ride',
+  'bull-ride': 'mechanical-bull-ride',
+  'rifle-shooting-range-setup': 'rifle-shooting-range',
+  'rifle-shooting': 'rifle-shooting-range',
+  'rifle-shooting-range': 'rifle-shooting-range',
+  'archery-range-setup': 'archery-range',
+  'archery': 'archery-range',
+  'archery-range': 'archery-range',
+  'open-gym-equipment-manufacturer': 'open-gym-equipment',
+  'open-gym-equipment': 'open-gym-equipment',
+  'climbing-wall-equipment-manufacturer': 'climbing-wall-equipment',
+  'climbing-wall-equipment': 'climbing-wall-equipment',
+  'rope-course-equipment-manufacturer': 'rope-course-equipment',
+  'rope-course-equipment': 'rope-course-equipment',
+  'adventure-safety-nets-manufacturer': 'safety-nets',
+  'safety-nets': 'safety-nets',
+  'adventure-safety-nets': 'safety-nets',
+  'adventure-safety-harness-manufacturer': 'safety-harness-belts',
+  'safety-harness-belts': 'safety-harness-belts',
+  'adventure-safety-harness': 'safety-harness-belts',
+  'zipline-equipment-manufacturer': 'zipline-equipment',
+  'zipline-equipment': 'zipline-equipment',
+  'climbing-ropes-carabiners-supplier': 'climbing-ropes-carabiners',
+  'climbing-ropes-carabiners': 'climbing-ropes-carabiners',
+  'climbing-holds-wall-panels-manufacturer': 'climbing-holds-wall-panels',
+  'climbing-holds-wall-panels': 'climbing-holds-wall-panels',
+  'rope-course-platforms-obstacles-manufacturer': 'rope-course-platforms-obstacles',
+  'rope-course-platforms-obstacles': 'rope-course-platforms-obstacles',
+  'adventure-park-platforms-manufacturer': 'adventure-park-platforms',
+  'adventure-park-platforms': 'adventure-park-platforms',
+  'cargo-nets-net-bridges-manufacturer': 'cargo-nets-net-bridges',
+  'cargo-nets-net-bridges': 'cargo-nets-net-bridges',
+  'tyre-balance-obstacles-manufacturer': 'tyre-balance-obstacles',
+  'tyre-balance-obstacles': 'tyre-balance-obstacles',
+  'adventure-park-ladders-bridges-manufacturer': 'adventure-park-ladders-bridges',
+  'adventure-park-ladders-bridges': 'adventure-park-ladders-bridges',
   'safety-helmets-fall-arrest-systems': 'safety-helmets-fall-arrest-systems',
   'steel-cables-anchors-rigging-equipment': 'steel-cables-anchors-rigging-equipment'
 };
 
-// 1. 301 Permanent Redirects for legacy product-details URLs
-app.get(['/product-details.html', '/product-details'], (req, res) => {
-  const productKey = (req.query.product || '').toLowerCase().trim();
-  if (productKey && SEO_REDIRECTS_MAP[productKey]) {
-    return res.redirect(301, `/${SEO_REDIRECTS_MAP[productKey]}/`);
+// 1. Static serving and routing for /product/:file.html
+app.get('/product/:file.html', (req, res, next) => {
+  const fileName = (req.params.file || '').toLowerCase().trim();
+  const targetSlug = OLD_PRODUCT_MAP[fileName] || fileName;
+  if (targetSlug !== fileName) {
+    return res.redirect(301, `/product/${targetSlug}.html`);
   }
-  // Default redirect to products catalog if no query provided
+  const filePath = path.join(__dirname, 'product', `${targetSlug}.html`);
+  if (fs.existsSync(filePath)) {
+    return res.sendFile(filePath);
+  }
+  next();
+});
+
+// Redirect /product/:slug or /product/:slug/ to /product/:slug.html
+app.get('/product/:slug', (req, res, next) => {
+  const raw = (req.params.slug || '').toLowerCase().trim();
+  if (raw.endsWith('.html')) return next();
+  const targetSlug = OLD_PRODUCT_MAP[raw] || raw;
+  const filePath = path.join(__dirname, 'product', `${targetSlug}.html`);
+  if (fs.existsSync(filePath)) {
+    return res.redirect(301, `/product/${targetSlug}.html`);
+  }
+  next();
+});
+
+app.get('/product/:slug/', (req, res, next) => {
+  const raw = (req.params.slug || '').toLowerCase().trim();
+  const targetSlug = OLD_PRODUCT_MAP[raw] || raw;
+  const filePath = path.join(__dirname, 'product', `${targetSlug}.html`);
+  if (fs.existsSync(filePath)) {
+    return res.redirect(301, `/product/${targetSlug}.html`);
+  }
+  next();
+});
+
+// 2. 301 Permanent Redirects for legacy product-details URLs
+app.get(['/product-details.html', '/product-details'], (req, res) => {
+  const productKey = (req.query.product || req.query.id || '').toLowerCase().trim();
+  if (productKey && OLD_PRODUCT_MAP[productKey]) {
+    return res.redirect(301, `/product/${OLD_PRODUCT_MAP[productKey]}.html`);
+  }
   return res.redirect(301, '/products.html');
 });
 
@@ -1319,44 +1394,24 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Clean SEO Product URLs handling (supports both /slug/ and /slug with 301 redirect to canonical trailing slash)
+// 3. Clean 301 redirects from old directory URLs (e.g. /zipline-manufacturer/ -> /product/zipline.html)
 app.get('/:productSlug', (req, res, next) => {
   const rawParam = req.params.productSlug || '';
   const slug = rawParam.toLowerCase().trim();
 
-  // If this matches an alias, 301 redirect to final canonical URL
-  if (SEO_REDIRECTS_MAP[slug] && SEO_REDIRECTS_MAP[slug] !== slug) {
-    return res.redirect(301, `/${SEO_REDIRECTS_MAP[slug]}/`);
-  }
-
-  const targetDir = path.resolve(__dirname, slug);
-  const targetFile = path.resolve(targetDir, 'index.html');
-
-  if (targetFile.startsWith(__dirname + path.sep) && fs.existsSync(targetFile)) {
-    // If request URL does not end with trailing slash, 301 redirect to canonical trailing slash URL
-    if (!req.path.endsWith('/')) {
-      return res.redirect(301, `/${slug}/`);
-    }
-    return res.sendFile(targetFile);
+  if (OLD_PRODUCT_MAP[slug]) {
+    return res.redirect(301, `/product/${OLD_PRODUCT_MAP[slug]}.html`);
   }
 
   next();
 });
 
-// Clean SEO Product URLs with trailing slash
 app.get('/:productSlug/', (req, res, next) => {
   const rawParam = req.params.productSlug || '';
   const slug = rawParam.toLowerCase().trim();
 
-  if (SEO_REDIRECTS_MAP[slug] && SEO_REDIRECTS_MAP[slug] !== slug) {
-    return res.redirect(301, `/${SEO_REDIRECTS_MAP[slug]}/`);
-  }
-
-  const targetDir = path.resolve(__dirname, slug);
-  const targetFile = path.resolve(targetDir, 'index.html');
-
-  if (targetFile.startsWith(__dirname + path.sep) && fs.existsSync(targetFile)) {
-    return res.sendFile(targetFile);
+  if (OLD_PRODUCT_MAP[slug]) {
+    return res.redirect(301, `/product/${OLD_PRODUCT_MAP[slug]}.html`);
   }
 
   next();
