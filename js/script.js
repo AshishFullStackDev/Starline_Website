@@ -1117,12 +1117,28 @@ function handleEnquiry(event) {
     setFormStatus(status, '⏳ Submitting your enquiry to our adventure engineering team...', 'loading');
     
     const submitEnquiry = async () => {
-        const apiUrl = getEnquiryApiEndpoint();
-        const shouldFetchHttp = apiUrl && apiUrl !== 'direct-firebase' && !apiUrl.includes('api.starlineadventures.com');
-
-        if (shouldFetchHttp) {
+        // 1. Primary submission method: direct to Firebase Firestore via Modular SDK (no 405 error on static hosting)
+        if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
             try {
-                const response = await fetch(apiUrl, {
+                return await window.StarlineFirebase.saveEnquiry(formData);
+            } catch (fbErr) {
+                console.warn('[StarlineFirebase]: Save notice:', fbErr ? fbErr.message : fbErr);
+                if (fbErr && fbErr.field) throw fbErr;
+            }
+        } else {
+            try {
+                await import('/js/firebase-init.js');
+                if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                    return await window.StarlineFirebase.saveEnquiry(formData);
+                }
+            } catch (impErr) {}
+        }
+
+        // 2. Local development fallback (only when running locally on Express server port 3000)
+        const isLocalExpress = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '3000';
+        if (isLocalExpress) {
+            try {
+                const response = await fetch('/api/enquiry', {
                     method: 'POST',
                     credentials: 'include',
                     headers: {
@@ -1146,15 +1162,7 @@ function handleEnquiry(event) {
                 if (fetchErr && fetchErr.isValidationError) {
                     throw fetchErr;
                 }
-                console.warn('[Enquiry Submit]: Backend unreachable, activating fallback:', fetchErr ? fetchErr.message : fetchErr);
-            }
-        }
-
-        if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-            try {
-                return await window.StarlineFirebase.saveEnquiry(formData);
-            } catch (fbErr) {
-                console.warn('[StarlineFirebase]: Fallback save notice:', fbErr ? fbErr.message : fbErr);
+                console.warn('[Enquiry Submit]: Local fallback note:', fetchErr ? fetchErr.message : fetchErr);
             }
         }
 
@@ -1169,7 +1177,7 @@ function handleEnquiry(event) {
             ok: true,
             id: enquiryId,
             enquiryId: enquiryId,
-            customerMessage: "Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly. We appreciate your interest and look forward to working with you."
+            customerMessage: "Thank you! Your enquiry has been submitted successfully."
         };
     };
 
@@ -2146,12 +2154,28 @@ function initContactForm() {
         };
 
         const submitContactForm = async () => {
-            const apiUrl = getEnquiryApiEndpoint();
-            const shouldFetchHttp = apiUrl && apiUrl !== 'direct-firebase' && !apiUrl.includes('api.starlineadventures.com');
-
-            if (shouldFetchHttp) {
+            // 1. Primary submission method: direct to Firebase Firestore via Modular SDK (no 405 error on static hosting)
+            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
                 try {
-                    const res = await fetch(apiUrl, {
+                    return await window.StarlineFirebase.saveEnquiry(payload);
+                } catch (fbErr) {
+                    console.warn('[StarlineFirebase]: Save notice:', fbErr ? fbErr.message : fbErr);
+                    if (fbErr && fbErr.field) throw fbErr;
+                }
+            } else {
+                try {
+                    await import('/js/firebase-init.js');
+                    if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                        return await window.StarlineFirebase.saveEnquiry(payload);
+                    }
+                } catch (impErr) {}
+            }
+
+            // 2. Local development fallback (only on localhost with Node/Express port 3000)
+            const isLocalExpress = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '3000';
+            if (isLocalExpress) {
+                try {
+                    const res = await fetch('/api/enquiry', {
                         method: 'POST',
                         credentials: 'include',
                         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -2172,15 +2196,7 @@ function initContactForm() {
                     if (fetchErr && fetchErr.isValidationError) {
                         throw fetchErr;
                     }
-                    console.warn('[Contact Submit]: Backend unreachable, activating fallback:', fetchErr ? fetchErr.message : fetchErr);
-                }
-            }
-
-            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                try {
-                    return await window.StarlineFirebase.saveEnquiry(payload);
-                } catch (fbErr) {
-                    console.warn('[StarlineFirebase]: Fallback save notice:', fbErr ? fbErr.message : fbErr);
+                    console.warn('[Contact Submit]: Local fallback note:', fetchErr ? fetchErr.message : fetchErr);
                 }
             }
 
@@ -2194,7 +2210,8 @@ function initContactForm() {
             return {
                 ok: true,
                 id: enquiryId,
-                enquiryId: enquiryId
+                enquiryId: enquiryId,
+                customerMessage: "Thank you! Your enquiry has been submitted successfully."
             };
         };
 

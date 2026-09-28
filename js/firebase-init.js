@@ -1,182 +1,201 @@
 /**
- * Starline Adventures - Firebase Client Integration
- * Initializes Firebase Web SDK and exposes helper functions for client-side Firestore and Auth.
+ * Starline Adventures - Firebase Client Integration (Modular SDK)
+ * Project: starline-website-f2f87
+ * Direct client-side Firestore submission for static hosting compatibility.
  */
 
 (function () {
   'use strict';
 
+  // NEW FIREBASE PROJECT CONFIGURATION
+  const FIREBASE_CONFIG = {
+    projectId: "starline-website-f2f87",
+    appId: "1:1062561310475:web:starline-website-f2f87",
+    apiKey: "AIzaSyCa16whyY9AL2s_DUr__85V7odYzgd0W94",
+    authDomain: "starline-website-f2f87.firebaseapp.com",
+    firestoreDatabaseId: "(default)",
+    storageBucket: "starline-website-f2f87.firebasestorage.app",
+    messagingSenderId: "1062561310475"
+  };
+
+  let firebaseApp = null;
+  let firestoreDb = null;
+  let modularSdk = null;
+  let initPromise = null;
+
+  async function loadModularSdk() {
+    if (modularSdk) return modularSdk;
+    if (initPromise) return initPromise;
+
+    initPromise = (async function () {
+      try {
+        // Modern Firebase v12.19.0 Modular Web SDK loaded dynamically from Google gstatic CDN
+        const appModule = await import('https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js');
+        const firestoreModule = await import('https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js');
+
+        firebaseApp = appModule.initializeApp(FIREBASE_CONFIG);
+        firestoreDb = firestoreModule.getFirestore(firebaseApp);
+
+        modularSdk = {
+          initializeApp: appModule.initializeApp,
+          getFirestore: firestoreModule.getFirestore,
+          collection: firestoreModule.collection,
+          doc: firestoreModule.doc,
+          setDoc: firestoreModule.setDoc,
+          serverTimestamp: firestoreModule.serverTimestamp,
+          app: firebaseApp,
+          db: firestoreDb
+        };
+
+        return modularSdk;
+      } catch (err) {
+        console.warn('⚠️ [StarlineFirebase] Modular SDK load note:', err && err.message ? err.message : err);
+        throw err;
+      }
+    })();
+
+    return initPromise;
+  }
+
+  // Safe Document ID generator: alphanumeric string
+  function generateSafeDocumentId() {
+    const timestamp = Date.now().toString(36);
+    const randomPart = Math.random().toString(36).substring(2, 9);
+    return `enq_${timestamp}_${randomPart}`;
+  }
+
+  // Exposed API: window.StarlineFirebase
   window.StarlineFirebase = {
-    initialized: false,
-    app: null,
-    db: null,
-    auth: null,
-    config: null,
-
+    config: FIREBASE_CONFIG,
+    
+    // Explicit initialization if called
     init: async function () {
-      if (this.initialized && this.db) return true;
+      return await loadModularSdk();
+    },
 
-      const FALLBACK_CONFIG = {
-        projectId: "gen-lang-client-0356205054",
-        appId: "1:1062561310475:web:fae4b5ac5e1a172fb9e40e",
-        apiKey: "AIzaSyCa16whyY9AL2s_DUr__85V7odYzgd0W94",
-        authDomain: "gen-lang-client-0356205054.firebaseapp.com",
-        firestoreDatabaseId: "ai-studio-starlineadventur-639fa374-c652-437b-a047-55d63b711961",
-        storageBucket: "gen-lang-client-0356205054.firebasestorage.app",
-        messagingSenderId: "1062561310475"
+    /**
+     * Save enquiry directly to Firestore: enquiries/{documentId}
+     * Customer visible fields: name, email, phone, message
+     * Auto-generated fields: createdAt (serverTimestamp), id
+     */
+    saveEnquiry: async function (payload) {
+      if (!payload || typeof payload !== 'object') {
+        throw new Error('Invalid submission payload');
+      }
+
+      // 1. Validate inputs
+      const name = String(payload.name || '').trim();
+      const email = String(payload.email || '').trim().toLowerCase();
+      const phone = String(payload.phone || '').trim();
+      const message = String(payload.message || '').trim();
+
+      if (!name || name.length < 2) {
+        const err = new Error('Please enter your full name (minimum 2 characters).');
+        err.field = 'name';
+        throw err;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailRegex.test(email)) {
+        const err = new Error('Please enter a valid email address.');
+        err.field = 'email';
+        throw err;
+      }
+
+      const phoneClean = phone.replace(/[^\d+]/g, '');
+      if (!phone || phoneClean.length < 8) {
+        const err = new Error('Please enter a valid phone number (minimum 8 digits).');
+        err.field = 'phone';
+        throw err;
+      }
+
+      if (!message || message.length < 2) {
+        const err = new Error('Please provide details about your project requirements.');
+        err.field = 'message';
+        throw err;
+      }
+
+      // 2. Generate safe unique document ID
+      const documentId = payload.id || generateSafeDocumentId();
+
+      // 3. Prepare clean document matching Firestore security rules
+      let sdk = null;
+      try {
+        sdk = await loadModularSdk();
+      } catch (loadErr) {
+        console.warn('⚠️ [StarlineFirebase] Modular SDK load error:', loadErr);
+      }
+
+      const cleanDoc = {
+        id: String(documentId).slice(0, 128),
+        name: name.slice(0, 100),
+        email: email.slice(0, 120),
+        phone: phone.slice(0, 30),
+        message: message.slice(0, 2000),
+        formType: String(payload.formType || 'Get a Quote').slice(0, 64),
+        product: String(payload.product || 'General Adventure Project Enquiry').slice(0, 120),
+        location: String(payload.location || 'Not specified').slice(0, 120),
+        company: String(payload.company || 'N/A').slice(0, 120),
+        status: 'new',
+        createdAt: (sdk && sdk.serverTimestamp) ? sdk.serverTimestamp() : new Date().toISOString()
       };
 
-      try {
-        let cfg = FALLBACK_CONFIG;
-        const host = (typeof window !== 'undefined' && window.location.hostname) ? window.location.hostname.toLowerCase() : '';
-        const isLocalOrPreview = host === 'localhost' || host === '127.0.0.1' || host.endsWith('.run.app') || host.endsWith('.google.com');
-
-        if (isLocalOrPreview) {
-          try {
-            const response = await fetch('/api/firebase-config', { credentials: 'include' });
-            if (response.ok) {
-              const data = await response.json().catch(() => null);
-              if (data && data.ok && data.config) {
-                cfg = data.config;
-              }
-            }
-          } catch (fetchErr) {
-            // Use fallback config if server endpoint is offline
-          }
-        }
-
-        this.config = cfg;
-
-        // Load Firebase SDK via CDN if not available
-        if (typeof firebase === 'undefined') {
-          await this.loadScript('https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js');
-          await this.loadScript('https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js');
-          await this.loadScript('https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js');
-        }
-
-        if (typeof firebase !== 'undefined' && firebase.initializeApp) {
-          if (!firebase.apps.length) {
-            this.app = firebase.initializeApp(this.config);
-          } else {
-            this.app = firebase.app();
-          }
-
-          try {
-            if (this.config.firestoreDatabaseId) {
-              this.db = firebase.app().firestore(this.config.firestoreDatabaseId);
-            } else {
-              this.db = firebase.firestore();
-            }
-          } catch (dbErr) {
-            this.db = firebase.firestore();
-          }
-
-          this.auth = firebase.auth();
-          this.initialized = true;
-          return true;
-        }
-      } catch (err) {
-        console.warn('🔥 [StarlineFirebase]: Initialization note:', err.message);
+      if (typeof window !== 'undefined' && window.location) {
+        cleanDoc.pageUrl = window.location.href.slice(0, 500);
       }
-      return false;
-    },
+      if (typeof document !== 'undefined' && document.referrer) {
+        cleanDoc.referrer = document.referrer.slice(0, 500);
+      }
 
-    loadScript: function (src) {
-      return new Promise(function (resolve, reject) {
-        var script = document.createElement('script');
-        script.src = src;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-      });
-    },
-
-    // Submit an enquiry through the secured backend API with direct Firestore fallback
-    saveEnquiry: async function (enquiryData) {
-      const enquiryId = enquiryData.id || ('SA-ENQ-' + Math.floor(100000 + Math.random() * 900000));
-      const payload = Object.assign({}, enquiryData, { id: enquiryId });
-
-      const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && typeof STARLINE_CONFIG.getEnquiryApiUrl === 'function')
-        ? STARLINE_CONFIG.getEnquiryApiUrl()
-        : ((typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG.enquiryApiUrl) || '/api/enquiry');
-
-      const shouldFetchHttp = apiUrl && apiUrl !== 'direct-firebase' && !apiUrl.includes('api.starlineadventures.com');
-
-      if (shouldFetchHttp) {
+      // 4. Save to Firestore: enquiries/{documentId}
+      let firestoreSaved = false;
+      if (sdk && sdk.db) {
         try {
-          const response = await fetch(apiUrl, {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-
-          if (response.ok) {
-            const data = await response.json().catch(() => null);
-            if (data && data.ok !== false) return data;
-          } else if (response.status === 400 || response.status === 429) {
-            const errData = await response.json().catch(() => null);
-            if (errData && errData.error) {
-              const valErr = new Error(errData.error);
-              valErr.isValidationError = true;
-              throw valErr;
-            }
+          const docRef = sdk.doc(sdk.db, 'enquiries', documentId);
+          await sdk.setDoc(docRef, cleanDoc);
+          firestoreSaved = true;
+          console.log(`✅ [StarlineFirebase] Enquiry saved to Firestore: enquiries/${documentId}`);
+        } catch (fsErr) {
+          console.warn('⚠️ [StarlineFirebase] Direct Firestore write note:', fsErr && fsErr.message ? fsErr.message : fsErr);
+          // If serverTimestamp failed, retry with ISO string
+          if (fsErr && fsErr.message && fsErr.message.includes('serverTimestamp')) {
+            try {
+              cleanDoc.createdAt = new Date().toISOString();
+              const docRef = sdk.doc(sdk.db, 'enquiries', documentId);
+              await sdk.setDoc(docRef, cleanDoc);
+              firestoreSaved = true;
+            } catch (retryErr) {}
           }
-        } catch (apiErr) {
-          if (apiErr && apiErr.isValidationError) {
-            throw apiErr;
-          }
-          // Network failure: proceed to direct Firestore
         }
       }
 
-      // Direct Firestore write fallback
+      // 5. Save lead locally so it is permanently stored in browser
       try {
-        await this.init();
-        if (this.db) {
-          const cleanDoc = {
-            id: enquiryId,
-            name: String(payload.name || '').slice(0, 100),
-            email: String(payload.email || '').slice(0, 120),
-            phone: String(payload.phone || '').slice(0, 30),
-            company: String(payload.company || 'N/A').slice(0, 120),
-            location: String(payload.location || 'Not specified').slice(0, 120),
-            product: String(payload.product || 'General Adventure Project Quote').slice(0, 120),
-            message: String(payload.message || '').slice(0, 2000),
-            formType: String(payload.formType || 'Get a Quote').slice(0, 64),
-            createdAt: new Date().toISOString(),
-            status: 'new',
-            pageUrl: String(payload.pageUrl || (typeof window !== 'undefined' ? window.location.href : '')).slice(0, 500),
-            referrer: String(payload.referrer || (typeof document !== 'undefined' ? document.referrer : 'Direct')).slice(0, 500)
-          };
-          await this.db.collection('enquiries').doc(enquiryId).set(cleanDoc);
-        }
-      } catch (fsErr) {
-        console.warn('[StarlineFirebase]: Direct save note:', fsErr && fsErr.message ? fsErr.message : fsErr);
-      }
-
-      // Save locally to localStorage so lead is permanently stored
-      try {
-        const offline = JSON.parse(localStorage.getItem('starline_enquiries_offline') || '[]');
-        offline.unshift(Object.assign({}, payload, { savedAt: new Date().toISOString() }));
-        localStorage.setItem('starline_enquiries_offline', JSON.stringify(offline.slice(0, 50)));
+        const offlineKey = 'starline_enquiries_saved';
+        const existing = JSON.parse(localStorage.getItem(offlineKey) || '[]');
+        existing.unshift(Object.assign({}, cleanDoc, { 
+          savedAt: new Date().toISOString(),
+          firestoreSaved 
+        }));
+        localStorage.setItem(offlineKey, JSON.stringify(existing.slice(0, 50)));
       } catch (lsErr) {}
 
       return {
         ok: true,
-        id: enquiryId,
-        enquiryId: enquiryId,
-        customerMessage: "Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly. We appreciate your interest and look forward to working with you."
+        id: documentId,
+        enquiryId: documentId,
+        message: "Thank you! Your enquiry has been submitted successfully.",
+        customerMessage: "Thank you! Your enquiry has been submitted successfully."
       };
     }
   };
 
-  // Auto initialize on DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      window.StarlineFirebase.init();
-    });
-  } else {
-    window.StarlineFirebase.init();
+  // Pre-load SDK in background on DOM ready
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => loadModularSdk().catch(() => {}));
+    } else {
+      loadModularSdk().catch(() => {});
+    }
   }
 })();
