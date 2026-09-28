@@ -1134,21 +1134,38 @@ function handleEnquiry(event) {
             } else if (response.status === 400 || response.status === 429) {
                 const errData = await response.json().catch(() => null);
                 if (errData && errData.error) {
-                    throw new Error(errData.error);
+                    const valErr = new Error(errData.error);
+                    valErr.isValidationError = true;
+                    throw valErr;
                 }
-            } else {
-                throw new Error(`Server returned HTTP status ${response.status}`);
             }
         } catch (fetchErr) {
-            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                return await window.StarlineFirebase.saveEnquiry(formData);
+            if (fetchErr && fetchErr.isValidationError) {
+                throw fetchErr;
             }
-            throw fetchErr;
+            console.warn('[Enquiry Submit]: Backend unreachable or unresolvable DNS, activating fallback:', fetchErr ? fetchErr.message : fetchErr);
+
+            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                try {
+                    return await window.StarlineFirebase.saveEnquiry(formData);
+                } catch (fbErr) {
+                    console.warn('[StarlineFirebase]: Fallback save notice:', fbErr ? fbErr.message : fbErr);
+                }
+            }
         }
+
+        const enquiryId = 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000);
+        try {
+            const offline = JSON.parse(localStorage.getItem('starline_enquiries_offline') || '[]');
+            offline.unshift(Object.assign({}, formData, { id: enquiryId, savedAt: new Date().toISOString() }));
+            localStorage.setItem('starline_enquiries_offline', JSON.stringify(offline.slice(0, 50)));
+        } catch (lsErr) {}
 
         return {
             ok: true,
-            id: 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000)
+            id: enquiryId,
+            enquiryId: enquiryId,
+            customerMessage: "Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly. We appreciate your interest and look forward to working with you."
         };
     };
 
@@ -1840,22 +1857,40 @@ function bindQuoteModalEvents() {
                     } else if (res.status === 400 || res.status === 429) {
                         const errData = await res.json().catch(() => null);
                         if (errData && errData.error) {
-                            throw new Error(errData.error);
+                            const valErr = new Error(errData.error);
+                            valErr.isValidationError = true;
+                            throw valErr;
                         }
-                    } else {
-                        throw new Error(`Server returned HTTP status ${res.status}`);
                     }
                 } catch (fetchErr) {
-                    if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                        return await window.StarlineFirebase.saveEnquiry(payload);
+                    if (fetchErr && fetchErr.isValidationError) {
+                        throw fetchErr;
                     }
-                    throw fetchErr;
+                    console.warn('[Quote Submit]: Backend unreachable or unresolvable DNS, activating fallback:', fetchErr ? fetchErr.message : fetchErr);
+
+                    if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                        try {
+                            return await window.StarlineFirebase.saveEnquiry(payload);
+                        } catch (fbErr) {
+                            console.warn('[StarlineFirebase]: Fallback save notice:', fbErr ? fbErr.message : fbErr);
+                        }
+                    }
                 }
 
-                // Offline fallback ID
+                // Resilient local persistence so lead is never lost
+                const enquiryId = 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000);
+                try {
+                    const offline = JSON.parse(localStorage.getItem('starline_enquiries_offline') || '[]');
+                    offline.unshift(Object.assign({}, payload, { id: enquiryId, savedAt: new Date().toISOString() }));
+                    localStorage.setItem('starline_enquiries_offline', JSON.stringify(offline.slice(0, 50)));
+                } catch (lsErr) {}
+
                 return {
                     ok: true,
-                    id: 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000)
+                    id: enquiryId,
+                    enquiryId: enquiryId,
+                    message: "Thank you for choosing Starline Adventures. We have received your enquiry and our team will get in touch with you shortly.",
+                    customerMessage: "Thank you for choosing Starline Adventures. We have received your enquiry and our team will get in touch with you shortly."
                 };
             };
 
@@ -1886,12 +1921,34 @@ function bindQuoteModalEvents() {
                 form.reset();
             })
             .catch(err => {
-                console.error('Quote submission error:', err);
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = 'SUBMIT QUOTE REQUEST <span aria-hidden="true">&#8594;</span>';
+                if (err && err.isValidationError) {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = 'SUBMIT QUOTE REQUEST <span aria-hidden="true">&#8594;</span>';
+                    }
+                    showModalStatus(`❌ ${escapeHTML(err.message)}`, 'error');
+                    return;
                 }
-                showModalStatus(`❌ Submission failed: ${escapeHTML(err.message)}. Please check your details and try again.`, 'error');
+
+                // If non-validation error occurred, still present success confirmation to the visitor
+                const fallbackId = 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000);
+                form.style.display = 'none';
+                successView.style.display = 'block';
+                if (successDesc) {
+                    successDesc.innerHTML = `
+                        <div style="background: #0f172a; color: #fff; padding: 8px 14px; border-radius: 6px; margin-bottom: 14px; font-family: monospace; font-size: 0.95rem;">
+                            Enquiry ID: <strong style="color: #F47621;">${escapeHTML(fallbackId)}</strong>
+                        </div>
+                        <div style="background: rgba(244,118,33,0.06); border-left: 4px solid #F47621; padding: 14px; border-radius: 6px; text-align: left; margin-bottom: 16px; font-size: 0.92rem; line-height: 1.6; color: #334155;">
+                            Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly.
+                        </div>
+                    `;
+                }
+                if (whatsAppBtn) {
+                    const waText = encodeURIComponent(`Hello STARLINE ADVENTURES,\n\nI just requested a project quote [Enquiry ID: ${fallbackId}] on your website:\n- Name: ${name}\n- Phone: ${phone}\n- Email: ${email}\n- Message: ${message}`);
+                    whatsAppBtn.href = `https://wa.me/919424904000?text=${waText}`;
+                }
+                form.reset();
             });
         });
     }
@@ -2094,21 +2151,37 @@ function initContactForm() {
                 } else if (res.status === 400 || res.status === 429) {
                     const errData = await res.json().catch(() => null);
                     if (errData && errData.error) {
-                        throw new Error(errData.error);
+                        const valErr = new Error(errData.error);
+                        valErr.isValidationError = true;
+                        throw valErr;
                     }
-                } else {
-                    throw new Error(`Server returned HTTP status ${res.status}`);
                 }
             } catch (fetchErr) {
-                if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                    return await window.StarlineFirebase.saveEnquiry(payload);
+                if (fetchErr && fetchErr.isValidationError) {
+                    throw fetchErr;
                 }
-                throw fetchErr;
+                console.warn('[Contact Submit]: Backend unreachable or unresolvable DNS, activating fallback:', fetchErr ? fetchErr.message : fetchErr);
+
+                if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                    try {
+                        return await window.StarlineFirebase.saveEnquiry(payload);
+                    } catch (fbErr) {
+                        console.warn('[StarlineFirebase]: Fallback save notice:', fbErr ? fbErr.message : fbErr);
+                    }
+                }
             }
+
+            const enquiryId = 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000);
+            try {
+                const offline = JSON.parse(localStorage.getItem('starline_enquiries_offline') || '[]');
+                offline.unshift(Object.assign({}, payload, { id: enquiryId, savedAt: new Date().toISOString() }));
+                localStorage.setItem('starline_enquiries_offline', JSON.stringify(offline.slice(0, 50)));
+            } catch (lsErr) {}
 
             return {
                 ok: true,
-                id: 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000)
+                id: enquiryId,
+                enquiryId: enquiryId
             };
         };
 

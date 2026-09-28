@@ -27,23 +27,25 @@
       };
 
       try {
-        let cfg = null;
-        try {
-          const baseApi = (typeof STARLINE_CONFIG !== 'undefined' && typeof STARLINE_CONFIG.getBaseApiUrl === 'function')
-            ? STARLINE_CONFIG.getBaseApiUrl()
-            : '';
-          const response = await fetch((baseApi ? baseApi : '') + '/api/firebase-config', { credentials: 'include' });
-          if (response.ok) {
-            const data = await response.json().catch(() => null);
-            if (data && data.ok && data.config) {
-              cfg = data.config;
+        let cfg = FALLBACK_CONFIG;
+        const host = (typeof window !== 'undefined' && window.location.hostname) ? window.location.hostname.toLowerCase() : '';
+        const isLocalOrPreview = host === 'localhost' || host === '127.0.0.1' || host.endsWith('.run.app') || host.endsWith('.google.com');
+
+        if (isLocalOrPreview) {
+          try {
+            const response = await fetch('/api/firebase-config', { credentials: 'include' });
+            if (response.ok) {
+              const data = await response.json().catch(() => null);
+              if (data && data.ok && data.config) {
+                cfg = data.config;
+              }
             }
+          } catch (fetchErr) {
+            // Use fallback config if server endpoint is offline
           }
-        } catch (fetchErr) {
-          // If server route is blocked or offline, use client-side fallback configuration
         }
 
-        this.config = cfg || FALLBACK_CONFIG;
+        this.config = cfg;
 
         // Load Firebase SDK via CDN if not available
         if (typeof firebase === 'undefined') {
