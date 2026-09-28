@@ -920,8 +920,11 @@ async function handleSubmission(req, res, defaultFormType = 'Contact Form') {
     }
 
     // 5. Generate Unique Enquiry ID & Record
+    const incomingId = (req.body && typeof req.body.id === 'string' && /^[a-zA-Z0-9_\-]+$/.test(req.body.id.trim()))
+      ? req.body.id.trim()
+      : null;
     const uniqueNumber = Math.floor(100000 + Math.random() * 900000);
-    const enquiryId = `SA-ENQ-${uniqueNumber}`;
+    const enquiryId = incomingId || `SA-ENQ-${uniqueNumber}`;
     const pageUrl = sanitizeInput(req.body.pageUrl || req.headers.referer || 'Website Direct');
     const referrer = sanitizeInput(req.body.referrer || req.headers.referer || 'Direct');
 
@@ -932,7 +935,7 @@ async function handleSubmission(req, res, defaultFormType = 'Contact Form') {
       email,
       phone,
       message,
-      createdAt: new Date().toISOString(),
+      createdAt: (typeof req.body.createdAt === 'string' && req.body.createdAt.length <= 64) ? req.body.createdAt : new Date().toISOString(),
       status: 'new',
       pageUrl,
       referrer
@@ -944,14 +947,67 @@ async function handleSubmission(req, res, defaultFormType = 'Contact Form') {
     if (location && location !== 'Not specified') enquiryRecord.location = location;
 
     // 6. Save Permanently in Firestore
-    if (db) {
+    // Strictly adhere to firestore.rules isValidEnquiry schema:
+    // Required keys: id, formType, name, email, phone, message, createdAt
+    // Allowed optional keys: company, location, product, status
+    // Prohibited keys: pageUrl, referrer (kept in enquiryRecord for email & local store)
+    const firestoreData = {
+      id: String(enquiryId).slice(0, 128),
+      formType: String(formType || 'Get a Quote').slice(0, 64),
+      name: String(name).slice(0, 100),
+      email: String(email).slice(0, 120),
+      phone: String(phone).slice(0, 30),
+      message: String(message).slice(0, 2000),
+      createdAt: enquiryRecord.createdAt,
+      status: 'new'
+    };
+    if (product && product !== 'General Adventure Project Quote') {
+      firestoreData.product = String(product).slice(0, 120);
+    }
+    if (company && company !== 'N/A') {
+      firestoreData.company = String(company).slice(0, 120);
+    }
+    if (location && location !== 'Not specified') {
+      firestoreData.location = String(location).slice(0, 120);
+    }
+
+    let firestoreSaved = false;
+    // Method A: Firestore REST API (Fastest and 100% reliable in Node.js)
+    if (firebaseConfig && firebaseConfig.projectId && firebaseConfig.apiKey) {
+      try {
+        const restUrl = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/enquiries?documentId=${encodeURIComponent(enquiryId)}&key=${firebaseConfig.apiKey}`;
+        const fields = {};
+        for (const [k, v] of Object.entries(firestoreData)) {
+          fields[k] = { stringValue: String(v) };
+        }
+        const restRes = await fetch(restUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fields })
+        });
+        if (restRes.ok) {
+          firestoreSaved = true;
+          console.log(`[Firestore REST Success]: Persisted enquiry [${enquiryId}]`);
+          recordSubmissionFingerprint(fingerprint, enquiryId);
+        } else {
+          const errText = await restRes.text().catch(() => '');
+          console.warn(`[Firestore REST Warning]: Status ${restRes.status} for [${enquiryId}]: ${errText}`);
+        }
+      } catch (restErr) {
+        console.warn(`[Firestore REST Error]:`, restErr.message);
+      }
+    }
+
+    // Method B: Modular SDK setDoc fallback
+    if (!firestoreSaved && db) {
       try {
         const docRef = doc(db, 'enquiries', enquiryId);
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Firestore operation timeout')), 4000)
+          setTimeout(() => reject(new Error('Firestore operation timeout')), 3000)
         );
-        await Promise.race([setDoc(docRef, enquiryRecord), timeoutPromise]);
-        console.log(`[Firestore Success]: Persisted enquiry [${enquiryId}]`);
+        await Promise.race([setDoc(docRef, firestoreData), timeoutPromise]);
+        firestoreSaved = true;
+        console.log(`[Firestore Modular Success]: Persisted enquiry [${enquiryId}]`);
         recordSubmissionFingerprint(fingerprint, enquiryId);
       } catch (fsErr) {
         console.warn(`[Firestore Notice]: Persistence note for [${enquiryId}]:`, fsErr.message);
@@ -963,25 +1019,30 @@ async function handleSubmission(req, res, defaultFormType = 'Contact Form') {
 
     // 7. Dispatch Notification Email
     let emailSent = false;
+    let emailError = null;
     try {
       const emailStatus = await sendNotificationEmail(enquiryRecord);
-      emailSent = emailStatus.sent;
+      emailSent = Boolean(emailStatus && emailStatus.sent);
       if (emailSent) {
-        console.log(`[Email Sent]: Dispatched ${formType} notification for [${enquiryId}]`);
+        console.log(`[Email Sent]: Dispatched ${formType} notification for [${enquiryId}] to starlineadventure@gmail.com`);
+      } else {
+        emailError = (emailStatus && emailStatus.reason) || 'Email could not be dispatched';
+        console.warn(`[Email Warning]: Enquiry [${enquiryId}] notification not sent: ${emailError}`);
       }
-    } catch (mailError) {
+    } catch (mailErr) {
       const appPass = process.env.EMAIL_APP_PASSWORD || '';
-      const safeErrMsg = mailError && mailError.message
-        ? (appPass ? mailError.message.replace(new RegExp(appPass, 'g'), '***') : mailError.message)
+      const safeErrMsg = mailErr && mailErr.message
+        ? (appPass ? mailErr.message.replace(new RegExp(appPass.trim().replace(/\s+/g, ''), 'g'), '***') : mailErr.message)
         : 'Mail error';
-      console.error(`[Email Error]: Non-fatal notification error for [${enquiryId}]:`, safeErrMsg);
+      emailError = safeErrMsg;
+      console.error(`[Email Error]: Notification error for [${enquiryId}]:`, safeErrMsg);
     }
 
     // Dispatch Customer Confirmation Email (Asynchronous, non-blocking)
     sendCustomerConfirmationEmail(enquiryRecord).catch(custMailErr => {
       const appPass = process.env.EMAIL_APP_PASSWORD || '';
       const safeErrMsg = custMailErr && custMailErr.message
-        ? (appPass ? custMailErr.message.replace(new RegExp(appPass, 'g'), '***') : custMailErr.message)
+        ? (appPass ? custMailErr.message.replace(new RegExp(appPass.trim().replace(/\s+/g, ''), 'g'), '***') : custMailErr.message)
         : 'Customer confirmation error';
       console.warn(`[Customer Mail Warning]: Confirmation notice for [${enquiryId}]:`, safeErrMsg);
     });
@@ -997,7 +1058,9 @@ async function handleSubmission(req, res, defaultFormType = 'Contact Form') {
       enquiryId: enquiryId,
       message: standardSuccessMsg,
       customerMessage: standardSuccessMsg,
-      emailSent
+      firestoreSaved,
+      emailSent,
+      ...(emailError ? { emailError } : {})
     });
   } catch (err) {
     console.error('Error processing enquiry:', err && err.message ? err.message : 'Unknown');

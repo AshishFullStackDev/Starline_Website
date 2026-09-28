@@ -161,6 +161,27 @@
         }
       }
 
+      // 5.5. Dispatch email notification via backend server to starlineadventure@gmail.com
+      try {
+        const notifyPayload = Object.assign({}, cleanDoc, {
+          pageUrl: (typeof window !== 'undefined' ? window.location.href : 'Website Direct'),
+          referrer: (typeof document !== 'undefined' ? document.referrer : '')
+        });
+        const notifyUrl = (typeof window.STARLINE_CONFIG !== 'undefined' && typeof window.STARLINE_CONFIG.getEnquiryApiUrl === 'function')
+          ? window.STARLINE_CONFIG.getEnquiryApiUrl()
+          : '/api/enquiry';
+        const targetUrl = (notifyUrl && notifyUrl !== 'direct-firebase') ? notifyUrl : '/api/enquiry';
+        
+        fetch(targetUrl, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(notifyPayload)
+        }).then(res => {
+          if (res.ok) console.log(`📧 [StarlineFirebase] Backend email notification dispatched for [${documentId}]`);
+        }).catch(() => {});
+      } catch (notifyErr) {}
+
       // 6. Save lead locally so it is permanently stored in browser
       try {
         const offlineKey = 'starline_enquiries_saved';

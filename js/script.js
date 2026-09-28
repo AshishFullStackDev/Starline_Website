@@ -1117,7 +1117,39 @@ function handleEnquiry(event) {
     setFormStatus(status, '⏳ Submitting your enquiry to our adventure engineering team...', 'loading');
     
     const submitEnquiry = async () => {
-        // 1. Primary submission method: direct to Firebase Firestore via Modular SDK (no 405 error on static hosting)
+        // 1. Primary submission method: Send to server endpoint to save to Firestore & send email notification
+        const apiUrl = (typeof getEnquiryApiEndpoint === 'function') ? getEnquiryApiEndpoint() : '/api/enquiry';
+        const targetUrl = (apiUrl && apiUrl !== 'direct-firebase' && !apiUrl.includes('api.starlineadventures.com')) ? apiUrl : '/api/enquiry';
+
+        try {
+            const response = await fetch(targetUrl, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            if (response.ok) {
+                const data = await response.json().catch(() => null);
+                if (data && data.ok !== false) return data;
+            } else if (response.status === 400 || response.status === 429) {
+                const errData = await response.json().catch(() => null);
+                if (errData && errData.error) {
+                    const valErr = new Error(errData.error);
+                    valErr.isValidationError = true;
+                    throw valErr;
+                }
+            }
+        } catch (fetchErr) {
+            if (fetchErr && fetchErr.isValidationError) {
+                throw fetchErr;
+            }
+            console.warn('[Enquiry Submit]: Backend notice, activating resilient fallback:', fetchErr ? fetchErr.message : fetchErr);
+        }
+
+        // 2. Resilient Firestore direct fallback
         if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
             try {
                 return await window.StarlineFirebase.saveEnquiry(formData);
@@ -1132,38 +1164,6 @@ function handleEnquiry(event) {
                     return await window.StarlineFirebase.saveEnquiry(formData);
                 }
             } catch (impErr) {}
-        }
-
-        // 2. Local development fallback (only when running locally on Express server port 3000)
-        const isLocalExpress = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '3000';
-        if (isLocalExpress) {
-            try {
-                const response = await fetch('/api/enquiry', {
-                    method: 'POST',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-                if (response.ok) {
-                    const data = await response.json().catch(() => null);
-                    if (data && data.ok !== false) return data;
-                } else if (response.status === 400 || response.status === 429) {
-                    const errData = await response.json().catch(() => null);
-                    if (errData && errData.error) {
-                        const valErr = new Error(errData.error);
-                        valErr.isValidationError = true;
-                        throw valErr;
-                    }
-                }
-            } catch (fetchErr) {
-                if (fetchErr && fetchErr.isValidationError) {
-                    throw fetchErr;
-                }
-                console.warn('[Enquiry Submit]: Local fallback note:', fetchErr ? fetchErr.message : fetchErr);
-            }
         }
 
         const enquiryId = 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000);
@@ -2154,7 +2154,36 @@ function initContactForm() {
         };
 
         const submitContactForm = async () => {
-            // 1. Primary submission method: direct to Firebase Firestore via Modular SDK (no 405 error on static hosting)
+            // 1. Primary submission method: Send to server endpoint to save to Firestore & send email notification
+            const apiUrl = (typeof getEnquiryApiEndpoint === 'function') ? getEnquiryApiEndpoint() : '/api/enquiry';
+            const targetUrl = (apiUrl && apiUrl !== 'direct-firebase' && !apiUrl.includes('api.starlineadventures.com')) ? apiUrl : '/api/enquiry';
+
+            try {
+                const res = await fetch(targetUrl, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    const data = await res.json().catch(() => null);
+                    if (data && data.ok !== false) return data;
+                } else if (res.status === 400 || res.status === 429) {
+                    const errData = await res.json().catch(() => null);
+                    if (errData && errData.error) {
+                        const valErr = new Error(errData.error);
+                        valErr.isValidationError = true;
+                        throw valErr;
+                    }
+                }
+            } catch (fetchErr) {
+                if (fetchErr && fetchErr.isValidationError) {
+                    throw fetchErr;
+                }
+                console.warn('[Contact Submit]: Backend notice, activating resilient fallback:', fetchErr ? fetchErr.message : fetchErr);
+            }
+
+            // 2. Resilient Firestore direct fallback
             if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
                 try {
                     return await window.StarlineFirebase.saveEnquiry(payload);
@@ -2169,35 +2198,6 @@ function initContactForm() {
                         return await window.StarlineFirebase.saveEnquiry(payload);
                     }
                 } catch (impErr) {}
-            }
-
-            // 2. Local development fallback (only on localhost with Node/Express port 3000)
-            const isLocalExpress = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '3000';
-            if (isLocalExpress) {
-                try {
-                    const res = await fetch('/api/enquiry', {
-                        method: 'POST',
-                        credentials: 'include',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (res.ok) {
-                        const data = await res.json().catch(() => null);
-                        if (data && data.ok !== false) return data;
-                    } else if (res.status === 400 || res.status === 429) {
-                        const errData = await res.json().catch(() => null);
-                        if (errData && errData.error) {
-                            const valErr = new Error(errData.error);
-                            valErr.isValidationError = true;
-                            throw valErr;
-                        }
-                    }
-                } catch (fetchErr) {
-                    if (fetchErr && fetchErr.isValidationError) {
-                        throw fetchErr;
-                    }
-                    console.warn('[Contact Submit]: Local fallback note:', fetchErr ? fetchErr.message : fetchErr);
-                }
             }
 
             const enquiryId = 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000);
