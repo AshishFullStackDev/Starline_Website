@@ -407,7 +407,22 @@ function getEmailCredentials() {
   };
 }
 
+// Track dispatched enquiry IDs in memory for deduplication across triggers
+const sentEnquiryEmailIds = new Set();
+
 async function sendNotificationEmail(record) {
+  if (!record) return { sent: false, reason: 'No record provided' };
+
+  // 1. Deduplication check
+  if (record.id && sentEnquiryEmailIds.has(record.id)) {
+    console.log(`[Deduplication]: Email already sent for enquiry [${record.id}]. Skipping duplicate.`);
+    return { sent: true, deduplicated: true };
+  }
+  if (record.emailSent === true) {
+    console.log(`[Deduplication]: Enquiry [${record.id}] already marked as sent. Skipping duplicate.`);
+    return { sent: true, deduplicated: true };
+  }
+
   const { user: emailUser, pass: emailAppPassword, hasPassword, targetRecipient } = getEmailCredentials();
 
   if (!hasPassword) {
@@ -428,80 +443,69 @@ async function sendNotificationEmail(record) {
     socketTimeout: 15000
   });
 
-  const emailSubject = `NEW WEBSITE ENQUIRY - ${record.product} - ${record.name}`;
+  const emailSubject = 'New Website Enquiry - Starline Adventures';
   const formLabel = record.formType || 'Website Enquiry';
   const cleanPhone = (record.phone || '').replace(/[^\d+]/g, '');
-  const formattedDate = new Date(record.createdAt).toLocaleString('en-IN', {
-    timeZone: 'Asia/Kolkata',
-    dateStyle: 'full',
-    timeStyle: 'medium'
-  });
 
-  const plainText = `
-STARLINE ADVENTURE
-New Website Enquiry
+  let formattedDate = '';
+  try {
+    if (record.createdAt) {
+      const d = new Date(record.createdAt);
+      if (!isNaN(d.getTime())) {
+        formattedDate = d.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+      } else {
+        formattedDate = String(record.createdAt);
+      }
+    }
+  } catch (e) {
+    formattedDate = String(record.createdAt || '');
+  }
 
-Enquiry ID: ${record.id}
-Date & Time: ${formattedDate} (IST)
-
-Customer Name: ${record.name}
-Phone: ${record.phone}
-Email: ${record.email}
-Project Location: ${record.location}
-Company / Org: ${record.company || 'N/A'}
-
-Product / Activity: ${record.product}
-Form Source: ${record.formType}
-
-Project Requirements:
-${record.message || 'No additional message provided.'}
-
-Page URL: ${record.pageUrl || 'Direct'}
-Referrer: ${record.referrer || 'Direct'}
-
-------------------------------------------------------------
-To reply to customer:
-Phone/WhatsApp: ${record.phone}
-Email: ${record.email}
-`;
+  // Exact body requested by user
+  let plainText = 'New enquiry received from Starline Adventures website.\n\n';
+  plainText += `Name: ${record.name || 'Not provided'}\n`;
+  plainText += `Email: ${record.email || 'Not provided'}\n`;
+  plainText += `Phone: ${record.phone || 'Not provided'}\n`;
+  plainText += `Message: ${record.message || 'No message provided'}\n`;
+  if (record.product) plainText += `\nProduct: ${record.product}`;
+  if (record.formType) plainText += `\nForm Type: ${record.formType}`;
+  if (record.id) plainText += `\nEnquiry ID: ${record.id}`;
+  if (formattedDate) plainText += `\nCreated At: ${formattedDate} (IST)`;
 
   const htmlBody = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(emailSubject)}</title>
   <style>
     body { margin: 0; padding: 24px; background-color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1e293b; line-height: 1.5; }
     .email-wrapper { max-width: 620px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
     .email-header { background: #14213d; padding: 28px 24px; text-align: center; border-bottom: 4px solid #F47621; }
-    .email-header h1 { margin: 0; color: #ffffff; font-size: 22px; font-weight: 800; letter-spacing: 1.5px; }
+    .email-header h1 { margin: 0; color: #ffffff; font-size: 22px; font-weight: 800; letter-spacing: 1px; }
     .email-header p { margin: 6px 0 0; color: #F47621; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
     .badge-bar { text-align: center; margin-top: -14px; }
     .type-badge { display: inline-block; background: #F47621; color: #ffffff; font-size: 12px; font-weight: 800; padding: 6px 18px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 2px 8px rgba(244,118,33,0.35); }
     .email-body { padding: 32px 28px 24px; }
-    .section-title { font-size: 13px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin: 24px 0 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; }
-    .info-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
-    .info-table tr { border-bottom: 1px solid #f1f5f9; }
-    .info-table td { padding: 10px 6px; font-size: 14px; vertical-align: top; }
-    .info-label { width: 140px; font-weight: 600; color: #64748b; }
-    .info-value { color: #0f172a; font-weight: 500; }
-    .highlight-value { color: #F47621; font-weight: 700; font-size: 15px; }
-    .message-container { background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #F47621; border-radius: 6px; padding: 16px 18px; font-size: 14px; color: #334155; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
-    .action-row { margin-top: 28px; padding-top: 20px; border-top: 1px dashed #cbd5e1; text-align: center; }
-    .action-btn { display: inline-block; padding: 11px 22px; margin: 4px 6px; font-size: 13px; font-weight: 700; text-decoration: none; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .btn-reply { background: #14213d; color: #ffffff !important; }
-    .btn-whatsapp { background: #25D366; color: #ffffff !important; }
-    .btn-call { background: #0284c7; color: #ffffff !important; }
-    .email-footer { background: #f8fafc; padding: 18px 24px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; }
+    .notice { font-size: 15px; font-weight: 600; color: #0f172a; margin-bottom: 20px; padding: 12px 16px; background: #fff7ed; border-left: 4px solid #F47621; border-radius: 4px; }
+    .info-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+    .info-table td { padding: 10px 8px; font-size: 14px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    .info-label { width: 140px; font-weight: 700; color: #64748b; }
+    .info-value { color: #0f172a; }
+    .message-container { background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #F47621; border-radius: 6px; padding: 16px 18px; font-size: 14px; color: #334155; line-height: 1.6; white-space: pre-wrap; word-break: break-word; margin-top: 8px; }
+    .action-row { margin-top: 24px; padding-top: 18px; border-top: 1px dashed #cbd5e1; text-align: center; }
+    .action-btn { display: inline-block; padding: 10px 20px; margin: 4px 6px; font-size: 13px; font-weight: 700; text-decoration: none; border-radius: 6px; color: #ffffff !important; }
+    .btn-reply { background: #14213d; }
+    .btn-whatsapp { background: #25D366; }
+    .btn-call { background: #0284c7; }
+    .email-footer { background: #f8fafc; padding: 16px 24px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; }
   </style>
 </head>
 <body>
   <div class="email-wrapper">
     <div class="email-header">
       <h1>STARLINE ADVENTURES</h1>
-      <p>Adventure Equipment &amp; Installation Specialist</p>
+      <p>Adventure Park Manufacturing &amp; Installation</p>
     </div>
 
     <div class="badge-bar">
@@ -509,58 +513,39 @@ Email: ${record.email}
     </div>
 
     <div class="email-body">
-      <div class="section-title">Customer Information</div>
+      <div class="notice">New enquiry received from Starline Adventures website.</div>
+
       <table class="info-table">
         <tr>
-          <td class="info-label">Full Name:</td>
-          <td class="info-value"><strong>${escapeHtml(record.name)}</strong></td>
+          <td class="info-label">Name:</td>
+          <td class="info-value"><strong>${escapeHtml(record.name || 'Not provided')}</strong></td>
         </tr>
         <tr>
           <td class="info-label">Email:</td>
-          <td class="info-value"><a href="mailto:${escapeHtml(record.email)}" style="color:#0284c7; text-decoration:none; font-weight:600;">${escapeHtml(record.email)}</a></td>
+          <td class="info-value"><a href="mailto:${escapeHtml(record.email)}" style="color:#0284c7; font-weight:600; text-decoration:none;">${escapeHtml(record.email || 'Not provided')}</a></td>
         </tr>
         <tr>
           <td class="info-label">Phone:</td>
-          <td class="info-value"><a href="tel:${escapeHtml(cleanPhone)}" style="color:#0f172a; text-decoration:none; font-weight:600;">${escapeHtml(record.phone)}</a></td>
+          <td class="info-value"><a href="tel:${escapeHtml(cleanPhone)}" style="color:#0f172a; font-weight:600; text-decoration:none;">${escapeHtml(record.phone || 'Not provided')}</a></td>
         </tr>
-        <tr>
-          <td class="info-label">Company / Org:</td>
-          <td class="info-value">${escapeHtml(record.company || 'N/A')}</td>
-        </tr>
-        <tr>
-          <td class="info-label">Location:</td>
-          <td class="info-value">${escapeHtml(record.location)}</td>
-        </tr>
+        ${record.product ? `<tr><td class="info-label">Product:</td><td class="info-value" style="color:#F47621; font-weight:700;">${escapeHtml(record.product)}</td></tr>` : ''}
+        ${record.formType ? `<tr><td class="info-label">Form Type:</td><td class="info-value">${escapeHtml(record.formType)}</td></tr>` : ''}
+        ${record.id ? `<tr><td class="info-label">Enquiry ID:</td><td class="info-value"><code>${escapeHtml(record.id)}</code></td></tr>` : ''}
+        ${formattedDate ? `<tr><td class="info-label">Created At:</td><td class="info-value">${escapeHtml(formattedDate)} (IST)</td></tr>` : ''}
       </table>
 
-      <div class="section-title">Project Interest</div>
-      <table class="info-table">
-        <tr>
-          <td class="info-label">Product / Activity:</td>
-          <td class="info-value highlight-value">${escapeHtml(record.product)}</td>
-        </tr>
-        <tr>
-          <td class="info-label">Submission Date:</td>
-          <td class="info-value">${escapeHtml(formattedDate)} (IST)</td>
-        </tr>
-        <tr>
-          <td class="info-label">Reference ID:</td>
-          <td class="info-value"><code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:12px;">${escapeHtml(record.id)}</code></td>
-        </tr>
-      </table>
-
-      <div class="section-title">Project Details &amp; Message</div>
+      <div style="font-weight:700; color:#64748b; font-size:13px; text-transform:uppercase; margin-top:16px;">Message:</div>
       <div class="message-container">${escapeHtml(record.message || 'No additional message provided.')}</div>
 
       <div class="action-row">
-        <a class="action-btn btn-reply" href="mailto:${escapeHtml(record.email)}?subject=Re:%20Starline%20Adventures%20-%20${encodeURIComponent(record.product)}">✉️ Reply to Customer</a>
-        ${cleanPhone ? `<a class="action-btn btn-whatsapp" href="https://wa.me/${cleanPhone.replace('+', '')}?text=${encodeURIComponent(`Hello ${record.name}, thank you for reaching out to Starline Adventures regarding your project for ${record.product}.`)}" target="_blank">💬 Chat on WhatsApp</a>` : ''}
-        ${cleanPhone ? `<a class="action-btn btn-call" href="tel:${cleanPhone}">📞 Call Customer</a>` : ''}
+        <a class="action-btn btn-reply" href="mailto:${escapeHtml(record.email)}?subject=Re:%20Starline%20Adventures%20Enquiry%20[${encodeURIComponent(record.id || '')}]">✉️ Reply to Customer</a>
+        ${cleanPhone ? `<a class="action-btn btn-whatsapp" href="https://wa.me/${cleanPhone.replace('+', '')}?text=${encodeURIComponent(`Hello ${record.name || 'there'}, thank you for contacting Starline Adventures.`)}" target="_blank">💬 WhatsApp</a>` : ''}
+        ${cleanPhone ? `<a class="action-btn btn-call" href="tel:${cleanPhone}">📞 Call</a>` : ''}
       </div>
     </div>
 
     <div class="email-footer">
-      This is an automated notification from the Starline Adventures website backend.<br>
+      This is an automated notification from the Starline Adventures backend.<br>
       Recipient: <strong>${escapeHtml(targetRecipient)}</strong>
     </div>
   </div>
@@ -569,15 +554,22 @@ Email: ${record.email}
 `;
 
   const mailOptions = {
-    from: `"Starline Adventures Web" <${emailUser}>`,
+    from: `"Starline Adventures" <${emailUser}>`,
     to: targetRecipient,
-    replyTo: record.email,
+    replyTo: (record.email && record.email.includes('@')) ? record.email : emailUser,
     subject: emailSubject,
     text: plainText,
     html: htmlBody
   };
 
   const info = await transporter.sendMail(mailOptions);
+
+  // Record in memory to prevent duplicate sends
+  if (record.id) {
+    sentEnquiryEmailIds.add(record.id);
+  }
+
+  console.log(`[Email Sent]: Dispatched notification for enquiry [${record.id}] to ${targetRecipient}. Message ID: ${info.messageId}`);
   return {
     sent: true,
     messageId: info.messageId,
@@ -694,6 +686,87 @@ https://starlineadventures.com
     html: htmlBody
   });
 }
+
+// ============================================================
+// 8.5. SERVER-SIDE FIRESTORE ENQUIRY WATCHER (Approach B)
+// Listens in real-time for new enquiries created in Firestore
+// and triggers email notifications to starlineadventure@gmail.com
+// ============================================================
+let firestoreWatcherActive = false;
+
+function initFirestoreEnquiryWatcher() {
+  if (firestoreWatcherActive) return;
+
+  try {
+    const admin = require('firebase-admin');
+    const { getFirestore: getAdminFirestore } = require('firebase-admin/firestore');
+
+    let adminApp = null;
+    if (admin.apps && admin.apps.length > 0) {
+      adminApp = admin.apps[0];
+    } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS || process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+      let certConfig = undefined;
+      if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+        try {
+          certConfig = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+        } catch (e) {
+          console.warn('[Firebase Service Account]: Parse error for FIREBASE_SERVICE_ACCOUNT_KEY');
+        }
+      }
+      adminApp = admin.initializeApp(
+        certConfig
+          ? { credential: admin.credential.cert(certConfig), projectId: 'starline-website-f2f87' }
+          : { projectId: 'starline-website-f2f87' }
+      );
+    }
+
+    if (adminApp) {
+      const aDb = getAdminFirestore(adminApp);
+      console.log('[Firestore Watcher]: Initializing server-side listener on enquiries collection...');
+
+      aDb.collection('enquiries').onSnapshot(
+        snapshot => {
+          firestoreWatcherActive = true;
+          snapshot.docChanges().forEach(async change => {
+            if (change.type === 'added') {
+              const docData = change.doc.data() || {};
+              const docId = change.doc.id;
+
+              // Check deduplication
+              if (docData.emailSent === true || sentEnquiryEmailIds.has(docId)) {
+                return;
+              }
+
+              console.log(`[Firestore Watcher]: Detected new Firestore enquiry [${docId}], dispatching email notification...`);
+              const sendResult = await sendNotificationEmail({ ...docData, id: docId });
+
+              if (sendResult && sendResult.sent) {
+                try {
+                  await change.doc.ref.update({
+                    emailSent: true,
+                    emailSentAt: new Date().toISOString(),
+                    emailMessageId: sendResult.messageId || null
+                  });
+                  console.log(`[Firestore Watcher]: Updated enquiry [${docId}] with emailSent=true`);
+                } catch (updateErr) {
+                  console.warn(`[Firestore Watcher]: Could not update emailSent flag on [${docId}]:`, updateErr.message);
+                }
+              }
+            }
+          });
+        },
+        error => {
+          console.warn('[Firestore Watcher Notice]: Listener notice:', error.message);
+        }
+      );
+    }
+  } catch (err) {
+    console.warn('[Firestore Watcher]: Non-fatal init note:', err.message);
+  }
+}
+
+// Automatically start the watcher
+initFirestoreEnquiryWatcher();
 
 // Helper to detect product name internally from referer URL
 function detectProductFromUrl(url) {
@@ -891,7 +964,7 @@ async function handleSubmission(req, res, defaultFormType = 'Contact Form') {
     // 7. Dispatch Notification Email
     let emailSent = false;
     try {
-      const emailStatus = await sendNotificationEmail(fullRecord);
+      const emailStatus = await sendNotificationEmail(enquiryRecord);
       emailSent = emailStatus.sent;
       if (emailSent) {
         console.log(`[Email Sent]: Dispatched ${formType} notification for [${enquiryId}]`);
