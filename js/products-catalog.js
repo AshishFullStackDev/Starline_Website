@@ -939,49 +939,50 @@ function initEnquiryFormSubmission() {
 
         if (submitBtn) submitBtn.disabled = true;
 
-        const payload = {
-            name,
-            email,
-            phone,
-            location,
-            product,
-            message,
-            formType: 'Product Enquiry'
-        };
-
-        let data = null;
         try {
-            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                data = await window.StarlineFirebase.saveEnquiry(payload);
-            } else {
-                const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
-                const res = await fetch(apiUrl, {
-                    method: 'POST',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-                if (res.ok) {
-                    data = await res.json().catch(() => null);
-                }
-            }
-        } catch (submitErr) {}
-
-        if (!data || data.ok === false) {
-            data = {
-                ok: true,
-                id: 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000)
+            const payload = {
+                name,
+                email,
+                phone,
+                location,
+                product,
+                message,
+                formType: 'Product Enquiry'
             };
-        }
 
-        if (data && data.ok !== false) {
-            closeProductEnquiryModal();
-            form.reset();
+            let data = null;
+            try {
+                if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                    data = await window.StarlineFirebase.saveEnquiry(payload);
+                } else {
+                    const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
+                    const res = await fetch(apiUrl, {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) {
+                        data = await res.json().catch(() => null);
+                    }
+                }
+            } catch (submitErr) {}
 
-            const enquiryId = data.enquiryId || data.id || ('SA-ENQ-' + Math.floor(100000 + Math.random() * 900000));
+            if (!data || data.ok === false) {
+                data = {
+                    ok: true,
+                    id: 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000)
+                };
+            }
+
+            if (data && data.ok !== false) {
+                closeProductEnquiryModal();
+                form.reset();
+
+                const enquiryId = data.enquiryId || data.id || ('SA-ENQ-' + Math.floor(100000 + Math.random() * 900000));
 
                 if (typeof showEnquirySuccessModal === 'function') {
                     showEnquirySuccessModal({
