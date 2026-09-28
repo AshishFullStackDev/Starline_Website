@@ -1118,39 +1118,43 @@ function handleEnquiry(event) {
     
     const submitEnquiry = async () => {
         const apiUrl = getEnquiryApiEndpoint();
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-            if (response.ok) {
-                const data = await response.json().catch(() => null);
-                if (data && data.ok !== false) return data;
-            } else if (response.status === 400 || response.status === 429) {
-                const errData = await response.json().catch(() => null);
-                if (errData && errData.error) {
-                    const valErr = new Error(errData.error);
-                    valErr.isValidationError = true;
-                    throw valErr;
-                }
-            }
-        } catch (fetchErr) {
-            if (fetchErr && fetchErr.isValidationError) {
-                throw fetchErr;
-            }
-            console.warn('[Enquiry Submit]: Backend unreachable or unresolvable DNS, activating fallback:', fetchErr ? fetchErr.message : fetchErr);
+        const shouldFetchHttp = apiUrl && apiUrl !== 'direct-firebase' && !apiUrl.includes('api.starlineadventures.com');
 
-            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                try {
-                    return await window.StarlineFirebase.saveEnquiry(formData);
-                } catch (fbErr) {
-                    console.warn('[StarlineFirebase]: Fallback save notice:', fbErr ? fbErr.message : fbErr);
+        if (shouldFetchHttp) {
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                if (response.ok) {
+                    const data = await response.json().catch(() => null);
+                    if (data && data.ok !== false) return data;
+                } else if (response.status === 400 || response.status === 429) {
+                    const errData = await response.json().catch(() => null);
+                    if (errData && errData.error) {
+                        const valErr = new Error(errData.error);
+                        valErr.isValidationError = true;
+                        throw valErr;
+                    }
                 }
+            } catch (fetchErr) {
+                if (fetchErr && fetchErr.isValidationError) {
+                    throw fetchErr;
+                }
+                console.warn('[Enquiry Submit]: Backend unreachable, activating fallback:', fetchErr ? fetchErr.message : fetchErr);
+            }
+        }
+
+        if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+            try {
+                return await window.StarlineFirebase.saveEnquiry(formData);
+            } catch (fbErr) {
+                console.warn('[StarlineFirebase]: Fallback save notice:', fbErr ? fbErr.message : fbErr);
             }
         }
 
@@ -1844,36 +1848,41 @@ function bindQuoteModalEvents() {
 
             const submitQuote = async () => {
                 const apiUrl = getEnquiryApiEndpoint();
-                try {
-                    const res = await fetch(apiUrl, {
-                        method: 'POST',
-                        credentials: 'include',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (res.ok) {
-                        const data = await res.json().catch(() => null);
-                        if (data && data.ok !== false) return data;
-                    } else if (res.status === 400 || res.status === 429) {
-                        const errData = await res.json().catch(() => null);
-                        if (errData && errData.error) {
-                            const valErr = new Error(errData.error);
-                            valErr.isValidationError = true;
-                            throw valErr;
-                        }
-                    }
-                } catch (fetchErr) {
-                    if (fetchErr && fetchErr.isValidationError) {
-                        throw fetchErr;
-                    }
-                    console.warn('[Quote Submit]: Backend unreachable or unresolvable DNS, activating fallback:', fetchErr ? fetchErr.message : fetchErr);
+                const shouldFetchHttp = apiUrl && apiUrl !== 'direct-firebase' && !apiUrl.includes('api.starlineadventures.com');
 
-                    if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                        try {
-                            return await window.StarlineFirebase.saveEnquiry(payload);
-                        } catch (fbErr) {
-                            console.warn('[StarlineFirebase]: Fallback save notice:', fbErr ? fbErr.message : fbErr);
+                if (shouldFetchHttp) {
+                    try {
+                        const res = await fetch(apiUrl, {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (res.ok) {
+                            const data = await res.json().catch(() => null);
+                            if (data && data.ok !== false) return data;
+                        } else if (res.status === 400 || res.status === 429) {
+                            const errData = await res.json().catch(() => null);
+                            if (errData && errData.error) {
+                                const valErr = new Error(errData.error);
+                                valErr.isValidationError = true;
+                                throw valErr;
+                            }
                         }
+                    } catch (fetchErr) {
+                        if (fetchErr && fetchErr.isValidationError) {
+                            throw fetchErr;
+                        }
+                        console.warn('[Quote Submit]: Backend unreachable, activating fallback:', fetchErr ? fetchErr.message : fetchErr);
+                    }
+                }
+
+                // Direct Firestore submission
+                if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                    try {
+                        return await window.StarlineFirebase.saveEnquiry(payload);
+                    } catch (fbErr) {
+                        console.warn('[StarlineFirebase]: Fallback save notice:', fbErr ? fbErr.message : fbErr);
                     }
                 }
 
@@ -2138,36 +2147,40 @@ function initContactForm() {
 
         const submitContactForm = async () => {
             const apiUrl = getEnquiryApiEndpoint();
-            try {
-                const res = await fetch(apiUrl, {
-                    method: 'POST',
-                    credentials: 'include',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (res.ok) {
-                    const data = await res.json().catch(() => null);
-                    if (data && data.ok !== false) return data;
-                } else if (res.status === 400 || res.status === 429) {
-                    const errData = await res.json().catch(() => null);
-                    if (errData && errData.error) {
-                        const valErr = new Error(errData.error);
-                        valErr.isValidationError = true;
-                        throw valErr;
-                    }
-                }
-            } catch (fetchErr) {
-                if (fetchErr && fetchErr.isValidationError) {
-                    throw fetchErr;
-                }
-                console.warn('[Contact Submit]: Backend unreachable or unresolvable DNS, activating fallback:', fetchErr ? fetchErr.message : fetchErr);
+            const shouldFetchHttp = apiUrl && apiUrl !== 'direct-firebase' && !apiUrl.includes('api.starlineadventures.com');
 
-                if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                    try {
-                        return await window.StarlineFirebase.saveEnquiry(payload);
-                    } catch (fbErr) {
-                        console.warn('[StarlineFirebase]: Fallback save notice:', fbErr ? fbErr.message : fbErr);
+            if (shouldFetchHttp) {
+                try {
+                    const res = await fetch(apiUrl, {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) {
+                        const data = await res.json().catch(() => null);
+                        if (data && data.ok !== false) return data;
+                    } else if (res.status === 400 || res.status === 429) {
+                        const errData = await res.json().catch(() => null);
+                        if (errData && errData.error) {
+                            const valErr = new Error(errData.error);
+                            valErr.isValidationError = true;
+                            throw valErr;
+                        }
                     }
+                } catch (fetchErr) {
+                    if (fetchErr && fetchErr.isValidationError) {
+                        throw fetchErr;
+                    }
+                    console.warn('[Contact Submit]: Backend unreachable, activating fallback:', fetchErr ? fetchErr.message : fetchErr);
+                }
+            }
+
+            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                try {
+                    return await window.StarlineFirebase.saveEnquiry(payload);
+                } catch (fbErr) {
+                    console.warn('[StarlineFirebase]: Fallback save notice:', fbErr ? fbErr.message : fbErr);
                 }
             }
 

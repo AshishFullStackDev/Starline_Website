@@ -100,28 +100,34 @@
         ? STARLINE_CONFIG.getEnquiryApiUrl()
         : ((typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG.enquiryApiUrl) || '/api/enquiry');
 
-      try {
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+      const shouldFetchHttp = apiUrl && apiUrl !== 'direct-firebase' && !apiUrl.includes('api.starlineadventures.com');
 
-        if (response.ok) {
-          const data = await response.json().catch(() => null);
-          if (data && data.ok !== false) return data;
-        } else if (response.status === 400 || response.status === 429) {
-          const errData = await response.json().catch(() => null);
-          if (errData && errData.error) {
-            throw new Error(errData.error);
+      if (shouldFetchHttp) {
+        try {
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (response.ok) {
+            const data = await response.json().catch(() => null);
+            if (data && data.ok !== false) return data;
+          } else if (response.status === 400 || response.status === 429) {
+            const errData = await response.json().catch(() => null);
+            if (errData && errData.error) {
+              const valErr = new Error(errData.error);
+              valErr.isValidationError = true;
+              throw valErr;
+            }
           }
+        } catch (apiErr) {
+          if (apiErr && apiErr.isValidationError) {
+            throw apiErr;
+          }
+          // Network failure: proceed to direct Firestore
         }
-      } catch (apiErr) {
-        if (apiErr.message && !apiErr.message.includes('fetch') && !apiErr.message.includes('Failed to load')) {
-          throw apiErr;
-        }
-        // Network failure / offline: proceed to client fallback
       }
 
       // Direct Firestore write fallback

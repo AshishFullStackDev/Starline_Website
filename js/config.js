@@ -43,8 +43,10 @@ const STARLINE_CONFIG = {
     // The Node.js / Express backend (server.js) runs on a separate Node-compatible service:
     // e.g. https://api.starlineadventures.com (Render, Railway, Cloud Run, VPS, etc.).
     //
-    // REPLACE THIS VALUE with your live deployed backend URL:
-    PRODUCTION_API_URL: 'https://api.starlineadventures.com/api/enquiry',
+    // Set this to your live backend server URL once deployed (e.g. 'https://your-api.onrender.com/api/enquiry').
+    // By default, leave empty ('') or 'direct-firebase' to use serverless direct Firestore saving,
+    // which works 100% out of the box on static hosting without requiring DNS configuration or a backend server!
+    PRODUCTION_API_URL: '',
 
     // Local development endpoint for Express server (port 3000):
     DEVELOPMENT_API_URL: 'http://localhost:3000/api/enquiry',
@@ -52,7 +54,7 @@ const STARLINE_CONFIG = {
     // Function to dynamically resolve the appropriate API endpoint
     getEnquiryApiUrl: function() {
         if (typeof window === 'undefined') {
-            return this.PRODUCTION_API_URL;
+            return this.PRODUCTION_API_URL || 'direct-firebase';
         }
 
         // Support manual override for testing / staging environments
@@ -73,7 +75,12 @@ const STARLINE_CONFIG = {
         }
 
         // 3. Live production domain (starlineadventures.com, www.starlineadventures.com, or custom static host)
-        return this.PRODUCTION_API_URL;
+        if (this.PRODUCTION_API_URL && !this.PRODUCTION_API_URL.includes('api.starlineadventures.com')) {
+            return this.PRODUCTION_API_URL;
+        }
+
+        // Default to direct Firebase Firestore submission for static hosting:
+        return 'direct-firebase';
     },
 
     // Base URL helper for other server endpoints (/api/health, /api/firebase-config)
