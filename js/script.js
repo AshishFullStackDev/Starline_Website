@@ -743,7 +743,19 @@ function shareWebsite() {
 // In addition, after a successful submit we show a WhatsApp click-to-chat
 // button pre-filled with the enquiry details - this works with zero
 // third-party API dependency (the visitor just taps it and hits send).
-const ENQUIRY_API_URL = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG && STARLINE_CONFIG.enquiryApiUrl) || '/api/enquiry';
+const ENQUIRY_API_URL = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG && (typeof STARLINE_CONFIG.getEnquiryApiUrl === 'function' ? STARLINE_CONFIG.getEnquiryApiUrl() : STARLINE_CONFIG.enquiryApiUrl)) || '/api/enquiry';
+
+function getEnquiryApiEndpoint() {
+    if (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG) {
+        if (typeof STARLINE_CONFIG.getEnquiryApiUrl === 'function') {
+            return STARLINE_CONFIG.getEnquiryApiUrl();
+        }
+        if (STARLINE_CONFIG.enquiryApiUrl) {
+            return STARLINE_CONFIG.enquiryApiUrl;
+        }
+    }
+    return '/api/enquiry';
+}
 
 // Sanitize URL parameters to prevent XSS
 function getURLParameter(param) {
@@ -1105,11 +1117,7 @@ function handleEnquiry(event) {
     setFormStatus(status, '⏳ Submitting your enquiry to our adventure engineering team...', 'loading');
     
     const submitEnquiry = async () => {
-        if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-            return await window.StarlineFirebase.saveEnquiry(formData);
-        }
-
-        const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
+        const apiUrl = getEnquiryApiEndpoint();
         try {
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -1123,8 +1131,20 @@ function handleEnquiry(event) {
             if (response.ok) {
                 const data = await response.json().catch(() => null);
                 if (data && data.ok !== false) return data;
+            } else if (response.status === 400 || response.status === 429) {
+                const errData = await response.json().catch(() => null);
+                if (errData && errData.error) {
+                    throw new Error(errData.error);
+                }
+            } else {
+                throw new Error(`Server returned HTTP status ${response.status}`);
             }
-        } catch (e) {}
+        } catch (fetchErr) {
+            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                return await window.StarlineFirebase.saveEnquiry(formData);
+            }
+            throw fetchErr;
+        }
 
         return {
             ok: true,
@@ -1806,11 +1826,7 @@ function bindQuoteModalEvents() {
             };
 
             const submitQuote = async () => {
-                if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                    return await window.StarlineFirebase.saveEnquiry(payload);
-                }
-
-                const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
+                const apiUrl = getEnquiryApiEndpoint();
                 try {
                     const res = await fetch(apiUrl, {
                         method: 'POST',
@@ -1821,8 +1837,20 @@ function bindQuoteModalEvents() {
                     if (res.ok) {
                         const data = await res.json().catch(() => null);
                         if (data && data.ok !== false) return data;
+                    } else if (res.status === 400 || res.status === 429) {
+                        const errData = await res.json().catch(() => null);
+                        if (errData && errData.error) {
+                            throw new Error(errData.error);
+                        }
+                    } else {
+                        throw new Error(`Server returned HTTP status ${res.status}`);
                     }
-                } catch (e) {}
+                } catch (fetchErr) {
+                    if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                        return await window.StarlineFirebase.saveEnquiry(payload);
+                    }
+                    throw fetchErr;
+                }
 
                 // Offline fallback ID
                 return {
@@ -1899,6 +1927,12 @@ document.addEventListener('click', function(e) {
     // Check for any anchor or button with text matching quote variations
     const buttonOrLink = e.target.closest('a, button');
     if (buttonOrLink && !buttonOrLink.closest('.quote-modal')) {
+        // Explicitly ignore telephone, email, and WhatsApp links to ensure direct native handling
+        const href = buttonOrLink.getAttribute('href') || '';
+        if (href.startsWith('tel:') || href.startsWith('mailto:') || href.includes('wa.me')) {
+            return;
+        }
+
         // Skip form submit buttons
         if (buttonOrLink.type === 'submit' && !buttonOrLink.classList.contains('open-quote-modal')) return;
 
@@ -2046,11 +2080,7 @@ function initContactForm() {
         };
 
         const submitContactForm = async () => {
-            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                return await window.StarlineFirebase.saveEnquiry(payload);
-            }
-
-            const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
+            const apiUrl = getEnquiryApiEndpoint();
             try {
                 const res = await fetch(apiUrl, {
                     method: 'POST',
@@ -2061,8 +2091,20 @@ function initContactForm() {
                 if (res.ok) {
                     const data = await res.json().catch(() => null);
                     if (data && data.ok !== false) return data;
+                } else if (res.status === 400 || res.status === 429) {
+                    const errData = await res.json().catch(() => null);
+                    if (errData && errData.error) {
+                        throw new Error(errData.error);
+                    }
+                } else {
+                    throw new Error(`Server returned HTTP status ${res.status}`);
                 }
-            } catch (e) {}
+            } catch (fetchErr) {
+                if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                    return await window.StarlineFirebase.saveEnquiry(payload);
+                }
+                throw fetchErr;
+            }
 
             return {
                 ok: true,

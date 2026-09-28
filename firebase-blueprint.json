@@ -49,6 +49,14 @@
         "createdAt": {
           "type": "string",
           "maxLength": 64
+        },
+        "pageUrl": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "referrer": {
+          "type": "string",
+          "maxLength": 500
         }
       },
       "required": [

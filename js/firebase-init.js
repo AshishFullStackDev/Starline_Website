@@ -29,7 +29,10 @@
       try {
         let cfg = null;
         try {
-          const response = await fetch('/api/firebase-config', { credentials: 'include' });
+          const baseApi = (typeof STARLINE_CONFIG !== 'undefined' && typeof STARLINE_CONFIG.getBaseApiUrl === 'function')
+            ? STARLINE_CONFIG.getBaseApiUrl()
+            : '';
+          const response = await fetch((baseApi ? baseApi : '') + '/api/firebase-config', { credentials: 'include' });
           if (response.ok) {
             const data = await response.json().catch(() => null);
             if (data && data.ok && data.config) {
@@ -91,19 +94,32 @@
       const enquiryId = enquiryData.id || ('SA-ENQ-' + Math.floor(100000 + Math.random() * 900000));
       const payload = Object.assign({}, enquiryData, { id: enquiryId });
 
+      const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && typeof STARLINE_CONFIG.getEnquiryApiUrl === 'function')
+        ? STARLINE_CONFIG.getEnquiryApiUrl()
+        : ((typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG.enquiryApiUrl) || '/api/enquiry');
+
       try {
-        const response = await fetch('/api/enquiry', {
+        const response = await fetch(apiUrl, {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify(payload)
         });
+
         if (response.ok) {
           const data = await response.json().catch(() => null);
           if (data && data.ok !== false) return data;
+        } else if (response.status === 400 || response.status === 429) {
+          const errData = await response.json().catch(() => null);
+          if (errData && errData.error) {
+            throw new Error(errData.error);
+          }
         }
-      } catch (e) {
-        // Fallback to direct client saving
+      } catch (apiErr) {
+        if (apiErr.message && !apiErr.message.includes('fetch') && !apiErr.message.includes('Failed to load')) {
+          throw apiErr;
+        }
+        // Network failure / offline: proceed to client fallback
       }
 
       // Direct Firestore write fallback
@@ -119,14 +135,16 @@
             location: String(payload.location || 'Not specified').slice(0, 120),
             product: String(payload.product || 'General Adventure Project Quote').slice(0, 120),
             message: String(payload.message || '').slice(0, 2000),
-            formType: String(payload.formType || 'Quick RFQ').slice(0, 64),
+            formType: String(payload.formType || 'Get a Quote').slice(0, 64),
             createdAt: new Date().toISOString(),
-            status: 'new'
+            status: 'new',
+            pageUrl: String(payload.pageUrl || (typeof window !== 'undefined' ? window.location.href : '')).slice(0, 500),
+            referrer: String(payload.referrer || (typeof document !== 'undefined' ? document.referrer : 'Direct')).slice(0, 500)
           };
           await this.db.collection('enquiries').doc(enquiryId).set(cleanDoc);
         }
       } catch (fsErr) {
-        console.warn('[StarlineFirebase]: Direct save notice:', fsErr && fsErr.message ? fsErr.message : fsErr);
+        console.warn('[StarlineFirebase]: Direct save note:', fsErr && fsErr.message ? fsErr.message : fsErr);
       }
 
       // Save locally to localStorage so lead is permanently stored
@@ -140,8 +158,7 @@
         ok: true,
         id: enquiryId,
         enquiryId: enquiryId,
-        customerMessage: "Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly. We appreciate your interest and look forward to working with you.",
-        fallback: true
+        customerMessage: "Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly. We appreciate your interest and look forward to working with you."
       };
     }
   };

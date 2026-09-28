@@ -104,16 +104,16 @@ app.use((req, res, next) => {
 // ============================================================
 // 3. CORS CONFIGURATION
 // ============================================================
-const DEFAULT_ALLOWED_ORIGINS = [
+const PRODUCTION_ALLOWED_ORIGINS = [
   'https://starlineadventures.com',
   'https://www.starlineadventures.com'
 ];
 
 function isOriginAllowed(origin) {
-  if (!origin) return true; // same-origin or server-to-server
+  if (!origin) return true; // same-origin, curl, server-to-server
 
   const normalized = origin.toLowerCase().trim();
-  if (DEFAULT_ALLOWED_ORIGINS.includes(normalized)) return true;
+  if (PRODUCTION_ALLOWED_ORIGINS.includes(normalized)) return true;
 
   if (process.env.ALLOWED_ORIGINS) {
     const customAllowed = process.env.ALLOWED_ORIGINS
@@ -122,13 +122,11 @@ function isOriginAllowed(origin) {
     if (customAllowed.includes(normalized)) return true;
   }
 
-  // Allow preview & local development environments
+  // Allow preview & local development environments ONLY when dev or in Cloud Run preview
   const isDevOrPreview = NODE_ENV !== 'production' ||
     normalized.includes('.run.app') ||
     normalized.includes('.google.com') ||
-    normalized.includes('googleusercontent.com') ||
-    normalized.includes('localhost') ||
-    normalized.includes('127.0.0.1');
+    normalized.includes('googleusercontent.com');
 
   if (isDevOrPreview && (
     normalized.includes('.run.app') ||
@@ -607,17 +605,22 @@ async function sendCustomerConfirmationEmail(record) {
   const subject = `Enquiry Confirmation [${record.id}] - Starline Adventures`;
   const textBody = `Hello ${record.name},
 
-Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly. We appreciate your interest and look forward to working with you.
+Thank you for contacting Starline Adventures.
+
+Your enquiry has been received successfully.
+
+Our team will contact you shortly.
 
 ------------------------------------------------------------
-ENQUIRY SUMMARY:
-- Enquiry ID:        ${record.id}
-- Interested In:     ${record.product}
-- Project Location:  ${record.location}
-- Date Received:     ${new Date(record.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
+ENQUIRY DETAILS:
+- Reference ID:   ${record.id}
+- Name:           ${record.name}
+- Email:          ${record.email}
+- Phone:          ${record.phone}
+- Date:           ${new Date(record.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
 ------------------------------------------------------------
 
-For immediate assistance, you can also reach us via:
+For immediate assistance, you can reach us via:
 Phone: +91-94249-04000 / +91-9421-244-244
 WhatsApp: https://wa.me/919424904000
 Email: starlineadventure@gmail.com
@@ -659,15 +662,17 @@ https://starlineadventures.com
     <div class="content">
       <div class="greeting">Hello ${escapeHtml(record.name)},</div>
       <div class="msg-box">
-        Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly. We appreciate your interest and look forward to working with you.
+        <p style="margin: 0 0 8px;"><strong>Thank you for contacting Starline Adventures.</strong></p>
+        <p style="margin: 0 0 8px;">Your enquiry has been received successfully.</p>
+        <p style="margin: 0;">Our team will contact you shortly.</p>
       </div>
       <div>
         <span class="id-badge">Enquiry Reference: ${escapeHtml(record.id)}</span>
       </div>
       <table class="summary-table">
-        <tr><td class="summary-label">Selected Solution:</td><td class="summary-val">${escapeHtml(record.product)}</td></tr>
-        <tr><td class="summary-label">Project Location:</td><td class="summary-val">${escapeHtml(record.location)}</td></tr>
+        <tr><td class="summary-label">Name:</td><td class="summary-val">${escapeHtml(record.name)}</td></tr>
         <tr><td class="summary-label">Contact Phone:</td><td class="summary-val">${escapeHtml(record.phone)}</td></tr>
+        <tr><td class="summary-label">Email:</td><td class="summary-val">${escapeHtml(record.email)}</td></tr>
       </table>
     </div>
     <div class="footer">
@@ -841,26 +846,26 @@ async function handleSubmission(req, res, defaultFormType = 'Contact Form') {
     // 5. Generate Unique Enquiry ID & Record
     const uniqueNumber = Math.floor(100000 + Math.random() * 900000);
     const enquiryId = `SA-ENQ-${uniqueNumber}`;
+    const pageUrl = sanitizeInput(req.body.pageUrl || req.headers.referer || 'Website Direct');
+    const referrer = sanitizeInput(req.body.referrer || req.headers.referer || 'Direct');
 
     const enquiryRecord = {
       id: enquiryId,
-      formType,
+      formType: formType || 'Get a Quote',
       name,
       email,
       phone,
-      company,
-      location,
-      product,
       message,
       createdAt: new Date().toISOString(),
-      status: 'new'
+      status: 'new',
+      pageUrl,
+      referrer
     };
 
-    const fullRecord = {
-      ...enquiryRecord,
-      pageUrl: sanitizeInput(req.body.pageUrl || req.headers.referer || 'Website Direct'),
-      referrer: sanitizeInput(req.body.referrer || req.headers.referer || 'Direct')
-    };
+    // Attach internal context if present
+    if (product) enquiryRecord.product = product;
+    if (company && company !== 'N/A') enquiryRecord.company = company;
+    if (location && location !== 'Not specified') enquiryRecord.location = location;
 
     // 6. Save Permanently in Firestore
     if (db) {
@@ -878,7 +883,7 @@ async function handleSubmission(req, res, defaultFormType = 'Contact Form') {
     }
 
     // Also persist in server-side secure store
-    saveEnquirySecurely(fullRecord);
+    saveEnquirySecurely(enquiryRecord);
 
     // 7. Dispatch Notification Email
     let emailSent = false;
