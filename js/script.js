@@ -843,6 +843,8 @@ function showEnquirySuccessModal(info) {
                         Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly. We appreciate your interest and look forward to working with you.
                     </div>
 
+                    <div class="enquiry-email-banner" id="enquiryModalEmailBanner" style="display: none; margin: 12px 0 16px; padding: 10px 14px; border-radius: 8px; font-size: 0.88rem; line-height: 1.4; text-align: left;"></div>
+
                     <div class="enquiry-summary-grid">
                         <div class="enquiry-summary-item">
                             <span class="enquiry-summary-label">Full Name</span>
@@ -943,6 +945,25 @@ function showEnquirySuccessModal(info) {
     if (waBtn) {
         const waText = encodeURIComponent(`Hello STARLINE ADVENTURES,\n\nI have submitted enquiry reference ID ${enquiryId} on your website:\n- Name: ${info.name}\n- Product/Activity: ${info.product}\n- Location: ${info.location}\n- Phone: ${info.phone}\n\nLooking forward to hearing from your engineering team.`);
         waBtn.href = `https://wa.me/919424904000?text=${waText}`;
+    }
+
+    const emailBannerEl = document.getElementById('enquiryModalEmailBanner');
+    if (emailBannerEl) {
+        if (info.emailSent) {
+            emailBannerEl.style.display = 'block';
+            emailBannerEl.style.background = '#f0fdf4';
+            emailBannerEl.style.border = '1px solid #86efac';
+            emailBannerEl.style.color = '#166534';
+            emailBannerEl.innerHTML = '✉️ <strong>EmailJS Dispatched:</strong> Notification email sent directly to <strong>starlineadventure@gmail.com</strong>';
+        } else if (info.emailError) {
+            emailBannerEl.style.display = 'block';
+            emailBannerEl.style.background = '#fefce8';
+            emailBannerEl.style.border = '1px solid #fef08a';
+            emailBannerEl.style.color = '#854d0e';
+            emailBannerEl.innerHTML = '💾 <strong>Firestore Saved:</strong> Your enquiry is securely saved. <br><span style="font-size: 0.8rem; opacity: 0.85;">(Email notification: ' + escapeHtmlString(info.emailError) + ')</span>';
+        } else {
+            emailBannerEl.style.display = 'none';
+        }
     }
 
     // Open Modal with smooth transition
@@ -1144,6 +1165,8 @@ function handleEnquiry(event) {
             location: formData.location,
             product: formData.product,
             message: formData.message,
+            emailSent: data.emailSent,
+            emailError: data.emailError,
             customerMessage: data.customerMessage || "Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly. We appreciate your interest and look forward to working with you."
         });
 
@@ -1820,10 +1843,17 @@ function bindQuoteModalEvents() {
                 successView.style.display = 'block';
 
                 if (successDesc) {
+                    const emailBannerHtml = data.emailSent
+                        ? `<div style="background: #f0fdf4; border: 1px solid #86efac; color: #166534; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; font-size: 0.86rem; font-weight: 600;">✉️ Notification email dispatched to <strong>starlineadventure@gmail.com</strong></div>`
+                        : (data.emailError
+                            ? `<div style="background: #fefce8; border: 1px solid #fef08a; color: #854d0e; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; font-size: 0.86rem;">💾 <strong>Firestore Saved:</strong> Enquiry securely recorded. <br><span style="font-size: 0.78rem; opacity: 0.85;">(${escapeHTML(data.emailError)})</span></div>`
+                            : '');
+
                     successDesc.innerHTML = `
                         <div style="background: #0f172a; color: #fff; padding: 8px 14px; border-radius: 6px; margin-bottom: 14px; font-family: monospace; font-size: 0.95rem;">
                             Enquiry ID: <strong style="color: #F47621;">${escapeHTML(enquiryId)}</strong>
                         </div>
+                        ${emailBannerHtml}
                         <div style="background: rgba(244,118,33,0.06); border-left: 4px solid #F47621; padding: 14px; border-radius: 6px; text-align: left; margin-bottom: 16px; font-size: 0.92rem; line-height: 1.6; color: #334155;">
                             Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly. We appreciate your interest and look forward to working with you.
                         </div>
@@ -1838,34 +1868,11 @@ function bindQuoteModalEvents() {
                 form.reset();
             })
             .catch(err => {
-                if (err && err.isValidationError) {
-                    if (submitBtn) {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = 'SUBMIT QUOTE REQUEST <span aria-hidden="true">&#8594;</span>';
-                    }
-                    showModalStatus(`❌ ${escapeHTML(err.message)}`, 'error');
-                    return;
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'SUBMIT QUOTE REQUEST <span aria-hidden="true">&#8594;</span>';
                 }
-
-                // If non-validation error occurred, still present success confirmation to the visitor
-                const fallbackId = 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000);
-                form.style.display = 'none';
-                successView.style.display = 'block';
-                if (successDesc) {
-                    successDesc.innerHTML = `
-                        <div style="background: #0f172a; color: #fff; padding: 8px 14px; border-radius: 6px; margin-bottom: 14px; font-family: monospace; font-size: 0.95rem;">
-                            Enquiry ID: <strong style="color: #F47621;">${escapeHTML(fallbackId)}</strong>
-                        </div>
-                        <div style="background: rgba(244,118,33,0.06); border-left: 4px solid #F47621; padding: 14px; border-radius: 6px; text-align: left; margin-bottom: 16px; font-size: 0.92rem; line-height: 1.6; color: #334155;">
-                            Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly.
-                        </div>
-                    `;
-                }
-                if (whatsAppBtn) {
-                    const waText = encodeURIComponent(`Hello STARLINE ADVENTURES,\n\nI just requested a project quote [Enquiry ID: ${fallbackId}] on your website:\n- Name: ${name}\n- Phone: ${phone}\n- Email: ${email}\n- Message: ${message}`);
-                    whatsAppBtn.href = `https://wa.me/919424904000?text=${waText}`;
-                }
-                form.reset();
+                showModalStatus(`❌ ${escapeHTML(err.message || 'Unable to submit enquiry. Please try again or reach out on WhatsApp.')}`, 'error');
             });
         });
     }
@@ -2100,6 +2107,8 @@ function initContactForm() {
                     location,
                     product: product || 'General Adventure Project Enquiry',
                     message,
+                    emailSent: data.emailSent,
+                    emailError: data.emailError,
                     customerMessage: data.customerMessage || "Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly. We appreciate your interest and look forward to working with you."
                 });
             }

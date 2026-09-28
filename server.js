@@ -47,11 +47,11 @@ app.use((req, res, next) => {
   // Preserves AI Studio preview iframe, Google Maps embeds, and Firebase SDK
   const csp = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' https://www.gstatic.com https://apis.google.com",
+    "script-src 'self' 'unsafe-inline' https://www.gstatic.com https://apis.google.com https://cdn.jsdelivr.net",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com data:",
     "img-src 'self' data: blob: https:",
-    "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com",
+    "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://api.emailjs.com",
     "frame-src 'self' https://maps.google.com https://*.firebaseapp.com",
     "frame-ancestors 'self' https://*.google.com https://localhost.corp.google.com:26001 https://*.run.app"
   ].join('; ');

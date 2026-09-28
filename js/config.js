@@ -34,6 +34,17 @@ const STARLINE_CONFIG = {
     mapsLink: 'https://maps.app.goo.gl/ZfGAxr5sR2J8ZRk66',
 
     // ============================================================
+    // EMAILJS PUBLIC CONFIGURATION
+    // Direct client-side email dispatch to starlineadventure@gmail.com
+    // ============================================================
+    emailjs: {
+        serviceId: 'service_cr564i3',
+        templateId: 'template_01ptjdf',
+        publicKey: 'A8riesDbY_laz4ioq',
+        recipientEmail: 'starlineadventure@gmail.com'
+    },
+
+    // ============================================================
     // BACKEND API URL CONFIGURATION
     // ============================================================
     // The live website frontend is hosted on static hosting at https://starlineadventures.com

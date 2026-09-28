@@ -973,6 +973,8 @@ function initEnquiryFormSubmission() {
                         product,
                         location: 'Not specified',
                         phone,
+                        emailSent: data.emailSent,
+                        emailError: data.emailError,
                         customerMessage: data.customerMessage || "Thank you! Your enquiry has been submitted successfully."
                     });
                 } else {

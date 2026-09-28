@@ -53,13 +53,13 @@ function formatCreatedAt(createdAt) {
 
 /**
  * Cloud Function Trigger on Firestore enquiry creation
+ * Note: Email delivery has been migrated to client-side EmailJS (service_cr564i3).
+ * Cloud Function execution is bypassed.
  */
 exports.sendEnquiryNotification = onDocumentCreated('enquiries/{enquiryId}', async (event) => {
-  const snap = event.data;
-  if (!snap) {
-    console.log('[Notice]: No document data present in event.');
-    return null;
-  }
+  console.log(`[Notice]: Enquiry document detected: ${event.params ? event.params.enquiryId : 'unknown'}. Email delivery is handled client-side via EmailJS. Cloud Function email bypassed.`);
+  return { bypassed: true, handler: 'emailjs' };
+});
 
   const data = snap.data() || {};
   const enquiryId = event.params.enquiryId || data.id || snap.id;

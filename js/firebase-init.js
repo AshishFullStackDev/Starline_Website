@@ -165,13 +165,33 @@
         throw connErr;
       }
 
-      // 6. Save lead locally so it is permanently stored in browser
+      // 6. Trigger EmailJS Client-Side Dispatch (Requirements #3, #4, #7, #8, #9, #10)
+      let emailResult = { sent: false, error: null };
+      try {
+        if (typeof window !== 'undefined') {
+          if (!window.StarlineEmailJS) {
+            try {
+              await import('/js/emailjs-service.js');
+            } catch (e) {}
+          }
+          if (window.StarlineEmailJS && typeof window.StarlineEmailJS.sendEnquiryEmail === 'function') {
+            emailResult = await window.StarlineEmailJS.sendEnquiryEmail(cleanDoc);
+          }
+        }
+      } catch (emailErr) {
+        console.warn('⚠️ [EmailJS Notice]: Dispatch note:', emailErr && emailErr.message ? emailErr.message : emailErr);
+        emailResult = { sent: false, error: emailErr && emailErr.message ? emailErr.message : 'Email dispatch error' };
+      }
+
+      // 7. Save lead locally so it is permanently stored in browser
       try {
         const offlineKey = 'starline_enquiries_saved';
         const existing = JSON.parse(localStorage.getItem(offlineKey) || '[]');
         existing.unshift(Object.assign({}, cleanDoc, { 
           savedAt: new Date().toISOString(),
-          firestoreSaved 
+          firestoreSaved,
+          emailSent: emailResult.sent,
+          emailError: emailResult.error || null
         }));
         localStorage.setItem(offlineKey, JSON.stringify(existing.slice(0, 50)));
       } catch (lsErr) {}
@@ -180,8 +200,15 @@
         ok: true,
         id: documentId,
         enquiryId: documentId,
-        message: "Thank you! Your enquiry has been submitted successfully.",
-        customerMessage: "Thank you! Your enquiry has been submitted successfully."
+        firestoreSaved: true,
+        emailSent: emailResult.sent,
+        emailError: emailResult.error || null,
+        message: emailResult.sent
+          ? "Thank you! Your enquiry has been received and emailed to starlineadventure@gmail.com."
+          : "Thank you! Your enquiry has been safely received and stored in our database.",
+        customerMessage: emailResult.sent
+          ? "Thank you! Your enquiry has been safely saved in our system and an email was sent to starlineadventure@gmail.com."
+          : "Thank you! Your enquiry has been securely recorded. Our team will review your requirements and reach out to you shortly."
       };
     }
   };
