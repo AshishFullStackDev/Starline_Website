@@ -949,10 +949,17 @@ function initEnquiryFormSubmission() {
             };
 
             let data = null;
-            try {
-                if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                    data = await window.StarlineFirebase.saveEnquiry(payload);
-                } else {
+            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                data = await window.StarlineFirebase.saveEnquiry(payload);
+            } else {
+                try {
+                    await import('/js/firebase-init.js');
+                    if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                        data = await window.StarlineFirebase.saveEnquiry(payload);
+                    }
+                } catch (dynErr) {}
+
+                if (!data && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
                     const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
                     const res = await fetch(apiUrl, {
                         method: 'POST',
@@ -967,7 +974,7 @@ function initEnquiryFormSubmission() {
                         data = await res.json().catch(() => null);
                     }
                 }
-            } catch (submitErr) {}
+            }
 
             if (!data || data.ok === false) {
                 data = {
@@ -987,9 +994,9 @@ function initEnquiryFormSubmission() {
                         id: enquiryId,
                         name,
                         product,
-                        location,
+                        location: 'Not specified',
                         phone,
-                        customerMessage: data.customerMessage || "Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly. We appreciate your interest and look forward to working with you."
+                        customerMessage: data.customerMessage || "Thank you! Your enquiry has been submitted successfully."
                     });
                 } else {
                     alert(`Enquiry submitted successfully! Reference ID: ${enquiryId}`);

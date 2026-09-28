@@ -334,9 +334,12 @@ try {
   if (fs.existsSync(configPath)) {
     firebaseConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
     const firebaseApp = initializeApp(firebaseConfig);
-    db = getFirestore(firebaseApp, firebaseConfig.firestoreDatabaseId);
+    const dbId = (firebaseConfig.firestoreDatabaseId && firebaseConfig.firestoreDatabaseId !== '(default)') 
+      ? firebaseConfig.firestoreDatabaseId 
+      : undefined;
+    db = dbId ? getFirestore(firebaseApp, dbId) : getFirestore(firebaseApp);
     auth = getAuth(firebaseApp);
-    console.log('[Firebase Initialized]: Connected to Firestore database:', firebaseConfig.firestoreDatabaseId);
+    console.log('[Firebase Initialized]: Connected to Firestore database for project:', firebaseConfig.projectId);
 
     // Test connection on boot
     async function testConnection() {
