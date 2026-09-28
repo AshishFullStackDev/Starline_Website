@@ -958,22 +958,6 @@ function initEnquiryFormSubmission() {
                         data = await window.StarlineFirebase.saveEnquiry(payload);
                     }
                 } catch (dynErr) {}
-
-                if (!data && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-                    const apiUrl = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG?.enquiryApiUrl) || '/api/enquiry';
-                    const res = await fetch(apiUrl, {
-                        method: 'POST',
-                        credentials: 'include',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify(payload)
-                    });
-                    if (res.ok) {
-                        data = await res.json().catch(() => null);
-                    }
-                }
             }
 
             if (!data || data.ok === false) {

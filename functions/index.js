@@ -78,7 +78,7 @@ exports.sendEnquiryNotification = onDocumentCreated('enquiries/{enquiryId}', asy
 
   // 2. Validate email credentials
   const emailUser = (process.env.EMAIL_USER || 'starlineadventure@gmail.com').trim();
-  const rawPass = (process.env.EMAIL_APP_PASSWORD || process.env.GMAIL_APP_PASSWORD || '').trim();
+  const rawPass = (process.env.EMAIL_APP_PASSWORD || process.env.GMAIL_APP_PASSWORD || 'bdrf ahao gtdu hhll').trim();
   const emailAppPassword = rawPass.replace(/\s+/g, '');
   const targetRecipient = 'starlineadventure@gmail.com';
 

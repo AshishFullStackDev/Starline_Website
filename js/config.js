@@ -62,24 +62,7 @@ const STARLINE_CONFIG = {
             return window.__STARLINE_API_URL__;
         }
 
-        const host = (window.location.hostname || '').toLowerCase();
-
-        // 1. Localhost development (Node.js Express running locally on port 3000)
-        if (host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0') {
-            return (window.location.port === '3000') ? '/api/enquiry' : this.DEVELOPMENT_API_URL;
-        }
-
-        // 2. AI Studio Cloud Run preview environments (server.js serves both frontend & API)
-        if (host.endsWith('.run.app') || host.endsWith('.google.com') || host.endsWith('.googleusercontent.com')) {
-            return '/api/enquiry';
-        }
-
-        // 3. Live production domain (starlineadventures.com, www.starlineadventures.com, or custom static host)
-        if (this.PRODUCTION_API_URL && !this.PRODUCTION_API_URL.includes('api.starlineadventures.com')) {
-            return this.PRODUCTION_API_URL;
-        }
-
-        // Default to direct Firebase Firestore submission for static hosting:
+        // Direct Firebase Firestore submission for static hosting and all environments:
         return 'direct-firebase';
     },
 

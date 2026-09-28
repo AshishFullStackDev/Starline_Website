@@ -743,18 +743,10 @@ function shareWebsite() {
 // In addition, after a successful submit we show a WhatsApp click-to-chat
 // button pre-filled with the enquiry details - this works with zero
 // third-party API dependency (the visitor just taps it and hits send).
-const ENQUIRY_API_URL = (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG && (typeof STARLINE_CONFIG.getEnquiryApiUrl === 'function' ? STARLINE_CONFIG.getEnquiryApiUrl() : STARLINE_CONFIG.enquiryApiUrl)) || '/api/enquiry';
+const ENQUIRY_API_URL = 'direct-firebase';
 
 function getEnquiryApiEndpoint() {
-    if (typeof STARLINE_CONFIG !== 'undefined' && STARLINE_CONFIG) {
-        if (typeof STARLINE_CONFIG.getEnquiryApiUrl === 'function') {
-            return STARLINE_CONFIG.getEnquiryApiUrl();
-        }
-        if (STARLINE_CONFIG.enquiryApiUrl) {
-            return STARLINE_CONFIG.enquiryApiUrl;
-        }
-    }
-    return '/api/enquiry';
+    return 'direct-firebase';
 }
 
 // Sanitize URL parameters to prevent XSS
@@ -1117,39 +1109,7 @@ function handleEnquiry(event) {
     setFormStatus(status, '⏳ Submitting your enquiry to our adventure engineering team...', 'loading');
     
     const submitEnquiry = async () => {
-        // 1. Primary submission method: Send to server endpoint to save to Firestore & send email notification
-        const apiUrl = (typeof getEnquiryApiEndpoint === 'function') ? getEnquiryApiEndpoint() : '/api/enquiry';
-        const targetUrl = (apiUrl && apiUrl !== 'direct-firebase' && !apiUrl.includes('api.starlineadventures.com')) ? apiUrl : '/api/enquiry';
-
-        try {
-            const response = await fetch(targetUrl, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-            if (response.ok) {
-                const data = await response.json().catch(() => null);
-                if (data && data.ok !== false) return data;
-            } else if (response.status === 400 || response.status === 429) {
-                const errData = await response.json().catch(() => null);
-                if (errData && errData.error) {
-                    const valErr = new Error(errData.error);
-                    valErr.isValidationError = true;
-                    throw valErr;
-                }
-            }
-        } catch (fetchErr) {
-            if (fetchErr && fetchErr.isValidationError) {
-                throw fetchErr;
-            }
-            console.warn('[Enquiry Submit]: Backend notice, activating resilient fallback:', fetchErr ? fetchErr.message : fetchErr);
-        }
-
-        // 2. Resilient Firestore direct fallback
+        // Direct to Firebase Firestore via Modular SDK (pure static hosting compatible)
         if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
             try {
                 return await window.StarlineFirebase.saveEnquiry(formData);
@@ -1855,37 +1815,7 @@ function bindQuoteModalEvents() {
             };
 
             const submitQuote = async () => {
-                const apiUrl = getEnquiryApiEndpoint();
-                const shouldFetchHttp = apiUrl && apiUrl !== 'direct-firebase' && !apiUrl.includes('api.starlineadventures.com');
-
-                if (shouldFetchHttp) {
-                    try {
-                        const res = await fetch(apiUrl, {
-                            method: 'POST',
-                            credentials: 'include',
-                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-                        if (res.ok) {
-                            const data = await res.json().catch(() => null);
-                            if (data && data.ok !== false) return data;
-                        } else if (res.status === 400 || res.status === 429) {
-                            const errData = await res.json().catch(() => null);
-                            if (errData && errData.error) {
-                                const valErr = new Error(errData.error);
-                                valErr.isValidationError = true;
-                                throw valErr;
-                            }
-                        }
-                    } catch (fetchErr) {
-                        if (fetchErr && fetchErr.isValidationError) {
-                            throw fetchErr;
-                        }
-                        console.warn('[Quote Submit]: Backend unreachable, activating fallback:', fetchErr ? fetchErr.message : fetchErr);
-                    }
-                }
-
-                // Direct Firestore submission
+                // Direct Firestore submission (pure static hosting compatible)
                 if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
                     try {
                         return await window.StarlineFirebase.saveEnquiry(payload);
@@ -2154,36 +2084,7 @@ function initContactForm() {
         };
 
         const submitContactForm = async () => {
-            // 1. Primary submission method: Send to server endpoint to save to Firestore & send email notification
-            const apiUrl = (typeof getEnquiryApiEndpoint === 'function') ? getEnquiryApiEndpoint() : '/api/enquiry';
-            const targetUrl = (apiUrl && apiUrl !== 'direct-firebase' && !apiUrl.includes('api.starlineadventures.com')) ? apiUrl : '/api/enquiry';
-
-            try {
-                const res = await fetch(targetUrl, {
-                    method: 'POST',
-                    credentials: 'include',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (res.ok) {
-                    const data = await res.json().catch(() => null);
-                    if (data && data.ok !== false) return data;
-                } else if (res.status === 400 || res.status === 429) {
-                    const errData = await res.json().catch(() => null);
-                    if (errData && errData.error) {
-                        const valErr = new Error(errData.error);
-                        valErr.isValidationError = true;
-                        throw valErr;
-                    }
-                }
-            } catch (fetchErr) {
-                if (fetchErr && fetchErr.isValidationError) {
-                    throw fetchErr;
-                }
-                console.warn('[Contact Submit]: Backend notice, activating resilient fallback:', fetchErr ? fetchErr.message : fetchErr);
-            }
-
-            // 2. Resilient Firestore direct fallback
+            // Direct to Firebase Firestore via Modular SDK (pure static hosting compatible)
             if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
                 try {
                     return await window.StarlineFirebase.saveEnquiry(payload);
