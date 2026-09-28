@@ -37,10 +37,10 @@ service cloud.firestore {
 
     // Enquiry validation
     function isValidEnquiry(data) {
-      return data.keys().hasAll(['name', 'email', 'phone', 'message', 'createdAt'])
-        && data.keys().hasOnly(['id', 'formType', 'name', 'email', 'phone', 'company', 'location', 'product', 'message', 'createdAt', 'status', 'pageUrl', 'referrer'])
-        && (!('id' in data) || (data.id is string && data.id.size() <= 128))
-        && (!('formType' in data) || (data.formType is string && data.formType.size() <= 64))
+      return data.keys().hasAll(['id', 'formType', 'name', 'email', 'phone', 'message', 'createdAt'])
+        && data.keys().hasOnly(['id', 'formType', 'name', 'email', 'phone', 'company', 'location', 'product', 'message', 'createdAt', 'status'])
+        && data.id is string && data.id.size() <= 128
+        && data.formType is string && data.formType.size() <= 64
         && data.name is string && data.name.size() > 0 && data.name.size() <= 100
         && data.email is string && data.email.size() > 0 && data.email.size() <= 120
         && data.phone is string && data.phone.size() > 0 && data.phone.size() <= 30
@@ -49,9 +49,7 @@ service cloud.firestore {
         && (!('location' in data) || (data.location is string && data.location.size() <= 120))
         && (!('product' in data) || (data.product is string && data.product.size() <= 120))
         && (!('company' in data) || (data.company is string && data.company.size() <= 120))
-        && (!('status' in data) || (data.status is string && data.status.size() <= 30))
-        && (!('pageUrl' in data) || (data.pageUrl is string && data.pageUrl.size() <= 500))
-        && (!('referrer' in data) || (data.referrer is string && data.referrer.size() <= 500));
+        && (!('status' in data) || (data.status is string && data.status.size() <= 30));
     }
 
     // Testimonial validation

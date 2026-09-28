@@ -75,15 +75,17 @@
 
     /**
      * Save enquiry directly to Firestore: enquiries/{documentId}
-     * Customer visible fields: name, email, phone, message
-     * Auto-generated fields: createdAt (serverTimestamp), id
+     * Must strictly match deployed Firestore security rules:
+     * Required keys: id, formType, name, email, phone, message, createdAt
+     * Allowed optional keys: company, location, product, status
+     * Prohibited keys: pageUrl, referrer, or any undeclared fields
      */
     saveEnquiry: async function (payload) {
       if (!payload || typeof payload !== 'object') {
         throw new Error('Invalid submission payload');
       }
 
-      // 1. Validate inputs
+      // 1. Validate inputs (Name, Email, Phone, Message)
       const name = String(payload.name || '').trim();
       const email = String(payload.email || '').trim().toLowerCase();
       const phone = String(payload.phone || '').trim();
@@ -115,61 +117,51 @@
         throw err;
       }
 
-      // 2. Generate safe unique document ID
-      const documentId = payload.id || generateSafeDocumentId();
+      // 2. Generate safe unique document ID matching ^[a-zA-Z0-9_\-]+$
+      const rawId = payload.id && typeof payload.id === 'string' ? payload.id.trim() : '';
+      const documentId = (/^[a-zA-Z0-9_\-]+$/.test(rawId) && rawId.length <= 128) 
+        ? rawId 
+        : generateSafeDocumentId();
 
-      // 3. Prepare clean document matching Firestore security rules
+      // 3. Load Firebase SDK
       let sdk = null;
       try {
         sdk = await loadModularSdk();
       } catch (loadErr) {
-        console.warn('⚠️ [StarlineFirebase] Modular SDK load error:', loadErr);
+        console.error('Failed to load Firebase SDK:', loadErr);
       }
 
+      // 4. Construct exact document matching deployed Firestore rules
+      // STRICT: Must include ONLY the allowed keys defined in the rules
       const cleanDoc = {
         id: String(documentId).slice(0, 128),
+        formType: String(payload.formType || 'Get a Quote').slice(0, 64),
         name: name.slice(0, 100),
         email: email.slice(0, 120),
         phone: phone.slice(0, 30),
         message: message.slice(0, 2000),
-        formType: String(payload.formType || 'Get a Quote').slice(0, 64),
-        product: String(payload.product || 'General Adventure Project Enquiry').slice(0, 120),
-        location: String(payload.location || 'Not specified').slice(0, 120),
         company: String(payload.company || 'N/A').slice(0, 120),
-        status: 'new',
+        location: String(payload.location || 'Not specified').slice(0, 120),
+        product: String(payload.product || 'General Adventure Project Enquiry').slice(0, 120),
+        status: String(payload.status || 'new').slice(0, 30),
         createdAt: (sdk && sdk.serverTimestamp) ? sdk.serverTimestamp() : new Date().toISOString()
       };
 
-      if (typeof window !== 'undefined' && window.location) {
-        cleanDoc.pageUrl = window.location.href.slice(0, 500);
-      }
-      if (typeof document !== 'undefined' && document.referrer) {
-        cleanDoc.referrer = document.referrer.slice(0, 500);
-      }
-
-      // 4. Save to Firestore: enquiries/{documentId}
+      // 5. Save to Firestore: enquiries/{documentId}
       let firestoreSaved = false;
       if (sdk && sdk.db) {
         try {
           const docRef = sdk.doc(sdk.db, 'enquiries', documentId);
           await sdk.setDoc(docRef, cleanDoc);
           firestoreSaved = true;
-          console.log(`✅ [StarlineFirebase] Enquiry saved to Firestore: enquiries/${documentId}`);
+          console.log(`✅ [StarlineFirebase] Enquiry successfully saved to Firestore: enquiries/${documentId}`);
         } catch (fsErr) {
-          console.warn('⚠️ [StarlineFirebase] Direct Firestore write note:', fsErr && fsErr.message ? fsErr.message : fsErr);
-          // If serverTimestamp failed, retry with ISO string
-          if (fsErr && fsErr.message && fsErr.message.includes('serverTimestamp')) {
-            try {
-              cleanDoc.createdAt = new Date().toISOString();
-              const docRef = sdk.doc(sdk.db, 'enquiries', documentId);
-              await sdk.setDoc(docRef, cleanDoc);
-              firestoreSaved = true;
-            } catch (retryErr) {}
-          }
+          console.error('❌ [StarlineFirebase] Direct Firestore write note:', fsErr && fsErr.message ? fsErr.message : fsErr);
+          throw fsErr;
         }
       }
 
-      // 5. Save lead locally so it is permanently stored in browser
+      // 6. Save lead locally so it is permanently stored in browser
       try {
         const offlineKey = 'starline_enquiries_saved';
         const existing = JSON.parse(localStorage.getItem(offlineKey) || '[]');
