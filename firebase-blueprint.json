@@ -57,8 +57,7 @@
         "name",
         "email",
         "phone",
-        "location",
-        "product",
+        "message",
         "createdAt"
       ]
     },

@@ -230,68 +230,32 @@
                             <input type="text" name="website_hp" id="website_hp" class="hp-field" style="display:none !important;" tabindex="-1" autocomplete="off" aria-hidden="true">
                             <input type="hidden" name="formType" value="Contact Form">
 
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="contactName">Full Name <span class="required-asterisk" style="color: #ef4444;">*</span></label>
-                                    <input type="text" id="contactName" name="name" required placeholder="e.g. Rahul Sharma" autocomplete="name">
-                                    <span class="field-error" id="error-contactName" role="alert" style="color: #ef4444; font-size: 0.82rem; margin-top: 4px; display: block;"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="contactPhone">Phone Number <span class="required-asterisk" style="color: #ef4444;">*</span></label>
-                                    <input type="tel" id="contactPhone" name="phone" required placeholder="+91-94249-04000" autocomplete="tel">
-                                    <span class="field-error" id="error-contactPhone" role="alert" style="color: #ef4444; font-size: 0.82rem; margin-top: 4px; display: block;"></span>
-                                </div>
+                            <div class="form-group" style="margin-bottom: 16px;">
+                                <label for="contactName">Name <span class="required-asterisk" style="color: #ef4444;">*</span></label>
+                                <input type="text" id="contactName" name="name" required placeholder="Your full name" autocomplete="name">
+                                <span class="field-error" id="error-contactName" role="alert" style="color: #ef4444; font-size: 0.82rem; margin-top: 4px; display: block;"></span>
                             </div>
 
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="contactEmail">Email <span class="required-asterisk" style="color: #ef4444;">*</span></label>
-                                    <input type="email" id="contactEmail" name="email" required placeholder="rahul@example.com" autocomplete="email">
-                                    <span class="field-error" id="error-contactEmail" role="alert" style="color: #ef4444; font-size: 0.82rem; margin-top: 4px; display: block;"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="contactCompany">Project / Company Name <span class="required-asterisk" style="color: #ef4444;">*</span></label>
-                                    <input type="text" id="contactCompany" name="company" required placeholder="Company or Resort / Site Name" autocomplete="organization">
-                                    <span class="field-error" id="error-contactCompany" role="alert" style="color: #ef4444; font-size: 0.82rem; margin-top: 4px; display: block;"></span>
-                                </div>
+                            <div class="form-group" style="margin-bottom: 16px;">
+                                <label for="contactEmail">Email <span class="required-asterisk" style="color: #ef4444;">*</span></label>
+                                <input type="email" id="contactEmail" name="email" required placeholder="you@example.com" autocomplete="email">
+                                <span class="field-error" id="error-contactEmail" role="alert" style="color: #ef4444; font-size: 0.82rem; margin-top: 4px; display: block;"></span>
                             </div>
 
-                            <div class="form-group">
-                                <label for="contactLocation">Project Location <span class="required-asterisk" style="color: #ef4444;">*</span></label>
-                                <input type="text" id="contactLocation" name="location" required placeholder="City, State (e.g. Pune, Maharashtra)">
-                                <span class="field-error" id="error-contactLocation" role="alert" style="color: #ef4444; font-size: 0.82rem; margin-top: 4px; display: block;"></span>
+                            <div class="form-group" style="margin-bottom: 16px;">
+                                <label for="contactPhone">Phone <span class="required-asterisk" style="color: #ef4444;">*</span></label>
+                                <input type="tel" id="contactPhone" name="phone" required placeholder="+91-94249-04000" autocomplete="tel">
+                                <span class="field-error" id="error-contactPhone" role="alert" style="color: #ef4444; font-size: 0.82rem; margin-top: 4px; display: block;"></span>
                             </div>
 
-                            <div class="form-group">
-                                <label for="contactProduct">Interested Activity / Equipment <span class="optional-badge" style="color: #64748b; font-weight: normal; font-size: 0.85em;">(Optional)</span></label>
-                                <select id="contactProduct" name="product">
-                                    <option value="">Select Activity / Equipment (Optional)</option>
-                                    <option value="Zip Line & Sky Activities">Zip Line & Sky Activities</option>
-                                    <option value="Rope Courses & Obstacles">Rope Courses & Obstacles</option>
-                                    <option value="Climbing Walls & Towers">Climbing Walls & Towers</option>
-                                    <option value="Multi-Activity Towers">Multi-Activity Towers</option>
-                                    <option value="Extreme Thrill Rides">Extreme Thrill Rides</option>
-                                    <option value="ATV & Off-Road Track">ATV & Off-Road Track</option>
-                                    <option value="Water Adventure Equipment">Water Adventure Equipment</option>
-                                    <option value="Safety Gear & Accessories">Safety Gear & Accessories</option>
-                                    <option value="Turnkey Adventure Park Setup">Turnkey Adventure Park Setup</option>
-                                    <option value="Other / Custom Setup">Other / Custom Setup</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="contactMessage">Requirement / Message <span class="required-asterisk" style="color: #ef4444;">*</span></label>
-                                <textarea id="contactMessage" name="message" required placeholder="Tell us about your project requirements, site dimensions, expected timeline..."></textarea>
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label for="contactMessage">Message <span class="required-asterisk" style="color: #ef4444;">*</span></label>
+                                <textarea id="contactMessage" name="message" rows="4" required placeholder="Tell us about your project requirements, site dimensions, expected timeline..."></textarea>
                                 <span class="field-error" id="error-contactMessage" role="alert" style="color: #ef4444; font-size: 0.82rem; margin-top: 4px; display: block;"></span>
                             </div>
 
-                            <div class="contact-trust-note" style="display: flex; align-items: flex-start; gap: 8px; background: #fff7ed; border: 1px solid #ffedd5; border-radius: 6px; padding: 10px 12px; margin-bottom: 20px; font-size: 0.83rem; color: #9a3412; line-height: 1.45;">
-                                <span aria-hidden="true" style="font-size: 1.05rem;">ℹ️</span>
-                                <span>Project requirements, site conditions and final specifications will be reviewed by our team before quotation.</span>
-                            </div>
-
                             <button type="submit" id="contactSubmitBtn" class="submit-btn">
-                                Request a Quote
+                                Get a Quote
                             </button>
 
                             <div id="contactFormStatus" class="form-status" role="status" aria-live="polite" style="margin-top: 16px; display: none;"></div>

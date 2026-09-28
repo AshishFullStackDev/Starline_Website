@@ -690,38 +690,29 @@
 
                     <form id="sidebarProductEnquiryForm" action="/api/enquiry" method="POST" class="enquiry-form">
                         <input type="hidden" name="formType" value="Product Page RFQ - Adventure Park Platforms">
+                        <input type="hidden" id="detailEnquiryProduct" name="product" value="Adventure Park Platforms">
 
                         <div style="margin-bottom: 14px;">
-                            <label for="detailEnquiryProduct" style="display: block; font-size: 0.85rem; font-weight: 700; color: #0b192c; margin-bottom: 6px;">Product / Attraction</label>
-                            <input type="text" id="detailEnquiryProduct" name="product" value="Adventure Park Platforms" readonly required style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; background: #f1f5f9; font-weight: 700; color: #0b192c; box-sizing: border-box;">
+                            <label for="detailEnquiryName" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Name *</label>
+                            <input type="text" id="detailEnquiryName" name="name" required placeholder="Your full name" autocomplete="name" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
                         </div>
 
                         <div style="margin-bottom: 14px;">
-                            <label for="detailEnquiryName" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Full Name *</label>
-                            <input type="text" id="detailEnquiryName" name="name" required placeholder="Your full name" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
+                            <label for="detailEnquiryEmail" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Email *</label>
+                            <input type="email" id="detailEnquiryEmail" name="email" required placeholder="you@example.com" autocomplete="email" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
                         </div>
 
                         <div style="margin-bottom: 14px;">
-                            <label for="detailEnquiryPhone" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Phone Number *</label>
-                            <input type="tel" id="detailEnquiryPhone" name="phone" required placeholder="+91-94249-04000" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
-                        </div>
-
-                        <div style="margin-bottom: 14px;">
-                            <label for="detailEnquiryEmail" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Email Address *</label>
-                            <input type="email" id="detailEnquiryEmail" name="email" required placeholder="you@example.com" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
-                        </div>
-
-                        <div style="margin-bottom: 14px;">
-                            <label for="detailEnquiryLocation" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Project Location *</label>
-                            <input type="text" id="detailEnquiryLocation" name="location" required placeholder="City, State" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
+                            <label for="detailEnquiryPhone" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Phone *</label>
+                            <input type="tel" id="detailEnquiryPhone" name="phone" required placeholder="+91-94249-04000" autocomplete="tel" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
                         </div>
 
                         <div style="margin-bottom: 18px;">
-                            <label for="detailEnquiryMessage" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Project Requirements *</label>
-                            <textarea id="detailEnquiryMessage" name="message" rows="3" required placeholder="Describe your site area, target riders, timeline..." style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; resize: vertical; font-family: inherit;"></textarea>
+                            <label for="detailEnquiryMessage" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Message *</label>
+                            <textarea id="detailEnquiryMessage" name="message" rows="4" required placeholder="Tell us about your requirements, site dimensions, or timeline..." style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; resize: vertical; font-family: inherit;"></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-product-enquire" style="width: 100%; padding: 12px; font-size: 1rem;">Submit Enquiry <span aria-hidden="true">&rarr;</span></button>
+                        <button type="submit" class="btn btn-product-enquire" style="width: 100%; padding: 12px; font-size: 1rem;">Get a Quote</button>
                         <p class="form-status" role="status" aria-live="polite" style="margin-top: 12px;"></p>
                     </form>
 
@@ -894,7 +885,7 @@
     <!-- Scripts -->
     <script src="/js/script.js"></script>
     <script>
-        // Simple enquiry submission handler for this page
+        // Simple quote submission handler for this page
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('sidebarProductEnquiryForm');
             if (!form) return;
@@ -906,11 +897,10 @@
                 const name = document.getElementById('detailEnquiryName').value.trim();
                 const email = document.getElementById('detailEnquiryEmail').value.trim();
                 const phone = document.getElementById('detailEnquiryPhone').value.trim();
-                const location = document.getElementById('detailEnquiryLocation').value.trim();
-                const product = document.getElementById('detailEnquiryProduct').value.trim();
+                const product = document.getElementById('detailEnquiryProduct') ? document.getElementById('detailEnquiryProduct').value.trim() : "Adventure Park Platforms";
                 const message = document.getElementById('detailEnquiryMessage').value.trim();
 
-                if (!name || !email || !phone || !location || !message) {
+                if (!name || !email || !phone || !message) {
                     if (statusEl) {
                         statusEl.className = 'form-status error';
                         statusEl.textContent = '❌ Please fill in all required fields.';
@@ -920,7 +910,7 @@
 
                 if (statusEl) {
                     statusEl.className = 'form-status loading';
-                    statusEl.textContent = '⏳ Sending enquiry to engineering team...';
+                    statusEl.textContent = '⏳ Sending your quote request...';
                 }
                 if (submitBtn) submitBtn.disabled = true;
 
@@ -929,7 +919,9 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                         body: JSON.stringify({
-                            name, email, phone, location, product, message,
+                            name, email, phone, message, product,
+                            location: 'Not specified',
+                            company: 'N/A',
                             formType: 'Product Page RFQ'
                         })
                     });
@@ -938,7 +930,7 @@
                         form.reset();
                         if (statusEl) {
                             statusEl.className = 'form-status success';
-                            statusEl.textContent = '✅ ' + (data.message || 'Thank you! Your enquiry has been received.');
+                            statusEl.textContent = '✅ ' + (data.message || 'Thank you! Your quote request has been received.');
                         }
                     } else {
                         throw new Error(data.error || 'Submission failed.');

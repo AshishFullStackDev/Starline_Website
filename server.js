@@ -687,22 +687,63 @@ https://starlineadventures.com
   });
 }
 
+// Helper to detect product name internally from referer URL
+function detectProductFromUrl(url) {
+  if (!url) return 'General Adventure Project Quote';
+  const clean = String(url).toLowerCase();
+  if (clean.includes('zipline') || clean.includes('zip-line')) return 'Zip Line';
+  if (clean.includes('giant-swing')) return 'Giant Swing';
+  if (clean.includes('suspension-bridge')) return 'Suspension Bridge';
+  if (clean.includes('climbing-wall-equipment')) return 'Climbing Wall Equipment';
+  if (clean.includes('climbing-wall')) return 'Climbing Wall';
+  if (clean.includes('sky-cycling')) return 'Sky Cycling';
+  if (clean.includes('trampoline-park')) return 'Trampoline Park';
+  if (clean.includes('bungee-jumping')) return '4 in 1 Bungee Jumping';
+  if (clean.includes('human-gyro')) return 'Human Gyro Ride';
+  if (clean.includes('rocket-ejection')) return 'Rocket Ejection';
+  if (clean.includes('sky-roller')) return 'Sky Roller Ride';
+  if (clean.includes('net-climbing')) return 'Net Climbing';
+  if (clean.includes('rope-course-equipment')) return 'Rope Course Equipment';
+  if (clean.includes('rope-course-platforms')) return 'Rope Course Platforms & Obstacles';
+  if (clean.includes('rope-course')) return 'Rope Course';
+  if (clean.includes('multi-activity-tower')) return 'Multi Activity Tower';
+  if (clean.includes('glass-bridge')) return 'Glass Bridge';
+  if (clean.includes('360-degree-cycle')) return '360 Degree Cycle';
+  if (clean.includes('mechanical-bull')) return 'Mechanical Bull Ride';
+  if (clean.includes('rifle-shooting')) return 'Rifle Shooting Range';
+  if (clean.includes('archery-range')) return 'Archery Range';
+  if (clean.includes('open-gym')) return 'Open Gym Equipment';
+  if (clean.includes('safety-nets')) return 'Safety Nets';
+  if (clean.includes('safety-harness')) return 'Safety Harness & Belts';
+  if (clean.includes('safety-helmets')) return 'Safety Helmets & Fall-Arrest Systems';
+  if (clean.includes('steel-cables')) return 'Steel Cables, Anchors & Rigging Equipment';
+  if (clean.includes('cargo-nets')) return 'Cargo Nets & Net Bridges';
+  if (clean.includes('tyre-balance')) return 'Tyre Balance Obstacles';
+  if (clean.includes('climbing-holds')) return 'Climbing Holds & Wall Panels';
+  if (clean.includes('climbing-ropes')) return 'Climbing Ropes & Carabiners';
+  if (clean.includes('adventure-park-platforms')) return 'Adventure Park Platforms';
+  if (clean.includes('adventure-park-ladders')) return 'Adventure Park Ladders & Bridges';
+  return 'General Adventure Project Quote';
+}
+
 // ============================================================
 // 9. INPUT VALIDATION & ENQUIRY PROCESSING
 // ============================================================
-function validateEnquiryPayload(body, defaultFormType = 'Contact Form') {
+function validateEnquiryPayload(body, defaultFormType = 'Contact Form', referer = '') {
   let { name, email, phone, company, location, product, message, formType } = body || {};
 
   name = sanitizeInput(name);
   email = String(email || '').trim().toLowerCase();
   phone = sanitizeInput(phone);
-  company = company ? sanitizeInput(company) : 'N/A';
-  location = sanitizeInput(location);
-  product = sanitizeInput(product) || 'General Adventure Project Enquiry';
   message = sanitizeInput(message);
+
+  // Optional/internal fields - never mandatory for the user
+  company = company ? sanitizeInput(company) : 'N/A';
+  location = location ? sanitizeInput(location) : 'Not specified';
+  product = (product && sanitizeInput(product)) || detectProductFromUrl(referer || body?.pageUrl) || 'General Adventure Project Quote';
   const type = sanitizeInput(formType || defaultFormType);
 
-  // Name validation
+  // 1. Name validation (Mandatory)
   if (!name || name.length < 2 || name.length > 100) {
     return { valid: false, error: 'Please enter a valid full name (2 to 100 characters).' };
   }
@@ -710,30 +751,27 @@ function validateEnquiryPayload(body, defaultFormType = 'Contact Form') {
     return { valid: false, error: 'Invalid characters in name.' };
   }
 
-  // Email validation: RFC standard regex, length boundaries, prevent header injection
+  // 2. Email validation (Mandatory)
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
   if (!email || email.length < 5 || email.length > 120 || !emailRegex.test(email) || /[\r\n]/.test(email)) {
     return { valid: false, error: 'Please enter a valid email address.' };
   }
 
-  // Phone validation: min 8 digits, allow +, space, hyphen
+  // 3. Phone validation (Mandatory)
   const phoneDigits = phone.replace(/[^\d]/g, '');
   if (!phone || phoneDigits.length < 8 || phoneDigits.length > 20 || phone.length > 30 || !/^\+?[0-9\s\-()]{8,30}$/.test(phone)) {
     return { valid: false, error: 'Please enter a valid phone number (minimum 8 digits).' };
   }
 
-  // Location validation
-  if (!location || location.length < 2 || location.length > 120) {
-    return { valid: false, error: 'Please enter your project location (city, state).' };
-  }
-
-  if (company.length > 120) company = company.slice(0, 120);
-  if (product.length > 120) product = product.slice(0, 120);
-
-  if (!message) {
-    message = `Project quote request for ${product} at ${location}.`;
+  // 4. Message validation (Mandatory)
+  if (!message || message.length < 2) {
+    return { valid: false, error: 'Please enter your message or project requirements.' };
   }
   if (message.length > 2000) message = message.slice(0, 2000);
+
+  if (company.length > 120) company = company.slice(0, 120);
+  if (location.length > 120) location = location.slice(0, 120);
+  if (product.length > 120) product = product.slice(0, 120);
 
   return {
     valid: true,
@@ -777,7 +815,7 @@ async function handleSubmission(req, res, defaultFormType = 'Contact Form') {
     }
 
     // 3. Server-side Input Validation
-    const validation = validateEnquiryPayload(req.body, defaultFormType);
+    const validation = validateEnquiryPayload(req.body, defaultFormType, req.headers.referer);
     if (!validation.valid) {
       return res.status(400).json({ ok: false, error: validation.error });
     }
@@ -1137,12 +1175,12 @@ app.use('/css', express.static(path.join(__dirname, 'css'), {
 }));
 
 app.use('/js', express.static(path.join(__dirname, 'js'), {
-  maxAge: '7d',
+  maxAge: 0,
   etag: true,
   lastModified: true,
   dotfiles: 'ignore',
   setHeaders: (res) => {
-    res.setHeader('Cache-Control', 'public, max-age=604800, stale-while-revalidate=86400');
+    res.setHeader('Cache-Control', 'no-cache, must-revalidate');
   }
 }));
 

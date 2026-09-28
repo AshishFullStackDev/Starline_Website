@@ -314,40 +314,29 @@
             <div class="product-modal-body">
                 <form id="productEnquiryForm" action="/api/enquiry" method="POST" class="enquiry-form">
                     <input type="hidden" name="formType" value="Product Modal Enquiry">
+                    <input type="hidden" id="modalEnquiryProduct" name="product" value="">
 
-                    <div style="margin-bottom: 16px;">
-                        <label for="modalEnquiryProduct" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Selected Product *</label>
-                        <input type="text" id="modalEnquiryProduct" name="product" required readonly style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; background: #f1f5f9; font-weight: 600; color: #0b192c; box-sizing: border-box;">
+                    <div style="margin-bottom: 14px;">
+                        <label for="modalEnquiryName" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Name *</label>
+                        <input type="text" id="modalEnquiryName" name="name" required placeholder="Your full name" autocomplete="name" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
-                        <div>
-                            <label for="modalEnquiryName" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Full Name *</label>
-                            <input type="text" id="modalEnquiryName" name="name" required placeholder="Your full name" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
-                        </div>
-                        <div>
-                            <label for="modalEnquiryPhone" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Phone Number *</label>
-                            <input type="tel" id="modalEnquiryPhone" name="phone" required placeholder="+91-94249-04000" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
-                        </div>
+                    <div style="margin-bottom: 14px;">
+                        <label for="modalEnquiryEmail" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Email *</label>
+                        <input type="email" id="modalEnquiryEmail" name="email" required placeholder="you@example.com" autocomplete="email" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
-                        <div>
-                            <label for="modalEnquiryEmail" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Email Address *</label>
-                            <input type="email" id="modalEnquiryEmail" name="email" required placeholder="you@example.com" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
-                        </div>
-                        <div>
-                            <label for="modalEnquiryLocation" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Project Location *</label>
-                            <input type="text" id="modalEnquiryLocation" name="location" required placeholder="City, State" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
-                        </div>
+                    <div style="margin-bottom: 14px;">
+                        <label for="modalEnquiryPhone" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Phone *</label>
+                        <input type="tel" id="modalEnquiryPhone" name="phone" required placeholder="+91-94249-04000" autocomplete="tel" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
                     </div>
 
                     <div style="margin-bottom: 18px;">
-                        <label for="modalEnquiryMessage" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Project Details / Requirements *</label>
-                        <textarea id="modalEnquiryMessage" name="message" rows="3" required placeholder="Tell us about your park site, timeline, or specific requirements..." style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; resize: vertical; font-family: inherit;"></textarea>
+                        <label for="modalEnquiryMessage" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Message *</label>
+                        <textarea id="modalEnquiryMessage" name="message" rows="4" required placeholder="Tell us about your requirements, site dimensions, or timeline..." style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; resize: vertical; font-family: inherit;"></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-product-enquire" style="width: 100%; padding: 12px; font-size: 1rem;">Submit Enquiry <span aria-hidden="true">&rarr;</span></button>
+                    <button type="submit" class="btn btn-product-enquire" style="width: 100%; padding: 12px; font-size: 1rem;">Get a Quote</button>
                     <p class="form-status" role="status" aria-live="polite" style="margin-top: 12px;"></p>
                 </form>
             </div>
@@ -504,10 +493,10 @@
         <span>💬</span>
     </a>
 
-    <script src="js/script.js"></script>
-    <script src="js/image-map.js"></script>
-    <script src="js/products.js"></script>
-    <script src="js/products-catalog.js"></script>
+    <script src="js/script.js?v=2.0"></script>
+    <script src="js/image-map.js?v=2.0"></script>
+    <script src="js/products.js?v=2.0"></script>
+    <script src="js/products-catalog.js?v=2.0"></script>
     <script>
         const footerYearEl = document.getElementById('footer-year');
         if (footerYearEl) {

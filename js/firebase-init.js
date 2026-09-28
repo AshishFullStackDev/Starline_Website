@@ -73,7 +73,6 @@
       } catch (err) {
         console.warn('🔥 [StarlineFirebase]: Initialization note:', err.message);
       }
-      }
       return false;
     },
 
@@ -117,9 +116,9 @@
             email: String(payload.email || '').slice(0, 120),
             phone: String(payload.phone || '').slice(0, 30),
             company: String(payload.company || 'N/A').slice(0, 120),
-            location: String(payload.location || '').slice(0, 120),
-            product: String(payload.product || 'General Adventure Project Enquiry').slice(0, 120),
-            message: String(payload.message || 'Project quote request').slice(0, 2000),
+            location: String(payload.location || 'Not specified').slice(0, 120),
+            product: String(payload.product || 'General Adventure Project Quote').slice(0, 120),
+            message: String(payload.message || '').slice(0, 2000),
             formType: String(payload.formType || 'Quick RFQ').slice(0, 64),
             createdAt: new Date().toISOString(),
             status: 'new'

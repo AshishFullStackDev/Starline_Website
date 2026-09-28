@@ -913,18 +913,16 @@ function initEnquiryFormSubmission() {
         const nameInput = document.getElementById('modalEnquiryName');
         const emailInput = document.getElementById('modalEnquiryEmail');
         const phoneInput = document.getElementById('modalEnquiryPhone');
-        const locationInput = document.getElementById('modalEnquiryLocation');
         const productInput = document.getElementById('modalEnquiryProduct');
         const messageInput = document.getElementById('modalEnquiryMessage');
 
         const name = nameInput?.value.trim();
         const email = emailInput?.value.trim();
         const phone = phoneInput?.value.trim();
-        const location = locationInput?.value.trim();
         const product = productInput?.value.trim() || 'Adventure Equipment';
         const message = messageInput?.value.trim();
 
-        if (!name || !email || !phone || !location || !message) {
+        if (!name || !email || !phone || !message) {
             if (statusEl) {
                 statusEl.className = 'form-status error';
                 statusEl.textContent = '❌ Please fill in all required fields.';
@@ -934,7 +932,7 @@ function initEnquiryFormSubmission() {
 
         if (statusEl) {
             statusEl.className = 'form-status loading';
-            statusEl.textContent = '⏳ Sending your enquiry to our engineering team...';
+            statusEl.textContent = '⏳ Sending your quote request to our engineering team...';
         }
 
         if (submitBtn) submitBtn.disabled = true;
@@ -944,7 +942,7 @@ function initEnquiryFormSubmission() {
                 name,
                 email,
                 phone,
-                location,
+                location: 'Not specified',
                 product,
                 message,
                 formType: 'Product Enquiry'
