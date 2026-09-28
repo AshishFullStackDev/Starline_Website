@@ -156,9 +156,13 @@
           firestoreSaved = true;
           console.log(`✅ [StarlineFirebase] Enquiry successfully saved to Firestore: enquiries/${documentId}`);
         } catch (fsErr) {
-          console.error('❌ [StarlineFirebase] Direct Firestore write note:', fsErr && fsErr.message ? fsErr.message : fsErr);
+          console.error('❌ [StarlineFirebase] Direct Firestore write error:', fsErr && fsErr.message ? fsErr.message : fsErr);
           throw fsErr;
         }
+      } else {
+        const connErr = new Error('Could not establish connection to Firebase Firestore. Please check your network and try again.');
+        console.error('❌ [StarlineFirebase]', connErr.message);
+        throw connErr;
       }
 
       // 6. Save lead locally so it is permanently stored in browser

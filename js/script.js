@@ -1110,35 +1110,17 @@ function handleEnquiry(event) {
     
     const submitEnquiry = async () => {
         // Direct to Firebase Firestore via Modular SDK (pure static hosting compatible)
-        if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-            try {
-                return await window.StarlineFirebase.saveEnquiry(formData);
-            } catch (fbErr) {
-                console.warn('[StarlineFirebase]: Save notice:', fbErr ? fbErr.message : fbErr);
-                if (fbErr && fbErr.field) throw fbErr;
-            }
-        } else {
+        if (typeof window.StarlineFirebase === 'undefined' || typeof window.StarlineFirebase.saveEnquiry !== 'function') {
             try {
                 await import('/js/firebase-init.js');
-                if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                    return await window.StarlineFirebase.saveEnquiry(formData);
-                }
             } catch (impErr) {}
         }
 
-        const enquiryId = 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000);
-        try {
-            const offline = JSON.parse(localStorage.getItem('starline_enquiries_offline') || '[]');
-            offline.unshift(Object.assign({}, formData, { id: enquiryId, savedAt: new Date().toISOString() }));
-            localStorage.setItem('starline_enquiries_offline', JSON.stringify(offline.slice(0, 50)));
-        } catch (lsErr) {}
+        if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+            return await window.StarlineFirebase.saveEnquiry(formData);
+        }
 
-        return {
-            ok: true,
-            id: enquiryId,
-            enquiryId: enquiryId,
-            customerMessage: "Thank you! Your enquiry has been submitted successfully."
-        };
+        throw new Error('Firebase Firestore service is unavailable. Please check your internet connection and try again.');
     };
 
     submitEnquiry()
@@ -1816,29 +1798,17 @@ function bindQuoteModalEvents() {
 
             const submitQuote = async () => {
                 // Direct Firestore submission (pure static hosting compatible)
-                if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                if (typeof window.StarlineFirebase === 'undefined' || typeof window.StarlineFirebase.saveEnquiry !== 'function') {
                     try {
-                        return await window.StarlineFirebase.saveEnquiry(payload);
-                    } catch (fbErr) {
-                        console.warn('[StarlineFirebase]: Fallback save notice:', fbErr ? fbErr.message : fbErr);
-                    }
+                        await import('/js/firebase-init.js');
+                    } catch (impErr) {}
                 }
 
-                // Resilient local persistence so lead is never lost
-                const enquiryId = 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000);
-                try {
-                    const offline = JSON.parse(localStorage.getItem('starline_enquiries_offline') || '[]');
-                    offline.unshift(Object.assign({}, payload, { id: enquiryId, savedAt: new Date().toISOString() }));
-                    localStorage.setItem('starline_enquiries_offline', JSON.stringify(offline.slice(0, 50)));
-                } catch (lsErr) {}
+                if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                    return await window.StarlineFirebase.saveEnquiry(payload);
+                }
 
-                return {
-                    ok: true,
-                    id: enquiryId,
-                    enquiryId: enquiryId,
-                    message: "Thank you for choosing Starline Adventures. We have received your enquiry and our team will get in touch with you shortly.",
-                    customerMessage: "Thank you for choosing Starline Adventures. We have received your enquiry and our team will get in touch with you shortly."
-                };
+                throw new Error('Firebase Firestore service is unavailable. Please check your internet connection and try again.');
             };
 
             submitQuote()
@@ -2085,35 +2055,17 @@ function initContactForm() {
 
         const submitContactForm = async () => {
             // Direct to Firebase Firestore via Modular SDK (pure static hosting compatible)
-            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                try {
-                    return await window.StarlineFirebase.saveEnquiry(payload);
-                } catch (fbErr) {
-                    console.warn('[StarlineFirebase]: Save notice:', fbErr ? fbErr.message : fbErr);
-                    if (fbErr && fbErr.field) throw fbErr;
-                }
-            } else {
+            if (typeof window.StarlineFirebase === 'undefined' || typeof window.StarlineFirebase.saveEnquiry !== 'function') {
                 try {
                     await import('/js/firebase-init.js');
-                    if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                        return await window.StarlineFirebase.saveEnquiry(payload);
-                    }
                 } catch (impErr) {}
             }
 
-            const enquiryId = 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000);
-            try {
-                const offline = JSON.parse(localStorage.getItem('starline_enquiries_offline') || '[]');
-                offline.unshift(Object.assign({}, payload, { id: enquiryId, savedAt: new Date().toISOString() }));
-                localStorage.setItem('starline_enquiries_offline', JSON.stringify(offline.slice(0, 50)));
-            } catch (lsErr) {}
+            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                return await window.StarlineFirebase.saveEnquiry(payload);
+            }
 
-            return {
-                ok: true,
-                id: enquiryId,
-                enquiryId: enquiryId,
-                customerMessage: "Thank you! Your enquiry has been submitted successfully."
-            };
+            throw new Error('Firebase Firestore service is unavailable. Please check your internet connection and try again.');
         };
 
         submitContactForm()

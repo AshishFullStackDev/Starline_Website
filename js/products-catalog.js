@@ -948,24 +948,17 @@ function initEnquiryFormSubmission() {
                 formType: 'Product Enquiry'
             };
 
-            let data = null;
-            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                data = await window.StarlineFirebase.saveEnquiry(payload);
-            } else {
+            if (typeof window.StarlineFirebase === 'undefined' || typeof window.StarlineFirebase.saveEnquiry !== 'function') {
                 try {
                     await import('/js/firebase-init.js');
-                    if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                        data = await window.StarlineFirebase.saveEnquiry(payload);
-                    }
                 } catch (dynErr) {}
             }
 
-            if (!data || data.ok === false) {
-                data = {
-                    ok: true,
-                    id: 'SA-ENQ-' + Math.floor(100000 + Math.random() * 900000)
-                };
+            if (typeof window.StarlineFirebase === 'undefined' || typeof window.StarlineFirebase.saveEnquiry !== 'function') {
+                throw new Error('Firebase Firestore service is unavailable. Please check your internet connection.');
             }
+
+            const data = await window.StarlineFirebase.saveEnquiry(payload);
 
             if (data && data.ok !== false) {
                 closeProductEnquiryModal();
