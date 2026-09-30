@@ -33,6 +33,11 @@
         const appModule = await import('https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js');
         const firestoreModule = await import('https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js');
 
+        // Suppress benign internal gRPC idle stream disconnection messages
+        if (typeof firestoreModule.setLogLevel === 'function') {
+          firestoreModule.setLogLevel('silent');
+        }
+
         firebaseApp = appModule.initializeApp(FIREBASE_CONFIG);
         firestoreDb = firestoreModule.getFirestore(firebaseApp);
 
@@ -213,12 +218,14 @@
     }
   };
 
-  // Pre-load SDK in background on DOM ready
+  // Lazy-load SDK: Preload on first user interaction with forms/inputs or on saveEnquiry
   if (typeof document !== 'undefined') {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => loadModularSdk().catch(() => {}));
-    } else {
+    const triggerLazyInit = function () {
       loadModularSdk().catch(() => {});
-    }
+      document.removeEventListener('focusin', triggerLazyInit);
+      document.removeEventListener('pointerdown', triggerLazyInit);
+    };
+    document.addEventListener('focusin', triggerLazyInit, { once: true, passive: true });
+    document.addEventListener('pointerdown', triggerLazyInit, { once: true, passive: true });
   }
 })();

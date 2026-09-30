@@ -9,7 +9,7 @@ const StarlineImageMap = require('./js/image-map.js');
 
 // Firebase Modular SDK
 const { initializeApp } = require('firebase/app');
-const { getFirestore, doc, setDoc, getDoc, getDocs, collection, getDocFromServer } = require('firebase/firestore');
+const { getFirestore, doc, setDoc, getDoc, getDocs, collection, setLogLevel } = require('firebase/firestore');
 const { getAuth } = require('firebase/auth');
 
 const app = express();
@@ -324,6 +324,11 @@ let auth = null;
 let firebaseConfig = null;
 
 try {
+  // Suppress benign internal gRPC idle stream disconnection messages from @firebase/firestore
+  if (typeof setLogLevel === 'function') {
+    setLogLevel('silent');
+  }
+
   const configPath = path.join(__dirname, 'firebase-applet-config.json');
   if (fs.existsSync(configPath)) {
     firebaseConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
@@ -334,21 +339,6 @@ try {
     db = dbId ? getFirestore(firebaseApp, dbId) : getFirestore(firebaseApp);
     auth = getAuth(firebaseApp);
     console.log('[Firebase Initialized]: Connected to Firestore database for project:', firebaseConfig.projectId);
-
-    // Test connection on boot
-    async function testConnection() {
-      try {
-        await getDocFromServer(doc(db, 'test', 'connection'));
-        console.log('[Firebase Connection]: Firestore connectivity verified.');
-      } catch (error) {
-        if (error instanceof Error && error.message.includes('the client is offline')) {
-          console.error('[Firebase Notice]: Client appears offline, check network configuration.');
-        } else {
-          console.log('[Firebase Connection]: Probe finished.');
-        }
-      }
-    }
-    testConnection();
   } else {
     console.warn('[Firebase Notice]: firebase-applet-config.json not found.');
   }
