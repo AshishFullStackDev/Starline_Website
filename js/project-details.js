@@ -116,7 +116,7 @@ const projectDetails = {
             'Full operator certification, harness safety inspections, and rescue protocol training'
         ],
         gallery: [
-            ['Flying Kokan Zipline Logo', 'images/logos/flying_kokan.webg']
+            ['Flying Kokan Zipline Logo', 'images/logos/flying_kokan.webp']
         ]
     },
     'maniratna-resort': {
@@ -164,7 +164,7 @@ const projectDetails = {
             'Operational training and preventative maintenance guidelines for farm staff'
         ],
         gallery: [
-            ['Srushti Farms Logo', 'images/logos/srushti farm.png']
+            ['Srushti Farms Logo', 'images/logos/srushti_farm.png']
         ]
     }
 };

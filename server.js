@@ -53,7 +53,7 @@ app.use((req, res, next) => {
     "img-src 'self' data: blob: https:",
     "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://api.emailjs.com",
     "frame-src 'self' https://maps.google.com https://*.firebaseapp.com",
-    "frame-ancestors 'self' https://*.google.com https://localhost.corp.google.com:26001 https://*.run.app"
+    "frame-ancestors 'self' https://*.google.com https://*.googleusercontent.com https://localhost.corp.google.com:26001 https://*.run.app"
   ].join('; ');
 
   res.setHeader('Content-Security-Policy', csp);
@@ -71,15 +71,9 @@ const BLOCKED_FILENAMES = new Set([
   'server.js',
   'package.json',
   'package-lock.json',
-  'bun.lock',
   'firestore.rules',
   'firebase-blueprint.json',
   'firebase-applet-config.json',
-  'active_gallery_data.json',
-  'classified_gallery.json',
-  'classified_gallery_images.json',
-  'gallery_classification.json',
-  'generate_starline_logo.js',
   'readme.md'
 ]);
 
