@@ -14269,16 +14269,42 @@ main > section:nth-of-type(3) > div > div:nth-of-type(3) > div > a:nth-of-type(2
    Strictly scoped to body.home-page so no other pages are affected
    ========================================================================== */
 
-/* 1. Hero Slider Images - Full cover without distortion */
+/* 1. Hero Slider Images - Fit properly while preserving original aspect ratio without cropping, stretching or distortion */
+body.home-page .hero-section {
+    background-color: #0b192c !important;
+}
+
+body.home-page .slide {
+    background: #0b192c radial-gradient(circle at center, #162438 0%, #0b192c 85%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
 body.home-page .slide img,
 body.home-page .slide .slide-bg-img {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    min-width: 100% !important;
-    min-height: 100% !important;
-    object-fit: cover !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
     object-position: center center !important;
-    display: block;
+    display: block !important;
+    z-index: 1 !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+body.home-page .slide.active img,
+body.home-page .slide.active .slide-bg-img {
+    transform: none !important;
 }
 
 /* 2. Product Cards - Keep all cards and image boxes identically sized */
