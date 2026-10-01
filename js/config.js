@@ -1,7 +1,6 @@
 // STARLINE ADVENTURES - UNIFIED CONFIGURATION
 // Central source of truth for company contact details and links
-
-const STARLINE_CONFIG = {
+var STARLINE_CONFIG = (typeof window !== 'undefined' && window.STARLINE_CONFIG) ? window.STARLINE_CONFIG : {
     // Company Information
     companyName: 'STARLINE ADVENTURES PVT LTD',
     brandName: 'STARLINE ADVENTURES',
