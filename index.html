@@ -1000,51 +1000,6 @@
             </div>
         </div>
 
-        <!-- =======================================================
-             PRODUCT ENQUIRY MODAL (Pre-filled & Integrated)
-             ======================================================= -->
-        <div id="productEnquiryModal" class="product-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="productEnquiryTitle">
-            <div class="product-modal-backdrop" id="productEnquiryBackdrop"></div>
-            <div class="product-modal-dialog" style="max-width: 600px;">
-                <div class="product-modal-header">
-                    <div>
-                        <span style="font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; color: #f47621; text-transform: uppercase;">PROJECT ENQUIRY</span>
-                        <h3 id="productEnquiryTitle" style="margin-top: 2px;">Request Product Quotation</h3>
-                    </div>
-                    <button type="button" class="product-modal-close" id="productEnquiryClose" aria-label="Close enquiry form">&times;</button>
-                </div>
-                <div class="product-modal-body">
-                    <form id="productEnquiryForm" action="javascript:void(0);" method="POST" class="enquiry-form">
-                        <input type="hidden" name="formType" value="Product Modal Enquiry">
-                        <input type="hidden" id="modalEnquiryProduct" name="product" value="">
-
-                        <div style="margin-bottom: 14px;">
-                            <label for="modalEnquiryName" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Name *</label>
-                            <input type="text" id="modalEnquiryName" name="name" required placeholder="Your full name" autocomplete="name" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
-                        </div>
-
-                        <div style="margin-bottom: 14px;">
-                            <label for="modalEnquiryEmail" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Email *</label>
-                            <input type="email" id="modalEnquiryEmail" name="email" required placeholder="you@example.com" autocomplete="email" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
-                        </div>
-
-                        <div style="margin-bottom: 14px;">
-                            <label for="modalEnquiryPhone" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Phone *</label>
-                            <input type="tel" id="modalEnquiryPhone" name="phone" required placeholder="+91-94249-04000" autocomplete="tel" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
-                        </div>
-
-                        <div style="margin-bottom: 18px;">
-                            <label for="modalEnquiryMessage" style="display: block; font-size: 0.85rem; font-weight: 600; color: #0b192c; margin-bottom: 6px;">Message *</label>
-                            <textarea id="modalEnquiryMessage" name="message" rows="4" required placeholder="Tell us about your requirements, site dimensions, or timeline..." style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; resize: vertical; font-family: inherit;"></textarea>
-                        </div>
-
-                        <button type="submit" class="btn btn-product-enquire" style="width: 100%; padding: 12px; font-size: 1rem;">Get a Quote</button>
-                        <p class="form-status" role="status" aria-live="polite" style="margin-top: 12px;"></p>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         <script src="js/config.js"></script>
     <script src="/js/emailjs-service.js"></script>
     <script src="js/firebase-init.js"></script>

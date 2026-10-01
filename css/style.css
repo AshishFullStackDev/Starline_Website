@@ -8520,59 +8520,6 @@ summary:focus-visible,
 }
 
 /* =========================
-   BACK-TO-TOP BUTTON
-========================= */
-.back-to-top {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 48px;
-    height: 48px;
-    border: 2px solid var(--primary-color);
-    border-radius: 50%;
-    background: var(--white);
-    color: var(--primary-color);
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.25s ease;
-    z-index: 999;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.back-to-top:hover {
-    background: var(--primary-color);
-    color: var(--white);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(244, 118, 33, 0.35);
-}
-
-.back-to-top:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(244, 118, 33, 0.2);
-}
-
-.back-to-top.visible {
-    opacity: 1;
-    visibility: visible;
-}
-
-@media (max-width: 768px) {
-    .back-to-top {
-        bottom: 20px;
-        right: 20px;
-        width: 44px;
-        height: 44px;
-        font-size: 20px;
-    }
-}
-
-/* =========================
    SCROLL PROGRESS BAR
 ========================= */
 .scroll-progress-bar {
@@ -8891,13 +8838,13 @@ summary:focus-visible,
     display: none;
     position: fixed;
     inset: 0;
-    z-index: 9999;
+    z-index: 999999;
     align-items: center;
     justify-content: center;
     padding: 16px;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.25s ease, visibility 0.25s ease;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
 .quote-modal.active,
@@ -8910,25 +8857,28 @@ summary:focus-visible,
 .quote-modal-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.72);
+    background: rgba(15, 23, 42, 0.75);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     cursor: pointer;
+    z-index: 1;
 }
 
 .quote-modal-dialog {
     position: relative;
-    z-index: 10000;
+    z-index: 2;
     background: #ffffff;
     width: 100%;
-    max-width: 640px;
-    max-height: 92vh;
+    max-width: 600px;
+    max-height: 90vh;
+    max-height: 90dvh;
     border-radius: 16px;
-    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.28), 0 0 0 1px rgba(244, 118, 33, 0.15);
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(244, 118, 33, 0.2);
     overflow-y: auto;
     overscroll-behavior: contain;
-    transform: translateY(20px) scale(0.97);
+    transform: translateY(16px) scale(0.98);
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    margin: auto;
 }
 
 .quote-modal.active .quote-modal-dialog,
@@ -9300,40 +9250,47 @@ summary:focus-visible,
 /* Responsive Styles */
 @media (max-width: 640px) {
     .quote-modal {
-        padding: 8px;
-        align-items: flex-end;
+        padding: 12px;
+        align-items: center;
+        justify-content: center;
     }
 
     .quote-modal-dialog {
-        max-height: 94vh;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
+        max-height: 90vh;
+        max-height: 90dvh;
+        width: 100%;
+        max-width: 100%;
+        border-radius: 14px;
+        margin: auto;
+        transform: translateY(8px) scale(0.99);
     }
 
     .quote-modal-header {
-        padding: 20px 18px 16px;
+        padding: 18px 18px 14px;
     }
 
     .quote-modal-body {
-        padding: 18px 18px 24px;
+        padding: 16px 16px 20px;
     }
 
     .quote-form-grid {
         grid-template-columns: 1fr;
-        gap: 13px;
+        gap: 12px;
     }
 
     .quote-field-group input,
     .quote-field-group select,
     .quote-field-group textarea {
-        padding: 10px 12px 10px 34px;
-        font-size: 0.9rem;
+        padding: 11px 12px 11px 36px;
+        font-size: 16px; /* Prevents auto-zoom on mobile iOS */
     }
 
     .quote-modal-trust {
         flex-direction: column;
         align-items: flex-start;
         gap: 6px;
+        padding: 8px 12px;
+        margin: 14px 0 16px;
     }
 }
 

@@ -829,8 +829,6 @@ function initProductsCatalog() {
 
     initProductCategoryTabs();
     renderProductsGrid();
-    initModalHandlers();
-    initEnquiryFormSubmission();
 }
 
 // Run immediately if DOM is ready, or listen for DOMContentLoaded
@@ -842,157 +840,18 @@ if (typeof document !== 'undefined') {
     }
 }
 
-// Open Product Enquiry Modal
+// Unified Product Enquiry Modal Trigger (routes to site-wide Quote Modal)
 function openProductEnquiryModal(productName) {
-    const modal = document.getElementById('productEnquiryModal');
-    const productInput = document.getElementById('modalEnquiryProduct');
-    const form = document.getElementById('productEnquiryForm');
-
-    if (!modal) return;
-
-    if (productInput) {
-        productInput.value = productName || 'Adventure Equipment';
+    if (typeof window.openQuoteModal === 'function') {
+        window.openQuoteModal(productName);
     }
-
-    if (form) {
-        const statusEl = form.querySelector('.form-status');
-        if (statusEl) {
-            statusEl.textContent = '';
-            statusEl.className = 'form-status';
-        }
-    }
-
-    modal.classList.add('active');
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-
-    // Focus on first input
-    setTimeout(() => {
-        document.getElementById('modalEnquiryName')?.focus();
-    }, 150);
 }
 
 // Close Product Enquiry Modal
 function closeProductEnquiryModal() {
-    const modal = document.getElementById('productEnquiryModal');
-    if (modal) {
-        modal.classList.remove('active');
-        modal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
+    if (typeof window.closeQuoteModal === 'function') {
+        window.closeQuoteModal();
     }
-}
-
-// Set up modal listeners
-function initModalHandlers() {
-    const enqClose = document.getElementById('productEnquiryClose');
-    const enqBackdrop = document.getElementById('productEnquiryBackdrop');
-
-    if (enqClose && typeof enqClose.addEventListener === 'function') enqClose.addEventListener('click', closeProductEnquiryModal);
-    if (enqBackdrop && typeof enqBackdrop.addEventListener === 'function') enqBackdrop.addEventListener('click', closeProductEnquiryModal);
-
-    if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeProductEnquiryModal();
-            }
-        });
-    }
-}
-
-// Handle Modal Enquiry Form Submission
-function initEnquiryFormSubmission() {
-    const form = document.getElementById('productEnquiryForm');
-    if (!form || typeof form.addEventListener !== 'function') return;
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const statusEl = form.querySelector('.form-status');
-        const submitBtn = form.querySelector('button[type="submit"]');
-
-        const nameInput = document.getElementById('modalEnquiryName');
-        const emailInput = document.getElementById('modalEnquiryEmail');
-        const phoneInput = document.getElementById('modalEnquiryPhone');
-        const productInput = document.getElementById('modalEnquiryProduct');
-        const messageInput = document.getElementById('modalEnquiryMessage');
-
-        const name = nameInput?.value.trim();
-        const email = emailInput?.value.trim();
-        const phone = phoneInput?.value.trim();
-        const product = productInput?.value.trim() || 'Adventure Equipment';
-        const message = messageInput?.value.trim();
-
-        if (!name || !email || !phone || !message) {
-            if (statusEl) {
-                statusEl.className = 'form-status error';
-                statusEl.textContent = '❌ Please fill in all required fields.';
-            }
-            return;
-        }
-
-        if (statusEl) {
-            statusEl.className = 'form-status loading';
-            statusEl.textContent = '⏳ Sending your quote request to our engineering team...';
-        }
-
-        if (submitBtn) submitBtn.disabled = true;
-
-        try {
-            const payload = {
-                name,
-                email,
-                phone,
-                location: 'Not specified',
-                product,
-                message,
-                formType: 'Product Enquiry'
-            };
-
-            if (typeof window.StarlineFirebase === 'undefined' || typeof window.StarlineFirebase.saveEnquiry !== 'function') {
-                try {
-                    await import('/js/firebase-init.js');
-                } catch (dynErr) {}
-            }
-
-            if (typeof window.StarlineFirebase === 'undefined' || typeof window.StarlineFirebase.saveEnquiry !== 'function') {
-                throw new Error('Firebase Firestore service is unavailable. Please check your internet connection.');
-            }
-
-            const data = await window.StarlineFirebase.saveEnquiry(payload);
-
-            if (data && data.ok !== false) {
-                closeProductEnquiryModal();
-                form.reset();
-
-                const enquiryId = data.enquiryId || data.id || ('SA-ENQ-' + Math.floor(100000 + Math.random() * 900000));
-
-                if (typeof showEnquirySuccessModal === 'function') {
-                    showEnquirySuccessModal({
-                        id: enquiryId,
-                        name,
-                        product,
-                        location: 'Not specified',
-                        phone,
-                        emailSent: data.emailSent,
-                        emailError: data.emailError,
-                        customerMessage: data.customerMessage || "Thank you! Your enquiry has been submitted successfully."
-                    });
-                } else {
-                    alert(`Enquiry submitted successfully! Reference ID: ${enquiryId}`);
-                }
-            } else {
-                throw new Error(data.error || data.message || 'Submission failed. Please try again.');
-            }
-        } catch (err) {
-            console.error('Product enquiry error:', err);
-            if (statusEl) {
-                statusEl.className = 'form-status error';
-                statusEl.textContent = `❌ ${err.message || 'Unable to submit enquiry. Please call us or message on WhatsApp.'}`;
-            }
-        } finally {
-            if (submitBtn) submitBtn.disabled = false;
-        }
-    });
 }
 
 function escapeHtml(str) {

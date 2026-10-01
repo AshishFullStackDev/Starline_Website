@@ -807,7 +807,7 @@ function buildWhatsAppEnquiryMessage(formData) {
 }
 
 // Global escape HTML helper
-function escapeHtmlString(str) {
+function escapeHTML(str) {
     if (!str) return '';
     return String(str)
         .replace(/&/g, '&amp;')
@@ -816,6 +816,10 @@ function escapeHtmlString(str) {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
 }
+
+const escapeHtmlString = escapeHTML;
+window.escapeHTML = escapeHTML;
+window.escapeHtmlString = escapeHTML;
 
 // Professional Enquiry Success Confirmation Modal
 function showEnquirySuccessModal(info) {
@@ -1130,18 +1134,40 @@ function handleEnquiry(event) {
     setFormStatus(status, '⏳ Submitting your enquiry to our adventure engineering team...', 'loading');
     
     const submitEnquiry = async () => {
-        // Direct to Firebase Firestore via Modular SDK (pure static hosting compatible)
-        if (typeof window.StarlineFirebase === 'undefined' || typeof window.StarlineFirebase.saveEnquiry !== 'function') {
-            try {
-                await import('/js/firebase-init.js');
-            } catch (impErr) {}
+        let directFbError = null;
+        // 1. Try Direct to Firebase Firestore via Modular SDK (pure static hosting compatible)
+        try {
+            if (typeof window.StarlineFirebase === 'undefined' || typeof window.StarlineFirebase.saveEnquiry !== 'function') {
+                try {
+                    await import('/js/firebase-init.js');
+                } catch (impErr) {}
+            }
+
+            if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                return await window.StarlineFirebase.saveEnquiry(formData);
+            }
+        } catch (fbErr) {
+            console.warn('[Submission Note]: Direct Firestore error:', fbErr.message);
+            directFbError = fbErr;
         }
 
-        if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-            return await window.StarlineFirebase.saveEnquiry(formData);
+        // 2. Fallback: Submit to server backend /api/enquiry if accessible
+        try {
+            const res = await fetch('/api/enquiry', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            if (res.ok) {
+                const data = await res.json();
+                return data;
+            }
+        } catch (serverErr) {
+            console.warn('[Submission Note]: Server endpoint error:', serverErr.message);
         }
 
-        throw new Error('Firebase Firestore service is unavailable. Please check your internet connection and try again.');
+        if (directFbError) throw directFbError;
+        throw new Error('Enquiry submission is temporarily unavailable. Please contact us directly via WhatsApp or phone.');
     };
 
     submitEnquiry()
@@ -1422,41 +1448,6 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// ===== BACK-TO-TOP BUTTON =====
-function createBackToTopButton() {
-    const button = document.createElement('button');
-    button.id = 'back-to-top';
-    button.className = 'back-to-top';
-    button.innerHTML = '↑';
-    button.setAttribute('title', 'Back to top');
-    button.setAttribute('aria-label', 'Back to top');
-    document.body.appendChild(button);
-    
-    // Show/hide button based on scroll
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            button.classList.add('visible');
-        } else {
-            button.classList.remove('visible');
-        }
-    });
-    
-    // Scroll to top smoothly
-    button.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
-}
-
-// Initialize back-to-top button
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', createBackToTopButton);
-} else {
-    createBackToTopButton();
-}
-
 // ===== SCROLL PROGRESS BAR =====
 function createScrollProgressBar() {
     const progressBar = document.createElement('div');
@@ -1595,30 +1586,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// ===== GET A QUOTE POPUP MODAL =====
+// ===== UNIFIED PROJECT ENQUIRY / REQUEST QUOTATION MODAL =====
 let quoteModalPreviousFocus = null;
 
 function createQuoteModal() {
     if (document.getElementById('quoteModal')) return;
 
     const modalHTML = `
-    <div id="quoteModal" class="quote-modal" aria-hidden="true" role="dialog" aria-labelledby="quoteModalTitle">
-        <div class="quote-modal-backdrop" id="quoteModalBackdrop"></div>
-        <div class="quote-modal-dialog">
+    <div id="quoteModal" class="quote-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="quoteModalTitle">
+        <div class="quote-modal-backdrop" id="quoteModalBackdrop" aria-hidden="true"></div>
+        <div class="quote-modal-dialog" role="document">
             <div class="quote-modal-header">
                 <span class="quote-modal-badge">Direct Factory Engineering</span>
-                <h2 id="quoteModalTitle" class="quote-modal-title">Get a Project Quote</h2>
-                <p class="quote-modal-subtitle">Direct manufacturer pricing, technical specs &amp; installation estimates for your adventure facility.</p>
+                <h2 id="quoteModalTitle" class="quote-modal-title">Request Product Quotation</h2>
+                <p id="quoteModalSubtitle" class="quote-modal-subtitle">Direct manufacturer pricing, technical specs &amp; installation estimates for your adventure facility.</p>
                 <button type="button" class="quote-modal-close" id="quoteModalClose" aria-label="Close quote modal">&times;</button>
             </div>
 
             <div class="quote-modal-body">
                 <form id="quoteModalForm" class="quote-modal-form" novalidate>
-                    <input type="hidden" name="formType" value="Quick RFQ">
+                    <input type="hidden" name="formType" value="Get a Quote">
                     <input type="hidden" name="product" id="quoteModalProduct" value="">
-                    <div class="quote-form-grid" style="display: flex; flex-direction: column; gap: 14px;">
+                    
+                    <div id="quoteModalProductBadge" style="display: none; align-items: center; gap: 6px; padding: 7px 12px; background: rgba(244, 118, 33, 0.08); border-left: 3px solid #F47621; border-radius: 4px; font-size: 0.85rem; color: #c25409; font-weight: 600; margin-bottom: 14px;">
+                        <span>Requested Item:</span>
+                        <strong id="quoteModalProductLabel" style="color: #0f172a;"></strong>
+                    </div>
+
+                    <div class="quote-form-grid">
                         <div class="quote-field-group">
-                            <label for="quoteModalName">Name <span class="quote-required">*</span></label>
+                            <label for="quoteModalName">Full Name <span class="quote-required">*</span></label>
                             <div class="quote-input-wrap">
                                 <span class="quote-input-icon" aria-hidden="true">👤</span>
                                 <input type="text" id="quoteModalName" name="name" placeholder="Your full name" required autocomplete="name">
@@ -1626,7 +1623,7 @@ function createQuoteModal() {
                         </div>
 
                         <div class="quote-field-group">
-                            <label for="quoteModalEmail">Email <span class="quote-required">*</span></label>
+                            <label for="quoteModalEmail">Email Address <span class="quote-required">*</span></label>
                             <div class="quote-input-wrap">
                                 <span class="quote-input-icon" aria-hidden="true">✉️</span>
                                 <input type="email" id="quoteModalEmail" name="email" placeholder="you@example.com" required autocomplete="email">
@@ -1634,7 +1631,7 @@ function createQuoteModal() {
                         </div>
 
                         <div class="quote-field-group">
-                            <label for="quoteModalPhone">Phone <span class="quote-required">*</span></label>
+                            <label for="quoteModalPhone">Phone Number <span class="quote-required">*</span></label>
                             <div class="quote-input-wrap">
                                 <span class="quote-input-icon" aria-hidden="true">📞</span>
                                 <input type="tel" id="quoteModalPhone" name="phone" placeholder="+91-94249-04000" required autocomplete="tel">
@@ -1642,8 +1639,8 @@ function createQuoteModal() {
                         </div>
 
                         <div class="quote-field-group">
-                            <label for="quoteModalMessage">Message <span class="quote-required">*</span></label>
-                            <textarea id="quoteModalMessage" name="message" rows="4" placeholder="Tell us about your project requirements, site dimensions, or timeline..." required></textarea>
+                            <label for="quoteModalMessage">Project Requirements / Message <span class="quote-required">*</span></label>
+                            <textarea id="quoteModalMessage" name="message" rows="3" placeholder="Tell us about your project requirements, site dimensions, or timeline..." required></textarea>
                         </div>
                     </div>
 
@@ -1663,9 +1660,9 @@ function createQuoteModal() {
                 <div class="quote-success-view" id="quoteSuccessView">
                     <div class="quote-success-icon" aria-hidden="true">✓</div>
                     <h3 class="quote-success-title">Quote Request Received!</h3>
-                    <p class="quote-success-desc" id="quoteSuccessDesc">
-                        Thank you! Your quote request has been routed directly to our adventure engineering team. We will get back to you with custom drawings, specifications, and pricing within 24 hours.
-                    </p>
+                    <div id="quoteSuccessDesc" class="quote-success-desc">
+                        <!-- Populated dynamically -->
+                    </div>
                     <div class="quote-success-actions">
                         <a href="https://wa.me/919424904000" target="_blank" rel="noopener noreferrer" class="quote-whatsapp-btn" id="quoteSuccessWhatsApp">
                             <span>💬 Connect on WhatsApp</span>
@@ -1690,11 +1687,22 @@ function openQuoteModal(productName) {
 
     quoteModalPreviousFocus = document.activeElement;
 
-    // Reset views
+    // Close any other open modals in the page cleanly
+    document.querySelectorAll('.product-modal.active, .enquiry-modal.active, .gallery-lightbox.active').forEach(m => {
+        m.classList.remove('active');
+        m.setAttribute('aria-hidden', 'true');
+    });
+
+    // Reset form view
     const form = document.getElementById('quoteModalForm');
     const successView = document.getElementById('quoteSuccessView');
     const status = document.getElementById('quoteModalStatus');
     const submitBtn = document.getElementById('quoteSubmitBtn');
+    const titleEl = document.getElementById('quoteModalTitle');
+    const subtitleEl = document.getElementById('quoteModalSubtitle');
+    const productInput = document.getElementById('quoteModalProduct');
+    const productBadge = document.getElementById('quoteModalProductBadge');
+    const productLabel = document.getElementById('quoteModalProductLabel');
 
     if (form) form.style.display = 'block';
     if (successView) successView.style.display = 'none';
@@ -1708,10 +1716,30 @@ function openQuoteModal(productName) {
         submitBtn.innerHTML = 'Get a Quote';
     }
 
-    // Set product internally without user selection
-    const productInput = document.getElementById('quoteModalProduct');
-    if (productInput) {
-        productInput.value = productName || detectProductFromUrl(window.location.href);
+    // Resolve product
+    let product = (productName && typeof productName === 'string' && productName.trim() !== '') 
+        ? productName.trim() 
+        : detectProductFromUrl(window.location.href);
+
+    if (productInput) productInput.value = product;
+
+    if (titleEl) {
+        titleEl.textContent = 'Request Product Quotation';
+    }
+
+    if (product && product !== 'General Adventure Project Quote' && product !== 'Adventure Equipment' && product !== 'Footer Quote Request') {
+        if (productBadge && productLabel) {
+            productLabel.textContent = product;
+            productBadge.style.display = 'flex';
+        }
+        if (subtitleEl) {
+            subtitleEl.innerHTML = `Direct manufacturer pricing, technical specs &amp; installation estimates for <strong>${escapeHTML(product)}</strong>.`;
+        }
+    } else {
+        if (productBadge) productBadge.style.display = 'none';
+        if (subtitleEl) {
+            subtitleEl.textContent = 'Direct manufacturer pricing, technical specs & installation estimates for your adventure facility.';
+        }
     }
 
     // Open modal
@@ -1723,12 +1751,14 @@ function openQuoteModal(productName) {
     setTimeout(() => {
         const nameInput = document.getElementById('quoteModalName');
         if (nameInput) nameInput.focus();
-    }, 100);
+    }, 120);
 }
 
-// Global modal triggers and aliases (Requirement #29)
+// Global modal triggers and aliases
 window.openProductEnquiryModal = openQuoteModal;
 window.openQuoteModal = openQuoteModal;
+window.closeProductEnquiryModal = closeQuoteModal;
+window.closeQuoteModal = closeQuoteModal;
 
 function closeQuoteModal() {
     const modal = document.getElementById('quoteModal');
@@ -1738,8 +1768,16 @@ function closeQuoteModal() {
     modal.classList.remove('active');
     document.body.style.overflow = '';
 
+    // Also close any legacy product modal if open
+    document.querySelectorAll('.product-modal.active, .enquiry-modal.active').forEach(m => {
+        m.classList.remove('active');
+        m.setAttribute('aria-hidden', 'true');
+    });
+
     if (quoteModalPreviousFocus && typeof quoteModalPreviousFocus.focus === 'function') {
-        quoteModalPreviousFocus.focus();
+        try {
+            quoteModalPreviousFocus.focus();
+        } catch (e) {}
         quoteModalPreviousFocus = null;
     }
 }
@@ -1758,6 +1796,12 @@ function bindQuoteModalEvents() {
     if (backdrop) backdrop.addEventListener('click', closeQuoteModal);
     if (doneBtn) doneBtn.addEventListener('click', closeQuoteModal);
 
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeQuoteModal();
+        }
+    });
+
     if (form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -1774,35 +1818,42 @@ function bindQuoteModalEvents() {
             const whatsAppBtn = document.getElementById('quoteSuccessWhatsApp');
 
             const name = nameInput ? nameInput.value.trim() : '';
-            const email = emailInput ? emailInput.value.trim() : '';
+            const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
             const phone = phoneInput ? phoneInput.value.trim() : '';
             const message = messageInput ? messageInput.value.trim() : '';
             const product = (productInput && productInput.value) ? productInput.value : detectProductFromUrl(window.location.href);
 
-            // Validation - only Name, Email, Phone, Message
-            if (!name) {
-                showModalStatus('Please enter your full name.', 'error');
+            // Validation - Full Name
+            if (!name || name.length < 2) {
+                showModalStatus('Please enter your full name (minimum 2 characters).', 'error');
                 nameInput?.focus();
                 return;
             }
-            if (!email || !email.includes('@') || !email.includes('.')) {
-                showModalStatus('Please enter a valid email address.', 'error');
+
+            // Validation - Email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                showModalStatus('Please enter a valid email address (e.g. you@example.com).', 'error');
                 emailInput?.focus();
                 return;
             }
+
+            // Validation - Phone
             const phoneDigits = phone.replace(/[^\d]/g, '');
             if (!phone || phoneDigits.length < 8) {
                 showModalStatus('Please enter a valid phone number (minimum 8 digits).', 'error');
                 phoneInput?.focus();
                 return;
             }
-            if (!message) {
-                showModalStatus('Please enter your requirements or message.', 'error');
+
+            // Validation - Message
+            if (!message || message.length < 2) {
+                showModalStatus('Please enter your project requirements or message.', 'error');
                 messageInput?.focus();
                 return;
             }
 
-            showModalStatus('Submitting your quote request...', 'loading');
+            showModalStatus('Submitting your quotation request...', 'loading');
             if (submitBtn) {
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = 'Submitting...';
@@ -1815,23 +1866,44 @@ function bindQuoteModalEvents() {
                 message,
                 company: 'N/A',
                 location: 'Not specified',
-                product,
-                formType: 'Quick RFQ'
+                product: product || 'General Adventure Project Enquiry',
+                formType: 'Get a Quote'
             };
 
             const submitQuote = async () => {
-                // Direct Firestore submission (pure static hosting compatible)
-                if (typeof window.StarlineFirebase === 'undefined' || typeof window.StarlineFirebase.saveEnquiry !== 'function') {
-                    try {
-                        await import('/js/firebase-init.js');
-                    } catch (impErr) {}
+                let directFbError = null;
+                // 1. Direct Firebase Firestore submission (Modular SDK)
+                try {
+                    if (typeof window.StarlineFirebase === 'undefined' || typeof window.StarlineFirebase.saveEnquiry !== 'function') {
+                        try {
+                            await import('/js/firebase-init.js');
+                        } catch (impErr) {}
+                    }
+
+                    if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                        return await window.StarlineFirebase.saveEnquiry(payload);
+                    }
+                } catch (fbErr) {
+                    console.warn('[Quote Modal]: Direct Firestore notice:', fbErr.message);
+                    directFbError = fbErr;
                 }
 
-                if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
-                    return await window.StarlineFirebase.saveEnquiry(payload);
+                // 2. Server API fallback (/api/enquiry)
+                try {
+                    const res = await fetch('/api/enquiry', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) {
+                        return await res.json();
+                    }
+                } catch (apiErr) {
+                    console.warn('[Quote Modal]: Server API notice:', apiErr.message);
                 }
 
-                throw new Error('Firebase Firestore service is unavailable. Please check your internet connection and try again.');
+                if (directFbError) throw directFbError;
+                throw new Error('Service temporarily unavailable. Please try again or reach out directly on WhatsApp.');
             };
 
             submitQuote()
@@ -1861,7 +1933,7 @@ function bindQuoteModalEvents() {
                 }
 
                 if (whatsAppBtn) {
-                    const waText = encodeURIComponent(`Hello STARLINE ADVENTURES,\n\nI just requested a project quote [Enquiry ID: ${enquiryId}] on your website:\n- Name: ${name}\n- Phone: ${phone}\n- Email: ${email}\n- Location: ${location}\n- Product/Activity: ${product}\n- Message: ${message}`);
+                    const waText = encodeURIComponent(`Hello STARLINE ADVENTURES,\n\nI just requested a project quote [Enquiry ID: ${enquiryId}] on your website:\n- Name: ${name}\n- Phone: ${phone}\n- Email: ${email}\n- Product/Activity: ${product}\n- Requirements: ${message}`);
                     whatsAppBtn.href = `https://wa.me/919424904000?text=${waText}`;
                 }
 
@@ -1870,7 +1942,7 @@ function bindQuoteModalEvents() {
             .catch(err => {
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = 'SUBMIT QUOTE REQUEST <span aria-hidden="true">&#8594;</span>';
+                    submitBtn.innerHTML = 'Get a Quote';
                 }
                 showModalStatus(`❌ ${escapeHTML(err.message || 'Unable to submit enquiry. Please try again or reach out on WhatsApp.')}`, 'error');
             });
@@ -1884,43 +1956,73 @@ function bindQuoteModalEvents() {
         status.className = `quote-modal-status ${type}`;
         status.style.display = 'block';
     }
-
-    function escapeHTML(str) {
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
-    }
 }
 
-// Global click listener to open Quote Modal on any "Get a Quote" trigger
+// Global click listener to open Quote Modal on any "Get a Quote" / "Request a Quote" trigger
 document.addEventListener('click', function(e) {
-    // Check if clicked element or its parent is a quote trigger
-    const trigger = e.target.closest('.nav-cta-btn, .open-quote-modal, .btn-quote, [data-open-quote-modal]');
-    if (trigger) {
+    const quoteTrigger = e.target.closest(
+        '.nav-cta-btn, .hero-quote-btn, .btn-product-enquire, .btn-footer-quote, .open-quote-modal, .btn-quote, [data-open-quote-modal], #productModalEnquireBtn'
+    );
+
+    if (quoteTrigger) {
+        // Skip submit buttons inside other active forms
+        if (quoteTrigger.type === 'submit' && !quoteTrigger.classList.contains('open-quote-modal')) {
+            return;
+        }
+
         e.preventDefault();
-        const product = trigger.getAttribute('data-product') || '';
+        
+        let product = quoteTrigger.getAttribute('data-product') || '';
+        if (!product || product === 'Footer Quote Request') {
+            const card = quoteTrigger.closest('.product-item-card, .product-card');
+            if (card) {
+                product = card.querySelector('.product-item-title, h3')?.textContent.trim() || '';
+            } else if (window.location.pathname.includes('/product/')) {
+                product = document.querySelector('h1')?.textContent.trim() || '';
+            }
+        }
+
         openQuoteModal(product);
         return;
     }
 
     // Check for any anchor or button with text matching quote variations
     const buttonOrLink = e.target.closest('a, button');
-    if (buttonOrLink && !buttonOrLink.closest('.quote-modal')) {
-        // Explicitly ignore telephone, email, and WhatsApp links to ensure direct native handling
+    if (buttonOrLink && !buttonOrLink.closest('#quoteModal')) {
         const href = buttonOrLink.getAttribute('href') || '';
         if (href.startsWith('tel:') || href.startsWith('mailto:') || href.includes('wa.me')) {
             return;
         }
 
-        // Skip form submit buttons
-        if (buttonOrLink.type === 'submit' && !buttonOrLink.classList.contains('open-quote-modal')) return;
+        // Skip submit buttons inside forms unless specifically marked
+        if (buttonOrLink.type === 'submit' && !buttonOrLink.classList.contains('open-quote-modal')) {
+            return;
+        }
 
-        const text = buttonOrLink.textContent.trim().toLowerCase();
-        if (text === 'get a quote' || text === 'get quote' || text.startsWith('get a quote') || text === 'request a quote →' || text === 'request a quote') {
+        const rawText = buttonOrLink.textContent.trim().toLowerCase();
+        const text = rawText.replace(/[→\s]+$/, '');
+        if (
+            text === 'get a quote' ||
+            text === 'request a quote' ||
+            text === 'request quote' ||
+            text === 'get quote' ||
+            text === 'get a project quote' ||
+            text === 'enquire now' ||
+            text === 'enquire about this product' ||
+            text.startsWith('get a quote') ||
+            text.startsWith('request a quote') ||
+            text.includes('price & project quote')
+        ) {
             e.preventDefault();
-            const product = buttonOrLink.getAttribute('data-product') || '';
+            let product = buttonOrLink.getAttribute('data-product') || '';
+            if (!product || product === 'Footer Quote Request') {
+                const card = buttonOrLink.closest('.product-item-card, .product-card');
+                if (card) {
+                    product = card.querySelector('.product-item-title, h3')?.textContent.trim() || '';
+                } else if (window.location.pathname.includes('/product/')) {
+                    product = document.querySelector('h1')?.textContent.trim() || '';
+                }
+            }
             openQuoteModal(product);
         }
     }
