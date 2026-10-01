@@ -272,7 +272,7 @@ const products = [
         "url": "/product/rocket-ejection.html",
         "category": "Adventure Rides",
         "image": "/images/products/rocket-ejection/rocket-ejection.jpeg",
-        "fallbackImage": "/images/ejector_square.jpeg",
+        "fallbackImage": "/images/ejector_square.jpeg?v=2",
         "altText": "Rocket Ejection and Reverse Bungee Catapult manufactured and installed by Starline Adventures in India",
         "shortDesc": "High-altitude twin-tower reverse bungee catapult launching riders skyward with intense thrill.",
         "fullDesc": "The Rocket Ejection is a flagship high-altitude thrill attraction. Using heavy-gauge tensioned bungee cords and automated launch winches between structural steel towers, riders are propelled rapidly skyward to experience intense vertical acceleration and breathtaking zero-gravity freefall.",

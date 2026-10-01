@@ -132,7 +132,7 @@
 
         // 11. Rocket Ejection
         "rocket-ejection": {
-            image: "images/ejector_square.jpeg",
+            image: "images/ejector_square.jpeg?v=2",
             alt: "High-Altitude Twin-Tower Rocket Ejection Reverse Bungee Ride - Starline Adventures",
             title: "Rocket Ejection",
             category: "activities",
@@ -674,7 +674,7 @@
             {
                 id: "gallery-rocket-ejection",
                 filename: "ejector_square.jpeg",
-                src: "images/ejector_square.jpeg",
+                src: "images/ejector_square.jpeg?v=2",
                 title: "Twin-Tower Rocket Ejection Reverse Bungee",
                 category: "activities",
                 categoryLabel: "Activities",

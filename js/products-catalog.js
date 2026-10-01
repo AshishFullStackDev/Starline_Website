@@ -9,7 +9,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "rocket-ejection",
         name: "Rocket Ejection",
-        image: "images/ejector_square.jpeg",
+        image: "images/ejector_square.jpeg?v=2",
         shortDesc: "High-altitude twin-tower reverse bungee catapult launching riders skyward with intense thrill.",
         fullDesc: "The Rocket Ejection is a flagship high-altitude thrill attraction. Using heavy-gauge tensioned bungee cords and automated launch winches between structural steel towers, riders are propelled rapidly skyward to experience intense vertical acceleration and breathtaking zero-gravity freefall.",
         specs: [
