@@ -44,7 +44,7 @@ const projectDetails = {
             'Operator technical certification and maintenance support'
         ],
         gallery: [
-            ['Ikya Island Mussoorie Logo', 'images/projects/IKYA ISLAND photo.jpg']
+            ['Ikya Island Mussoorie Logo', 'images/projects/ikya_island.jpg']
         ]
     },
     'forest-department': {
@@ -221,7 +221,7 @@ function renderProjectDetails() {
         galleryEl.innerHTML = project.gallery
             .map(([caption, src]) => `
                 <figure class="project-gallery-item">
-                    <img src="${src}" alt="${caption} - ${project.name}" loading="lazy" onerror="this.onerror=null; this.src=images/logo/logo.jpeg;">
+                    <img src="${src}" alt="${caption} - ${project.name}" loading="lazy" onerror="this.onerror=null; this.src='images/logo/logo.jpeg';">
                     <figcaption>${caption}</figcaption>
                 </figure>
             `)

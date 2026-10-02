@@ -163,7 +163,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "suspension-bridge",
         name: "Suspension Bridge",
-        image: "", // Empty for user image upload
+        image: "images/activities/suspension_bridge.jpg",
         shortDesc: "A swaying rope-and-plank bridge for crossing valleys and rivers.",
         fullDesc: "A classic adventure walkway suspended across gorges, water bodies, or tree canopies. Built with heavy-gauge galvanized main cables, anti-slip decking, and high-tensile safety netting for a scenic, gently swaying crossing.",
         specs: [
@@ -352,7 +352,7 @@ const STARLINE_PRODUCTS = [
         id: "climbing-ropes-carabiners",
         name: "Climbing Ropes & Carabiners",
         category: "equipment",
-        image: "",
+        image: "images/equipment/Climbing Ropes & Carabiner.jpg",
         shortDesc: "Certified static and dynamic kernmantle ropes, auto-locking alloy carabiners, belay controllers, and connector hardware.",
         fullDesc: "Professional height-safety connection and rigging kit combining low-stretch static and energy-absorbing dynamic kernmantle climbing ropes with hot-forged alloy steel and aluminium screw/auto-locking carabiners, figure-8 descenders, and assisted-braking belay controllers.",
         specs: [
@@ -367,7 +367,7 @@ const STARLINE_PRODUCTS = [
         id: "climbing-holds-wall-panels",
         name: "Climbing Holds & Wall Panels",
         category: "equipment",
-        image: "",
+        image: "images/equipment/Climbing Holds & Wall Panels.jpeg",
         shortDesc: "Ergonomic textured polyurethane modular climbing holds, 3D FRP panels, and pre-drilled multiplex bouldering boards.",
         fullDesc: "Modular climbing wall surface and route-setting systems for commercial indoor and outdoor climbing arenas. Features high-friction micro-textured polyurethane holds (jugs, slopers, crimps, pinches), heavy-duty 3D FRP realistic rock panels, multi-ply birch multiplex boards with dense M10 T-nut grids, and multi-directional top anchors.",
         specs: [
@@ -734,6 +734,28 @@ function initProductCategoryTabs() {
 }
 
 // Render the Product Cards (curated on homepage, full catalogue on products.html)
+
+// Universal Image Path Resolver for multi-depth pages
+function getCatalogResolvedImagePath(rawPath) {
+    if (!rawPath) return "";
+    let clean = String(rawPath).trim().replace(/^\/+/, "");
+    if (clean.startsWith("http://") || clean.startsWith("https://") || clean.startsWith("data:")) {
+        return clean;
+    }
+    const isSubdir = (typeof window !== "undefined") && (
+        window.location.pathname.includes("/product/") || 
+        window.location.pathname.endsWith("/product")
+    );
+    if (isSubdir) {
+        if (!clean.startsWith("../")) {
+            clean = "../" + clean;
+        }
+    } else {
+        clean = clean.replace(/^(\.\.\/)+/, "");
+    }
+    return clean;
+}
+
 function renderProductsGrid(categoryFilter) {
     const gridEl = document.getElementById('productsGrid');
     if (!gridEl) return;
@@ -785,7 +807,7 @@ function renderProductsGrid(categoryFilter) {
         const imgHtml = (typeof renderProductCardImage === 'function')
             ? renderProductCardImage(product)
             : ((product.image && product.image.trim() !== '')
-                ? `<img src="${product.image}" alt="${escapeHtml(product.name)} - Starline Adventures" class="product-item-img" loading="lazy" decoding="async" onerror="this.onerror=null; this.parentElement.innerHTML = '<div class=\\'product-card-empty-box\\'><span class=\\'product-card-empty-icon\\' aria-hidden=\\'true\\'>📷</span><span class=\\'product-card-empty-text\\'>Image coming soon</span></div>';">`
+                ? `<img src="${getCatalogResolvedImagePath(product.image)}" alt="${escapeHtml(product.name)} - Starline Adventures" class="product-item-img" loading="lazy" decoding="async" onerror="this.onerror=null; this.parentElement.innerHTML = '<div class=\\'product-card-empty-box\\'><span class=\\'product-card-empty-icon\\' aria-hidden=\\'true\\'>📷</span><span class=\\'product-card-empty-text\\'>Image coming soon</span></div>';">`
                 : `<div class="product-card-empty-box"><span class="product-card-empty-icon" aria-hidden="true">📷</span><span class="product-card-empty-text">Image coming soon</span></div>`);
 
         html += `

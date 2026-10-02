@@ -223,12 +223,12 @@
       
        "suspension-bridge": {
             image: "images/activities/suspension_bridge.jpg",
-            alt: "Suspension Bridge Adventure Activity",
+            alt: "Suspension Bridge Adventure Activity - Starline Adventures",
             title: "Suspension Bridge",
             category: "activities",
             categoryLabel: "Activities",
             desc: "A thrilling bridge experience that tests balance, confidence and adventure."
-},
+        },
 
         // 15 Main Equipment Categories (mapped to authentic images in images/equipment/ by their name):
         "open-gym-equipment": {
@@ -539,13 +539,40 @@
     /**
      * Renders image or placeholder for product catalog cards.
      */
+    
+    /**
+     * Resolves image paths according to current directory depth (root vs /product/).
+     * Root pages (index.html, products.html): "images/..."
+     * Subfolder pages (product/*.html): "../images/..."
+     */
+    function resolvePathForCurrentPage(pathStr) {
+        if (!pathStr || typeof pathStr !== "string") return "";
+        let clean = pathStr.trim().replace(/^\/+/, "");
+        if (clean.startsWith("http://") || clean.startsWith("https://") || clean.startsWith("data:")) {
+            return clean;
+        }
+        const isSubdir = (typeof window !== "undefined") && (
+            window.location.pathname.includes("/product/") || 
+            window.location.pathname.endsWith("/product")
+        );
+        if (isSubdir) {
+            if (!clean.startsWith("../")) {
+                clean = "../" + clean;
+            }
+        } else {
+            clean = clean.replace(/^(\.\.\/)+/, "");
+        }
+        return clean;
+    }
+
     function renderProductCardImage(product) {
-        const imgUrl = getProductImage(product);
+        const rawImgUrl = getProductImage(product);
+        const imgUrl = resolvePathForCurrentPage(rawImgUrl);
         const name = (product && product.name) ? product.name : "Product";
 
         if (imgUrl && imgUrl.trim() !== "") {
             return `
-                <img src="${escapeHtml(imgUrl)}"
+                <img src="${escapeHtml(resolvePathForCurrentPage(imgUrl))}"
                      alt="${escapeHtml(name)} - Starline Adventures"
                      class="product-item-img"
                      loading="lazy"

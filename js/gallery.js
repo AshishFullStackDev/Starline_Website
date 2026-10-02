@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return {
                 id: card.id || `img-${index + 1}`,
                 filename: img ? img.getAttribute('src').split('/').pop() : `image-${index + 1}`,
-                src: img ? img.getAttribute('src') : images/logo/logo.jpeg,
+                src: img ? img.getAttribute('src') : 'images/logo/logo.jpeg',
                 title: titleEl ? titleEl.textContent.trim() : `Project Photo #${index + 1}`,
                 category: category,
                 categoryLabel: badgeEl ? badgeEl.textContent.trim() : (categoryLabels[category] || 'Activities'),
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         width="400" 
                         height="300" 
                         class="gallery-card-img"
-                        onerror="this.onerror=null; this.src=images/logo/logo.jpeg;"
+                        onerror="this.onerror=null; this.src='images/logo/logo.jpeg';"
                     >
                     <div class="gallery-card-overlay">
                         <div class="gallery-card-zoom-icon">
