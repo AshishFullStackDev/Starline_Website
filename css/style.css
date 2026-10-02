@@ -8299,7 +8299,7 @@ summary:focus-visible,
 }
 
 .products-page #wall-climbing .card-media {
-    background-image: url('../images/activities/wall_climbing_square.jpeg');
+    background-image: url('../images/products/wall-climbing/wall-climbing.jpeg');
 }
 
 .products-page #multi-activity-tower .card-media {
@@ -14743,4 +14743,402 @@ a.btn-ask-activity:active {
     transform: translateY(0) !important;
     box-shadow: 0 2px 6px rgba(11, 25, 44, 0.12) !important;
 }
+
+/* ============================================================
+   LEAD CAPTURE ENTRY POPUP (STARLINE ADVENTURES)
+   True modal popup centered in browser viewport with dark overlay
+   ============================================================ */
+body.lead-popup-open {
+    overflow: hidden !important;
+}
+
+.lead-capture-modal {
+    position: fixed !important;
+    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 99999 !important;
+    display: none;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+    background: rgba(0, 0, 0, 0.55) !important;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.lead-capture-modal.active {
+    display: flex !important;
+}
+
+.lead-capture-backdrop {
+    display: none; /* Handled directly by fixed modal container */
+}
+
+.lead-capture-card,
+.lead-capture-dialog {
+    position: relative !important;
+    width: min(420px, 100%) !important;
+    max-height: calc(100vh - 40px) !important;
+    max-height: calc(100dvh - 40px) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.06) !important;
+    padding: 32px 28px 24px !important;
+    box-sizing: border-box !important;
+    margin: auto !important;
+    transform: translateY(0);
+    animation: leadModalFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes leadModalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Close Button (×) */
+.lead-capture-close {
+    position: absolute !important;
+    top: 14px !important;
+    right: 14px !important;
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #475569 !important;
+    font-size: 24px !important;
+    font-weight: 300 !important;
+    line-height: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease !important;
+    z-index: 10 !important;
+    padding: 0 !important;
+    touch-action: manipulation !important;
+}
+
+.lead-capture-close:hover {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+    transform: scale(1.06) !important;
+}
+
+.lead-capture-close:active {
+    background: #cbd5e1 !important;
+    transform: scale(0.96) !important;
+}
+
+.lead-capture-close:focus-visible {
+    outline: 2px solid #F47621 !important;
+    outline-offset: 2px !important;
+}
+
+/* Header */
+.lead-capture-header {
+    text-align: left;
+    margin-bottom: 20px;
+    padding-right: 28px;
+}
+
+.lead-capture-eyebrow {
+    display: inline-block;
+    color: #F47621;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.lead-capture-title {
+    color: #0f172a;
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.25;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.01em;
+}
+
+.lead-capture-subtitle {
+    color: #64748b;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    margin: 0;
+}
+
+/* Form */
+.lead-capture-form {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.lead-capture-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.lead-capture-label {
+    display: flex;
+    align-items: center;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 5px;
+}
+
+.lead-capture-label .required {
+    color: #ef4444;
+    font-weight: 700;
+    margin-left: 3px;
+}
+
+.lead-capture-label .optional {
+    color: #94a3b8;
+    font-weight: 400;
+    font-size: 0.76rem;
+    margin-left: 5px;
+}
+
+.lead-capture-input {
+    width: 100%;
+    height: 46px;
+    padding: 10px 14px;
+    font-size: 16px;
+    font-family: inherit;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #0f172a;
+    box-sizing: border-box;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.lead-capture-input::placeholder {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+.lead-capture-input:focus {
+    outline: none;
+    border-color: #F47621;
+    box-shadow: 0 0 0 3px rgba(244, 118, 33, 0.18);
+}
+
+.lead-capture-input.has-error {
+    border-color: #ef4444;
+    background: #fff8f8;
+}
+
+.lead-capture-input.has-error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18);
+}
+
+.lead-field-error {
+    color: #dc2626;
+    font-size: 0.74rem;
+    font-weight: 500;
+    line-height: 1.3;
+    margin-top: 4px;
+    display: none;
+}
+
+.lead-field-error.visible {
+    display: block;
+}
+
+/* Submit Button */
+.lead-capture-submit {
+    width: 100%;
+    height: 48px;
+    margin-top: 6px;
+    background: linear-gradient(135deg, #F47621 0%, #e0600f 100%);
+    color: #ffffff;
+    font-size: 0.96rem;
+    font-weight: 700;
+    font-family: inherit;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    box-shadow: 0 4px 14px rgba(244, 118, 33, 0.35);
+    touch-action: manipulation;
+}
+
+.lead-capture-submit:hover {
+    background: linear-gradient(135deg, #e0600f 0%, #c95107 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(244, 118, 33, 0.45);
+}
+
+.lead-capture-submit:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(244, 118, 33, 0.3);
+}
+
+.lead-capture-submit:focus-visible {
+    outline: 2px solid #0f172a;
+    outline-offset: 2px;
+}
+
+.lead-capture-submit:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Spinner */
+.lead-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: leadSpinnerRotate 0.65s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+@keyframes leadSpinnerRotate {
+    to { transform: rotate(360deg); }
+}
+
+/* Privacy Note */
+.lead-capture-privacy {
+    font-size: 0.74rem;
+    color: #94a3b8;
+    text-align: center;
+    margin: 8px 0 0 0;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+/* Success View */
+.lead-capture-success {
+    text-align: center;
+    padding: 24px 10px 12px;
+}
+
+.lead-success-icon-wrap {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 16px;
+    background: #ecfdf5;
+    color: #10b981;
+    border: 2px solid #a7f3d0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.lead-success-title {
+    color: #0f172a;
+    font-size: 1.45rem;
+    font-weight: 800;
+    margin: 0 0 10px 0;
+}
+
+.lead-success-message {
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin: 0 0 22px 0;
+    font-weight: 500;
+}
+
+.lead-success-close-btn {
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 600;
+    font-family: inherit;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.18s ease;
+}
+
+.lead-success-close-btn:hover {
+    background: #1e293b;
+}
+
+.lead-success-close-btn:focus-visible {
+    outline: 2px solid #F47621;
+    outline-offset: 2px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+    .lead-capture-modal {
+        padding: 14px !important;
+    }
+
+    .lead-capture-card,
+    .lead-capture-dialog {
+        padding: 26px 18px 20px !important;
+        border-radius: 14px !important;
+        max-height: calc(100vh - 28px) !important;
+        max-height: calc(100dvh - 28px) !important;
+    }
+
+    .lead-capture-close {
+        top: 12px !important;
+        right: 12px !important;
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 22px !important;
+    }
+
+    .lead-capture-title {
+        font-size: 1.25rem !important;
+    }
+
+    .lead-capture-subtitle {
+        font-size: 0.82rem !important;
+        margin-bottom: 14px !important;
+    }
+
+    .lead-capture-input {
+        height: 46px !important;
+        font-size: 16px !important;
+    }
+
+    .lead-capture-submit {
+        height: 48px !important;
+        font-size: 0.94rem !important;
+    }
+}
+
 

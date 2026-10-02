@@ -3231,3 +3231,454 @@ function initTestimonialsCarousel() {
 // Expose globally
 window.openQuoteModal = openQuoteModal;
 window.closeQuoteModal = closeQuoteModal;
+
+/* ============================================================
+   LEAD CAPTURE ENTRY POPUP (STARLINE ADVENTURES)
+   - Appears 2.5 seconds after page loads for new/returning visitors
+   - Fields: Name*, Email (optional), Phone Number*, Submit button
+   - Clearly visible × close button in top-right corner
+   - Closes when clicking × or outside the card (stops bubbling inside)
+   - 7-day suppression in localStorage on close or submit
+   - Saves lead to existing Firebase / server enquiry system
+   ============================================================ */
+(function initLeadCaptureModule() {
+    const STORAGE_KEY = 'starline_lead_capture_popup';
+    const ALT_STORAGE_KEY = 'starline_lead_popup_dismissed';
+    const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+    const POPUP_DELAY_MS = 2500; // 2.5 second delay after page load
+
+    function isLeadCaptureSuppressed() {
+        if (typeof window !== 'undefined' && window.location.pathname.includes('thank-you')) {
+            return true;
+        }
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(ALT_STORAGE_KEY);
+            if (!raw) return false;
+            let timestamp = null;
+            try {
+                const parsed = JSON.parse(raw);
+                timestamp = parsed?.timestamp || parsed?.dismissedAt || parsed?.time;
+            } catch (e) {
+                const num = Number(raw);
+                if (!isNaN(num) && num > 0) timestamp = num;
+            }
+            if (!timestamp) return false;
+            const elapsed = Date.now() - Number(timestamp);
+            return elapsed < SEVEN_DAYS_MS;
+        } catch (err) {
+            return false;
+        }
+    }
+
+    function recordLeadCaptureAction(actionType) {
+        try {
+            const data = JSON.stringify({
+                action: actionType, // 'closed' or 'submitted'
+                timestamp: Date.now()
+            });
+            localStorage.setItem(STORAGE_KEY, data);
+            localStorage.setItem(ALT_STORAGE_KEY, data);
+        } catch (err) {}
+    }
+
+    function getLeadCaptureModal() {
+        let modal = document.getElementById('leadCaptureModal');
+        if (modal) {
+            // Ensure modal is directly appended under document.body, not inside footer
+            if (modal.parentElement !== document.body) {
+                document.body.appendChild(modal);
+            }
+            setupModalEventListeners(modal);
+            return modal;
+        }
+
+        const markup = `
+        <div id="leadCaptureModal" class="lead-capture-modal" style="display: none;" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="leadCaptureTitle">
+            <div class="lead-capture-card" role="document">
+                <button type="button" class="lead-capture-close" id="leadCaptureClose" aria-label="Close popup" title="Close popup">&times;</button>
+                
+                <div class="lead-capture-content" id="leadCaptureFormContainer">
+                    <div class="lead-capture-header">
+                        <span class="lead-capture-eyebrow">Starline Adventures</span>
+                        <h2 id="leadCaptureTitle" class="lead-capture-title">Let's Connect</h2>
+                        <p class="lead-capture-subtitle">Leave your details below and our team will get in touch shortly.</p>
+                    </div>
+
+                    <form id="leadCaptureForm" class="lead-capture-form" novalidate>
+                        <div class="lead-capture-group">
+                            <label for="leadCaptureName" class="lead-capture-label">
+                                Name <span class="required" aria-hidden="true">*</span>
+                            </label>
+                            <input type="text"
+                                   id="leadCaptureName"
+                                   name="name"
+                                   class="lead-capture-input"
+                                   placeholder="Your Full Name"
+                                   required
+                                   minlength="2"
+                                   maxlength="100"
+                                   autocomplete="name">
+                            <div class="lead-field-error" id="leadCaptureNameError" role="alert" aria-live="polite"></div>
+                        </div>
+
+                        <div class="lead-capture-group">
+                            <label for="leadCaptureEmail" class="lead-capture-label">Email</label>
+                            <input type="email"
+                                   id="leadCaptureEmail"
+                                   name="email"
+                                   class="lead-capture-input"
+                                   placeholder="name@example.com"
+                                   maxlength="120"
+                                   autocomplete="email">
+                            <div class="lead-field-error" id="leadCaptureEmailError" role="alert" aria-live="polite"></div>
+                        </div>
+
+                        <div class="lead-capture-group">
+                            <label for="leadCapturePhone" class="lead-capture-label">
+                                Phone Number <span class="required" aria-hidden="true">*</span>
+                            </label>
+                            <input type="tel"
+                                   id="leadCapturePhone"
+                                   name="phone"
+                                   class="lead-capture-input"
+                                   placeholder="+91 94249 04000"
+                                   required
+                                   minlength="8"
+                                   maxlength="25"
+                                   autocomplete="tel">
+                            <div class="lead-field-error" id="leadCapturePhoneError" role="alert" aria-live="polite"></div>
+                        </div>
+
+                        <button type="submit" id="leadCaptureSubmitBtn" class="lead-capture-submit">
+                            <span class="lead-btn-text">Submit</span>
+                            <span class="lead-btn-loader" style="display: none;">
+                                <span class="lead-spinner" aria-hidden="true"></span> Submitting...
+                            </span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="lead-capture-success" id="leadCaptureSuccessContainer" style="display: none;">
+                    <div class="lead-success-icon-wrap" aria-hidden="true">&#10003;</div>
+                    <h3 class="lead-success-title">Thank you!</h3>
+                    <p class="lead-success-message">Thank you! We have received your details. Our team will contact you shortly.</p>
+                    <div class="lead-success-actions">
+                        <button type="button" class="lead-success-close-btn" id="leadCaptureSuccessDoneBtn">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = markup.trim();
+        modal = wrapper.firstElementChild;
+        document.body.appendChild(modal);
+        setupModalEventListeners(modal);
+        return modal;
+    }
+
+    function setupModalEventListeners(modal) {
+        if (!modal || modal.dataset.listenersAttached === 'true') return;
+        modal.dataset.listenersAttached = 'true';
+
+        const closeBtn = modal.querySelector('#leadCaptureClose');
+        const card = modal.querySelector('.lead-capture-card, .lead-capture-dialog');
+        const successDoneBtn = modal.querySelector('#leadCaptureSuccessDoneBtn');
+        const form = modal.querySelector('#leadCaptureForm');
+
+        const nameInput = modal.querySelector('#leadCaptureName');
+        const emailInput = modal.querySelector('#leadCaptureEmail');
+        const phoneInput = modal.querySelector('#leadCapturePhone');
+
+        const nameError = modal.querySelector('#leadCaptureNameError');
+        const emailError = modal.querySelector('#leadCaptureEmailError');
+        const phoneError = modal.querySelector('#leadCapturePhoneError');
+
+        // Clear error states on input
+        nameInput?.addEventListener('input', () => {
+            nameInput.classList.remove('has-error');
+            if (nameError) { nameError.textContent = ''; nameError.classList.remove('visible'); }
+        });
+
+        emailInput?.addEventListener('input', () => {
+            emailInput.classList.remove('has-error');
+            if (emailError) { emailError.textContent = ''; emailError.classList.remove('visible'); }
+        });
+
+        phoneInput?.addEventListener('input', () => {
+            phoneInput.classList.remove('has-error');
+            if (phoneError) { phoneError.textContent = ''; phoneError.classList.remove('visible'); }
+        });
+
+        // Close handlers
+        const dismissPopup = (record = true) => {
+            closeLeadCapturePopup(record);
+        };
+
+        // Clicking the × button closes immediately without submitting
+        closeBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dismissPopup(true);
+        });
+
+        // Clicking the modal overlay background outside card closes immediately
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                e.preventDefault();
+                dismissPopup(true);
+            }
+        });
+
+        // Prevent accidental closing when clicking inside the form/card
+        card?.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Success view Close button
+        successDoneBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            dismissPopup(true);
+        });
+
+        // Escape key closes popup
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                dismissPopup(true);
+            }
+        });
+
+        // Form submission handler
+        form?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nameVal = (nameInput?.value || '').trim();
+            const emailVal = (emailInput?.value || '').trim();
+            const phoneVal = (phoneInput?.value || '').trim();
+
+            let isValid = true;
+
+            // 1. Validate Name (Mandatory: cannot be empty, minimum 2 characters)
+            if (!nameVal || nameVal.length < 2) {
+                isValid = false;
+                nameInput?.classList.add('has-error');
+                if (nameError) {
+                    nameError.textContent = 'Please enter your name (minimum 2 characters).';
+                    nameError.classList.add('visible');
+                }
+            } else if (nameVal.length > 100) {
+                isValid = false;
+                nameInput?.classList.add('has-error');
+                if (nameError) {
+                    nameError.textContent = 'Name cannot exceed 100 characters.';
+                    nameError.classList.add('visible');
+                }
+            }
+
+            // 2. Validate Email (Optional, validate format only when provided)
+            const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+            if (emailVal) {
+                if (!emailPattern.test(emailVal) || emailVal.length < 5 || emailVal.length > 120) {
+                    isValid = false;
+                    emailInput?.classList.add('has-error');
+                    if (emailError) {
+                        emailError.textContent = 'Please enter a valid email address.';
+                        emailError.classList.add('visible');
+                    }
+                }
+            }
+
+            // 3. Validate Phone Number (Mandatory: must be valid phone number with >= 8 digits)
+            const cleanDigits = phoneVal.replace(/[^\d]/g, '');
+            const phoneRegex = /^\+?[0-9\s\-()]{8,25}$/;
+            if (!phoneVal || cleanDigits.length < 8 || !phoneRegex.test(phoneVal)) {
+                isValid = false;
+                phoneInput?.classList.add('has-error');
+                if (phoneError) {
+                    phoneError.textContent = 'Please enter a valid phone number (minimum 8 digits).';
+                    phoneError.classList.add('visible');
+                }
+            }
+
+            if (!isValid) {
+                // Focus first invalid input
+                if (nameInput?.classList.contains('has-error')) {
+                    nameInput.focus();
+                } else if (emailInput?.classList.contains('has-error')) {
+                    emailInput.focus();
+                } else if (phoneInput?.classList.contains('has-error')) {
+                    phoneInput.focus();
+                }
+                return;
+            }
+
+            // Valid submission - show loading state
+            const submitBtn = modal.querySelector('#leadCaptureSubmitBtn');
+            const btnText = submitBtn?.querySelector('.lead-btn-text');
+            const btnLoader = submitBtn?.querySelector('.lead-btn-loader');
+
+            if (submitBtn) submitBtn.disabled = true;
+            if (btnText) btnText.style.display = 'none';
+            if (btnLoader) btnLoader.style.display = 'inline-flex';
+
+            const payload = {
+                name: nameVal,
+                email: emailVal || 'no-email@starline.customer',
+                phone: phoneVal,
+                message: 'Lead Source: Website Entry Popup',
+                formType: 'Website Entry Popup',
+                product: 'Website Entry Popup',
+                company: 'Website Visitor',
+                location: 'Website Direct',
+                pageUrl: window.location.href,
+                referrer: document.referrer || 'Direct Entry'
+            };
+
+            let saveSucceeded = false;
+
+            // Submit using existing website / backend enquiry system
+            try {
+                const res = await fetch('/api/enquiry', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    saveSucceeded = true;
+                }
+            } catch (fetchErr) {
+                console.warn('[Lead Capture]: Server endpoint fetch notice:', fetchErr.message);
+            }
+
+            // Secondary fallback if server endpoint is inaccessible
+            if (!saveSucceeded) {
+                try {
+                    if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry !== 'function') {
+                        try {
+                            await import('/js/firebase-init.js');
+                        } catch (impErr) {}
+                    }
+                    if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                        await window.StarlineFirebase.saveEnquiry(payload);
+                        saveSucceeded = true;
+                    }
+                } catch (fbErr) {
+                    console.warn('[Lead Capture]: Firebase fallback notice:', fbErr.message);
+                }
+            }
+
+            // Record action in localStorage with 7 days expiry
+            recordLeadCaptureAction('submitted');
+
+            // Show Confirmation View
+            const formContainer = modal.querySelector('#leadCaptureFormContainer');
+            const successContainer = modal.querySelector('#leadCaptureSuccessContainer');
+
+            if (formContainer) formContainer.style.display = 'none';
+            if (successContainer) successContainer.style.display = 'block';
+
+            // Auto-dismiss smoothly after 6 seconds if user hasn't clicked close
+            setTimeout(() => {
+                const currentModal = document.getElementById('leadCaptureModal');
+                if (currentModal && currentModal.classList.contains('active')) {
+                    closeLeadCapturePopup(false);
+                }
+            }, 6000);
+        });
+    }
+
+    function openLeadCapturePopup() {
+        if (isLeadCaptureSuppressed()) return;
+
+        const modal = getLeadCaptureModal();
+        if (!modal) return;
+
+        // Reset to form view in case it was previously submitted in a long session
+        const formContainer = modal.querySelector('#leadCaptureFormContainer');
+        const successContainer = modal.querySelector('#leadCaptureSuccessContainer');
+        const submitBtn = modal.querySelector('#leadCaptureSubmitBtn');
+        const btnText = submitBtn?.querySelector('.lead-btn-text');
+        const btnLoader = submitBtn?.querySelector('.lead-btn-loader');
+
+        if (formContainer) formContainer.style.display = 'block';
+        if (successContainer) successContainer.style.display = 'none';
+        if (submitBtn) submitBtn.disabled = false;
+        if (btnText) {
+            btnText.style.display = 'inline';
+            btnText.textContent = 'Submit';
+        }
+        if (btnLoader) btnLoader.style.display = 'none';
+
+        // Display modal as fixed flex viewport overlay
+        modal.style.display = 'flex';
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+
+        // Prevent body scrolling
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+        document.body.classList.add('lead-popup-open');
+
+        // Accessible focus
+        setTimeout(() => {
+            const nameInput = modal.querySelector('#leadCaptureName');
+            if (nameInput && document.activeElement !== nameInput) {
+                nameInput.focus();
+            }
+        }, 150);
+    }
+
+    function closeLeadCapturePopup(recordClose = true) {
+        const modal = document.getElementById('leadCaptureModal');
+        if (!modal) return;
+
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        modal.style.display = 'none';
+
+        // Restore page scrolling
+        document.body.style.overflow = 'auto';
+        document.documentElement.style.overflow = 'auto';
+        document.body.classList.remove('lead-popup-open');
+
+        if (recordClose) {
+            recordLeadCaptureAction('closed');
+        }
+    }
+
+    function scheduleLeadCapturePopup() {
+        if (isLeadCaptureSuppressed()) return;
+
+        let scheduled = false;
+        const trigger = () => {
+            if (scheduled) return;
+            scheduled = true;
+            setTimeout(() => {
+                if (!isLeadCaptureSuppressed()) {
+                    openLeadCapturePopup();
+                }
+            }, POPUP_DELAY_MS);
+        };
+
+        if (document.readyState === 'complete') {
+            trigger();
+        } else {
+            window.addEventListener('load', trigger, { once: true });
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(trigger, 500);
+            }, { once: true });
+        }
+    }
+
+    // Expose for external testing & programmatic control
+    window.openLeadCapturePopup = openLeadCapturePopup;
+    window.closeLeadCapturePopup = closeLeadCapturePopup;
+    window.isLeadCaptureSuppressed = isLeadCaptureSuppressed;
+
+    // Start schedule on load
+    scheduleLeadCapturePopup();
+})();

@@ -72,8 +72,8 @@
 
         // 5. Wall Climbing
         "wall-climbing": {
-            image: "images/activities/wall_climbing_square.jpeg",
-            alt: "Engineered Artificial Rock Climbing Wall Panels - Starline Adventures",
+            image: "images/products/wall-climbing/wall-climbing.jpeg",
+            alt: "Wall Climbing Adventure Activity",
             title: "Wall Climbing",
             category: "activities",
             categoryLabel: "Activities",
@@ -162,8 +162,8 @@
 
         // 14. Net Climbing
         "net-climbing": {
-            image: "images/activities/net_climbing.jpeg",
-            alt: "Net Climbing Cargo Obstacle Course - Starline Adventures",
+            image: "images/products/net-climbing/net-climbing.jpeg",
+            alt: "Net Climbing Adventure Activity",
             title: "Net Climbing",
             category: "activities",
             categoryLabel: "Activities",
@@ -288,8 +288,8 @@
             desc: "Industrial-strength braided nylon cargo climbing nets, commando crawls, and enclosed cylindrical suspended net bridges."
         },
         "tyre-balance-obstacles": {
-             image: "images/equipment/Tyre_Balance_Obstacles.jpeg",
-             alt: "Tyre & Balance Obstacles",
+             image: "images/products/tyre-wall/tyre-wall.jpeg",
+             alt: "Tyre Wall Adventure Activity",
               desc: "Durable tyre balance obstacles designed for adventure parks, obstacle courses, and outdoor training areas."
         },
         "adventure-park-ladders-bridges": {
@@ -623,13 +623,13 @@
             },
             {
                 id: "gallery-wall-climbing",
-                filename: "wall_climbing_square.jpeg",
-                src: "images/activities/wall_climbing_square.jpeg",
-                title: "Artificial Rock Climbing Wall Panels",
+                filename: "wall-climbing.jpeg",
+                src: "images/products/wall-climbing/wall-climbing.jpeg",
+                title: "Wall Climbing Adventure Activity",
                 category: "activities",
                 categoryLabel: "Activities",
                 desc: "Outdoor textured climbing wall equipped with ergonomic holds and auto-belay fall arrest safety stations.",
-                alt: "Climber scaling artificial rock wall - Starline Adventures"
+                alt: "Wall Climbing Adventure Activity"
             },
             {
                 id: "gallery-activity-tower",
@@ -713,13 +713,13 @@
             },
             {
                 id: "gallery-net-climbing",
-                filename: "Net_Climbing.jpeg",
-                src: "images/activities/net_climbing.jpeg",
-                title: "Tensioned Net Climbing Obstacle",
+                filename: "net-climbing.jpeg",
+                src: "images/products/net-climbing/net-climbing.jpeg",
+                title: "Net Climbing Adventure Activity",
                 category: "activities",
                 categoryLabel: "Activities",
                 desc: "High-strength cargo net climb developing agility, grip, and upper-body balance on adventure towers.",
-                alt: "Net climbing obstacle on adventure park tower - Starline Adventures"
+                alt: "Net Climbing Adventure Activity"
             },
             {
                 id: "gallery-rifle-shooting",

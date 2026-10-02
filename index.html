@@ -122,7 +122,69 @@
             <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=3.0">
+
+    <!-- Critical Lead Capture Modal Styles (Ensures 100% reliable fixed viewport overlay) -->
+    <style id="starline-lead-modal-critical">
+        .lead-capture-modal {
+            position: fixed !important;
+            inset: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.55) !important;
+            z-index: 99999 !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 20px !important;
+            box-sizing: border-box !important;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .lead-capture-modal.active {
+            display: flex !important;
+        }
+        .lead-capture-card {
+            position: relative !important;
+            width: min(420px, 100%) !important;
+            max-height: calc(100vh - 40px) !important;
+            max-height: calc(100dvh - 40px) !important;
+            overflow-y: auto !important;
+            overscroll-behavior: contain !important;
+            background: #ffffff !important;
+            border-radius: 16px !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+            padding: 32px 28px 24px !important;
+            box-sizing: border-box !important;
+            margin: auto !important;
+        }
+        .lead-capture-close {
+            position: absolute !important;
+            top: 14px !important;
+            right: 14px !important;
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 50% !important;
+            background: #f1f5f9 !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #475569 !important;
+            font-size: 24px !important;
+            font-weight: 300 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            z-index: 10 !important;
+            padding: 0 !important;
+        }
+        body.lead-popup-open {
+            overflow: hidden !important;
+        }
+    </style>
         </head>
 
     <body class="home-page">
@@ -1000,10 +1062,89 @@
             </div>
         </div>
 
+        <!-- =======================================================
+             LEAD CAPTURE POPUP (Website Entry Modal - Viewport Centered)
+             ======================================================= -->
+        <div id="leadCaptureModal" class="lead-capture-modal" style="display: none;" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="leadCaptureTitle">
+            <div class="lead-capture-card" role="document">
+                <button type="button" class="lead-capture-close" id="leadCaptureClose" aria-label="Close popup" title="Close popup">&times;</button>
+                
+                <div class="lead-capture-content" id="leadCaptureFormContainer">
+                    <div class="lead-capture-header">
+                        <span class="lead-capture-eyebrow">Starline Adventures</span>
+                        <h2 id="leadCaptureTitle" class="lead-capture-title">Let's Connect</h2>
+                        <p class="lead-capture-subtitle">Leave your details below and our team will get in touch shortly.</p>
+                    </div>
+
+                    <form id="leadCaptureForm" class="lead-capture-form" novalidate>
+                        <div class="lead-capture-group">
+                            <label for="leadCaptureName" class="lead-capture-label">
+                                Name <span class="required" aria-hidden="true">*</span>
+                            </label>
+                            <input type="text"
+                                   id="leadCaptureName"
+                                   name="name"
+                                   class="lead-capture-input"
+                                   placeholder="Your Full Name"
+                                   required
+                                   minlength="2"
+                                   maxlength="100"
+                                   autocomplete="name">
+                            <div class="lead-field-error" id="leadCaptureNameError" role="alert" aria-live="polite"></div>
+                        </div>
+
+                        <div class="lead-capture-group">
+                            <label for="leadCaptureEmail" class="lead-capture-label">Email</label>
+                            <input type="email"
+                                   id="leadCaptureEmail"
+                                   name="email"
+                                   class="lead-capture-input"
+                                   placeholder="name@example.com"
+                                   maxlength="120"
+                                   autocomplete="email">
+                            <div class="lead-field-error" id="leadCaptureEmailError" role="alert" aria-live="polite"></div>
+                        </div>
+
+                        <div class="lead-capture-group">
+                            <label for="leadCapturePhone" class="lead-capture-label">
+                                Phone Number <span class="required" aria-hidden="true">*</span>
+                            </label>
+                            <input type="tel"
+                                   id="leadCapturePhone"
+                                   name="phone"
+                                   class="lead-capture-input"
+                                   placeholder="+91 94249 04000"
+                                   required
+                                   minlength="8"
+                                   maxlength="25"
+                                   autocomplete="tel">
+                            <div class="lead-field-error" id="leadCapturePhoneError" role="alert" aria-live="polite"></div>
+                        </div>
+
+                        <button type="submit" id="leadCaptureSubmitBtn" class="lead-capture-submit">
+                            <span class="lead-btn-text">Submit</span>
+                            <span class="lead-btn-loader" style="display: none;">
+                                <span class="lead-spinner" aria-hidden="true"></span> Submitting...
+                            </span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="lead-capture-success" id="leadCaptureSuccessContainer" style="display: none;">
+                    <div class="lead-success-icon-wrap" aria-hidden="true">&#10003;</div>
+                    <h3 class="lead-success-title">Thank you!</h3>
+                    <p class="lead-success-message">Thank you! We have received your details. Our team will contact you shortly.</p>
+                    <div class="lead-success-actions">
+                        <button type="button" class="lead-success-close-btn" id="leadCaptureSuccessDoneBtn">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script src="js/config.js"></script>
     <script src="/js/emailjs-service.js"></script>
     <script src="js/firebase-init.js"></script>
-    <script src="js/script.js?v=2.0"></script>
+    <script src="js/script.js?v=3.0"></script>
         <script src="js/image-map.js?v=2.0"></script>
         <script src="js/products.js?v=2.0"></script>
         <script src="js/products-catalog.js?v=2.0"></script>
