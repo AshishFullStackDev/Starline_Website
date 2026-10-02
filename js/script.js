@@ -3241,68 +3241,96 @@ window.closeQuoteModal = closeQuoteModal;
    - 7-day suppression in localStorage on close or submit
    - Saves lead to existing Firebase / server enquiry system
    ============================================================ */
+/* ============================================================
+   WEBSITE ENTRY POPUP (Lead Capture Modal / leadCaptureModal)
+   Lead Capture Popup localStorage logic:
+   - Dedicated key: starline_lead_popup_closed
+   - Appears 2.5 seconds after page loads for eligible visitors
+   - Fields: Name*, Email (optional), Phone Number*, Submit button
+   - Closes when clicking ×, Escape key, or outside card (backdrop)
+   - Clicking inside card does NOT close popup
+   - Suppresses 7 days on submission, 24 hours on close / backdrop
+   - Saves lead to existing Firebase / /api/enquiry backend
+   - Lead Source: Website Entry Popup
+   - Restores body overflow to auto on close, hidden on open
+   ============================================================ */
 (function initLeadCaptureModule() {
-    const STORAGE_KEY = 'starline_lead_capture_popup';
-    const ALT_STORAGE_KEY = 'starline_lead_popup_dismissed';
-    const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
-    const POPUP_DELAY_MS = 2500; // 2.5 second delay after page load
+    const STORAGE_KEY = 'starline_lead_popup_closed';
+    const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
+    const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+    const POPUP_DELAY_MS = 2500; // 2.5 seconds
 
-    function isLeadCaptureSuppressed() {
-        if (typeof window !== 'undefined' && window.location.pathname.includes('thank-you')) {
-            return true;
-        }
+    // Lead Capture Popup localStorage logic
+    function isVisitorEligible() {
+        if (typeof window === 'undefined') return false;
+        if (window.location.pathname.includes('thank-you')) return false;
+
         try {
-            const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(ALT_STORAGE_KEY);
-            if (!raw) return false;
-            let timestamp = null;
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return true;
+
+            // Direct string indicators
+            if (raw === 'true' || raw === 'closed' || raw === 'dismissed' || raw === '1') {
+                return false;
+            }
+
+            let expiresAt = null;
             try {
                 const parsed = JSON.parse(raw);
-                timestamp = parsed?.timestamp || parsed?.dismissedAt || parsed?.time;
+                if (parsed && typeof parsed === 'object') {
+                    expiresAt = parsed.expiresAt;
+                }
             } catch (e) {
                 const num = Number(raw);
-                if (!isNaN(num) && num > 0) timestamp = num;
+                if (!isNaN(num) && num > 0) expiresAt = num;
             }
-            if (!timestamp) return false;
-            const elapsed = Date.now() - Number(timestamp);
-            return elapsed < SEVEN_DAYS_MS;
+
+            if (!expiresAt) return false;
+            // Return true only if the suppression expiry time has passed
+            return Date.now() > expiresAt;
         } catch (err) {
-            return false;
+            return true;
         }
     }
 
-    function recordLeadCaptureAction(actionType) {
+    function recordPopupAction(actionType) {
         try {
+            // After successful submission: 7 days. After clicking × or backdrop close: 24 hours.
+            const duration = actionType === 'submitted' ? SEVEN_DAYS_MS : TWENTY_FOUR_HOURS_MS;
             const data = JSON.stringify({
                 action: actionType, // 'closed' or 'submitted'
-                timestamp: Date.now()
+                closedAt: Date.now(),
+                expiresAt: Date.now() + duration
             });
             localStorage.setItem(STORAGE_KEY, data);
-            localStorage.setItem(ALT_STORAGE_KEY, data);
         } catch (err) {}
     }
 
-    function getLeadCaptureModal() {
-        let modal = document.getElementById('leadCaptureModal');
-        if (modal) {
-            // Ensure modal is directly appended under document.body, not inside footer
-            if (modal.parentElement !== document.body) {
-                document.body.appendChild(modal);
+    function createLeadCaptureModal() {
+        let existing = document.getElementById('leadCaptureModal');
+        if (existing) {
+            if (existing.parentElement !== document.body) {
+                document.body.appendChild(existing);
             }
-            setupModalEventListeners(modal);
-            return modal;
+            bindModalEvents(existing);
+            return existing;
         }
 
-        const markup = `
-        <div id="leadCaptureModal" class="lead-capture-modal" style="display: none;" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="leadCaptureTitle">
+        const modal = document.createElement('div');
+        modal.id = 'leadCaptureModal';
+        modal.className = 'lead-capture-modal';
+        modal.setAttribute('aria-hidden', 'true');
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('aria-labelledby', 'leadCaptureTitle');
+        modal.style.display = 'none';
+
+        modal.innerHTML = `
             <div class="lead-capture-card" role="document">
                 <button type="button" class="lead-capture-close" id="leadCaptureClose" aria-label="Close popup" title="Close popup">&times;</button>
                 
                 <div class="lead-capture-content" id="leadCaptureFormContainer">
-                    <div class="lead-capture-header">
-                        <span class="lead-capture-eyebrow">Starline Adventures</span>
-                        <h2 id="leadCaptureTitle" class="lead-capture-title">Let's Connect</h2>
-                        <p class="lead-capture-subtitle">Leave your details below and our team will get in touch shortly.</p>
-                    </div>
+                    <h2 id="leadCaptureTitle" class="lead-capture-title">Let's Connect</h2>
 
                     <form id="leadCaptureForm" class="lead-capture-form" novalidate>
                         <div class="lead-capture-group">
@@ -3358,32 +3386,28 @@ window.closeQuoteModal = closeQuoteModal;
                     </form>
                 </div>
 
-                <div class="lead-capture-success" id="leadCaptureSuccessContainer" style="display: none;">
-                    <div class="lead-success-icon-wrap" aria-hidden="true">&#10003;</div>
-                    <h3 class="lead-success-title">Thank you!</h3>
-                    <p class="lead-success-message">Thank you! We have received your details. Our team will contact you shortly.</p>
+                <div class="lead-capture-success" id="leadCaptureSuccessContainer" style="display: none; text-align: center; padding: 20px 8px;">
+                    <div class="lead-success-icon-wrap" aria-hidden="true" style="width: 56px; height: 56px; border-radius: 50%; background: #ecfdf5; color: #10b981; border: 2px solid #a7f3d0; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px;">&#10003;</div>
+                    <h3 class="lead-success-title" style="color: #0f172a; font-size: 1.35rem; font-weight: 800; margin: 0 0 10px;">Thank you!</h3>
+                    <p class="lead-success-message" style="color: #475569; font-size: 0.95rem; line-height: 1.5; margin: 0 0 20px;">Thank you! We have received your details. Our team will contact you shortly.</p>
                     <div class="lead-success-actions">
-                        <button type="button" class="lead-success-close-btn" id="leadCaptureSuccessDoneBtn">Close</button>
+                        <button type="button" class="lead-success-close-btn" id="leadCaptureSuccessDoneBtn" style="background: #0f172a; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">Close</button>
                     </div>
                 </div>
             </div>
-        </div>
         `;
 
-        const wrapper = document.createElement('div');
-        wrapper.innerHTML = markup.trim();
-        modal = wrapper.firstElementChild;
         document.body.appendChild(modal);
-        setupModalEventListeners(modal);
+        bindModalEvents(modal);
         return modal;
     }
 
-    function setupModalEventListeners(modal) {
-        if (!modal || modal.dataset.listenersAttached === 'true') return;
-        modal.dataset.listenersAttached = 'true';
+    function bindModalEvents(modal) {
+        if (!modal || modal.dataset.eventsBound === 'true') return;
+        modal.dataset.eventsBound = 'true';
 
         const closeBtn = modal.querySelector('#leadCaptureClose');
-        const card = modal.querySelector('.lead-capture-card, .lead-capture-dialog');
+        const card = modal.querySelector('.lead-capture-card');
         const successDoneBtn = modal.querySelector('#leadCaptureSuccessDoneBtn');
         const form = modal.querySelector('#leadCaptureForm');
 
@@ -3411,45 +3435,40 @@ window.closeQuoteModal = closeQuoteModal;
             if (phoneError) { phoneError.textContent = ''; phoneError.classList.remove('visible'); }
         });
 
-        // Close handlers
-        const dismissPopup = (record = true) => {
-            closeLeadCapturePopup(record);
-        };
-
-        // Clicking the × button closes immediately without submitting
+        // 1. × button -> Close popup
         closeBtn?.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            dismissPopup(true);
+            closeLeadCapturePopup('closed');
         });
 
-        // Clicking the modal overlay background outside card closes immediately
+        // 2. Click outside card (on modal backdrop) -> Close popup
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 e.preventDefault();
-                dismissPopup(true);
+                closeLeadCapturePopup('closed');
             }
         });
 
-        // Prevent accidental closing when clicking inside the form/card
+        // 3. Click inside card -> DO NOT close popup
         card?.addEventListener('click', (e) => {
             e.stopPropagation();
         });
 
-        // Success view Close button
-        successDoneBtn?.addEventListener('click', (e) => {
-            e.preventDefault();
-            dismissPopup(true);
-        });
-
-        // Escape key closes popup
+        // 4. Escape key -> Close popup
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                dismissPopup(true);
+            if (e.key === 'Escape' && (modal.classList.contains('is-open') || modal.classList.contains('active') || modal.style.display === 'flex')) {
+                closeLeadCapturePopup('closed');
             }
         });
 
-        // Form submission handler
+        // 5. Success done button -> Close popup
+        successDoneBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeLeadCapturePopup('submitted');
+        });
+
+        // 6. Form submission handler
         form?.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -3459,7 +3478,7 @@ window.closeQuoteModal = closeQuoteModal;
 
             let isValid = true;
 
-            // 1. Validate Name (Mandatory: cannot be empty, minimum 2 characters)
+            // Name validation (required, minimum 2 characters)
             if (!nameVal || nameVal.length < 2) {
                 isValid = false;
                 nameInput?.classList.add('has-error');
@@ -3476,7 +3495,7 @@ window.closeQuoteModal = closeQuoteModal;
                 }
             }
 
-            // 2. Validate Email (Optional, validate format only when provided)
+            // Email validation (optional, only validated if entered)
             const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
             if (emailVal) {
                 if (!emailPattern.test(emailVal) || emailVal.length < 5 || emailVal.length > 120) {
@@ -3489,7 +3508,7 @@ window.closeQuoteModal = closeQuoteModal;
                 }
             }
 
-            // 3. Validate Phone Number (Mandatory: must be valid phone number with >= 8 digits)
+            // Phone Number validation (required, must contain a valid number with >= 8 digits)
             const cleanDigits = phoneVal.replace(/[^\d]/g, '');
             const phoneRegex = /^\+?[0-9\s\-()]{8,25}$/;
             if (!phoneVal || cleanDigits.length < 8 || !phoneRegex.test(phoneVal)) {
@@ -3502,7 +3521,6 @@ window.closeQuoteModal = closeQuoteModal;
             }
 
             if (!isValid) {
-                // Focus first invalid input
                 if (nameInput?.classList.contains('has-error')) {
                     nameInput.focus();
                 } else if (emailInput?.classList.contains('has-error')) {
@@ -3513,7 +3531,7 @@ window.closeQuoteModal = closeQuoteModal;
                 return;
             }
 
-            // Valid submission - show loading state
+            // Valid submission - show loading
             const submitBtn = modal.querySelector('#leadCaptureSubmitBtn');
             const btnText = submitBtn?.querySelector('.lead-btn-text');
             const btnLoader = submitBtn?.querySelector('.lead-btn-loader');
@@ -3526,6 +3544,7 @@ window.closeQuoteModal = closeQuoteModal;
                 name: nameVal,
                 email: emailVal || 'no-email@starline.customer',
                 phone: phoneVal,
+                leadSource: 'Website Entry Popup',
                 message: 'Lead Source: Website Entry Popup',
                 formType: 'Website Entry Popup',
                 product: 'Website Entry Popup',
@@ -3551,53 +3570,48 @@ window.closeQuoteModal = closeQuoteModal;
                     saveSucceeded = true;
                 }
             } catch (fetchErr) {
-                console.warn('[Lead Capture]: Server endpoint fetch notice:', fetchErr.message);
+                console.warn('[Lead Capture]: Server endpoint fetch note:', fetchErr.message);
             }
 
             // Secondary fallback if server endpoint is inaccessible
             if (!saveSucceeded) {
                 try {
-                    if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry !== 'function') {
-                        try {
-                            await import('/js/firebase-init.js');
-                        } catch (impErr) {}
-                    }
                     if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
                         await window.StarlineFirebase.saveEnquiry(payload);
                         saveSucceeded = true;
                     }
                 } catch (fbErr) {
-                    console.warn('[Lead Capture]: Firebase fallback notice:', fbErr.message);
+                    console.warn('[Lead Capture]: Firebase fallback note:', fbErr.message);
                 }
             }
 
             // Record action in localStorage with 7 days expiry
-            recordLeadCaptureAction('submitted');
+            recordPopupAction('submitted');
 
-            // Show Confirmation View
+            // Show Confirmation View: "Thank you! We have received your details. Our team will contact you shortly."
             const formContainer = modal.querySelector('#leadCaptureFormContainer');
             const successContainer = modal.querySelector('#leadCaptureSuccessContainer');
 
             if (formContainer) formContainer.style.display = 'none';
             if (successContainer) successContainer.style.display = 'block';
 
-            // Auto-dismiss smoothly after 6 seconds if user hasn't clicked close
+            // Auto-dismiss smoothly after 5.5 seconds if user hasn't clicked close
             setTimeout(() => {
                 const currentModal = document.getElementById('leadCaptureModal');
-                if (currentModal && currentModal.classList.contains('active')) {
-                    closeLeadCapturePopup(false);
+                if (currentModal && (currentModal.classList.contains('is-open') || currentModal.classList.contains('active') || currentModal.style.display === 'flex')) {
+                    closeLeadCapturePopup('submitted');
                 }
-            }, 6000);
+            }, 5500);
         });
     }
 
     function openLeadCapturePopup() {
-        if (isLeadCaptureSuppressed()) return;
+        if (!isVisitorEligible()) return;
 
-        const modal = getLeadCaptureModal();
+        const modal = createLeadCaptureModal();
         if (!modal) return;
 
-        // Reset to form view in case it was previously submitted in a long session
+        // Reset views in case of previous submission
         const formContainer = modal.querySelector('#leadCaptureFormContainer');
         const successContainer = modal.querySelector('#leadCaptureSuccessContainer');
         const submitBtn = modal.querySelector('#leadCaptureSubmitBtn');
@@ -3613,12 +3627,13 @@ window.closeQuoteModal = closeQuoteModal;
         }
         if (btnLoader) btnLoader.style.display = 'none';
 
-        // Display modal as fixed flex viewport overlay
+        // Display modal as fixed viewport overlay
         modal.style.display = 'flex';
+        modal.classList.add('is-open');
         modal.classList.add('active');
         modal.setAttribute('aria-hidden', 'false');
 
-        // Prevent body scrolling
+        // Lock body scrolling
         document.body.style.overflow = 'hidden';
         document.documentElement.style.overflow = 'hidden';
         document.body.classList.add('lead-popup-open');
@@ -3632,53 +3647,44 @@ window.closeQuoteModal = closeQuoteModal;
         }, 150);
     }
 
-    function closeLeadCapturePopup(recordClose = true) {
+    function closeLeadCapturePopup(actionType = 'closed') {
         const modal = document.getElementById('leadCaptureModal');
         if (!modal) return;
 
+        modal.style.display = 'none';
+        modal.classList.remove('is-open');
         modal.classList.remove('active');
         modal.setAttribute('aria-hidden', 'true');
-        modal.style.display = 'none';
 
-        // Restore page scrolling
+        // Restore body scrolling
         document.body.style.overflow = 'auto';
         document.documentElement.style.overflow = 'auto';
         document.body.classList.remove('lead-popup-open');
 
-        if (recordClose) {
-            recordLeadCaptureAction('closed');
-        }
+        recordPopupAction(actionType);
     }
 
-    function scheduleLeadCapturePopup() {
-        if (isLeadCaptureSuppressed()) return;
+    function startLeadCapturePopupLifecycle() {
+        // 1 & 2 & 3: Wait until DOM is loaded, create popup, append directly to document.body
+        const modal = createLeadCaptureModal();
 
-        let scheduled = false;
-        const trigger = () => {
-            if (scheduled) return;
-            scheduled = true;
-            setTimeout(() => {
-                if (!isLeadCaptureSuppressed()) {
-                    openLeadCapturePopup();
-                }
-            }, POPUP_DELAY_MS);
-        };
-
-        if (document.readyState === 'complete') {
-            trigger();
-        } else {
-            window.addEventListener('load', trigger, { once: true });
-            document.addEventListener('DOMContentLoaded', () => {
-                setTimeout(trigger, 500);
-            }, { once: true });
-        }
+        // 4 & 5 & 6: Wait 2.5 seconds, check localStorage, open if eligible
+        setTimeout(() => {
+            if (isVisitorEligible()) {
+                openLeadCapturePopup();
+            }
+        }, POPUP_DELAY_MS);
     }
 
     // Expose for external testing & programmatic control
     window.openLeadCapturePopup = openLeadCapturePopup;
     window.closeLeadCapturePopup = closeLeadCapturePopup;
-    window.isLeadCaptureSuppressed = isLeadCaptureSuppressed;
+    window.isVisitorEligible = isVisitorEligible;
 
-    // Start schedule on load
-    scheduleLeadCapturePopup();
+    // Execute when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startLeadCapturePopupLifecycle);
+    } else {
+        startLeadCapturePopupLifecycle();
+    }
 })();

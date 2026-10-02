@@ -122,45 +122,40 @@
             <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="css/style.css?v=3.0">
+    <link rel="stylesheet" href="css/style.css?v=4.0">
 
     <!-- Critical Lead Capture Modal Styles (Ensures 100% reliable fixed viewport overlay) -->
     <style id="starline-lead-modal-critical">
         .lead-capture-modal {
             position: fixed !important;
             inset: 0 !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            background: rgba(0, 0, 0, 0.55) !important;
-            z-index: 99999 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 999999 !important;
             display: none;
-            align-items: center !important;
-            justify-content: center !important;
-            padding: 20px !important;
-            box-sizing: border-box !important;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.55);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
+            box-sizing: border-box;
         }
+        .lead-capture-modal.is-open,
         .lead-capture-modal.active {
             display: flex !important;
         }
         .lead-capture-card {
-            position: relative !important;
-            width: min(420px, 100%) !important;
-            max-height: calc(100vh - 40px) !important;
-            max-height: calc(100dvh - 40px) !important;
-            overflow-y: auto !important;
-            overscroll-behavior: contain !important;
-            background: #ffffff !important;
-            border-radius: 16px !important;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
-            padding: 32px 28px 24px !important;
-            box-sizing: border-box !important;
-            margin: auto !important;
+            position: relative;
+            width: min(420px, 100%);
+            max-height: calc(100vh - 40px);
+            max-height: calc(100dvh - 40px);
+            overflow-y: auto;
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px 28px 24px;
+            box-shadow: 0 25px 50px rgba(0,0,0,.25);
+            box-sizing: border-box;
         }
         .lead-capture-close {
             position: absolute !important;
@@ -1063,18 +1058,15 @@
         </div>
 
         <!-- =======================================================
-             LEAD CAPTURE POPUP (Website Entry Modal - Viewport Centered)
+             LEAD CAPTURE POPUP (Website Entry Popup)
+             Modal positioned fixed over entire viewport (centered)
              ======================================================= -->
-        <div id="leadCaptureModal" class="lead-capture-modal" style="display: none;" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="leadCaptureTitle">
+        <div id="leadCaptureModal" class="lead-capture-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="leadCaptureTitle" style="display: none;">
             <div class="lead-capture-card" role="document">
                 <button type="button" class="lead-capture-close" id="leadCaptureClose" aria-label="Close popup" title="Close popup">&times;</button>
                 
                 <div class="lead-capture-content" id="leadCaptureFormContainer">
-                    <div class="lead-capture-header">
-                        <span class="lead-capture-eyebrow">Starline Adventures</span>
-                        <h2 id="leadCaptureTitle" class="lead-capture-title">Let's Connect</h2>
-                        <p class="lead-capture-subtitle">Leave your details below and our team will get in touch shortly.</p>
-                    </div>
+                    <h2 id="leadCaptureTitle" class="lead-capture-title">Let's Connect</h2>
 
                     <form id="leadCaptureForm" class="lead-capture-form" novalidate>
                         <div class="lead-capture-group">
@@ -1130,12 +1122,12 @@
                     </form>
                 </div>
 
-                <div class="lead-capture-success" id="leadCaptureSuccessContainer" style="display: none;">
-                    <div class="lead-success-icon-wrap" aria-hidden="true">&#10003;</div>
-                    <h3 class="lead-success-title">Thank you!</h3>
-                    <p class="lead-success-message">Thank you! We have received your details. Our team will contact you shortly.</p>
+                <div class="lead-capture-success" id="leadCaptureSuccessContainer" style="display: none; text-align: center; padding: 20px 8px;">
+                    <div class="lead-success-icon-wrap" aria-hidden="true" style="width: 56px; height: 56px; border-radius: 50%; background: #ecfdf5; color: #10b981; border: 2px solid #a7f3d0; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px;">&#10003;</div>
+                    <h3 class="lead-success-title" style="color: #0f172a; font-size: 1.35rem; font-weight: 800; margin: 0 0 10px;">Thank you!</h3>
+                    <p class="lead-success-message" style="color: #475569; font-size: 0.95rem; line-height: 1.5; margin: 0 0 20px;">Thank you! We have received your details. Our team will contact you shortly.</p>
                     <div class="lead-success-actions">
-                        <button type="button" class="lead-success-close-btn" id="leadCaptureSuccessDoneBtn">Close</button>
+                        <button type="button" class="lead-success-close-btn" id="leadCaptureSuccessDoneBtn" style="background: #0f172a; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">Close</button>
                     </div>
                 </div>
             </div>
@@ -1144,7 +1136,7 @@
         <script src="js/config.js"></script>
     <script src="/js/emailjs-service.js"></script>
     <script src="js/firebase-init.js"></script>
-    <script src="js/script.js?v=3.0"></script>
+    <script src="js/script.js?v=4.0"></script>
         <script src="js/image-map.js?v=2.0"></script>
         <script src="js/products.js?v=2.0"></script>
         <script src="js/products-catalog.js?v=2.0"></script>
