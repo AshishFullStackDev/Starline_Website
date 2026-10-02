@@ -20,7 +20,7 @@ const projectDetails = {
             'Resort recreation team training and operational handover'
         ],
         gallery: [
-            ['Resort Logo & Branding', 'images/logos/grand_machal.jpg']
+            ['Resort Logo & Branding', 'images/projects/grand_machal.jpg']
         ]
     },
     'ikya-island-mussoorie': {
@@ -44,7 +44,7 @@ const projectDetails = {
             'Operator technical certification and maintenance support'
         ],
         gallery: [
-            ['Ikya Island Mussoorie Logo', 'images/logos/IKYA ISLAND photo.jpg']
+            ['Ikya Island Mussoorie Logo', 'images/projects/IKYA ISLAND photo.jpg']
         ]
     },
     'forest-department': {
@@ -68,7 +68,7 @@ const projectDetails = {
             'Staff training for forest department rangers and activity guides'
         ],
         gallery: [
-            ['Forest Department Khandwa Seal', 'images/logos/forest_department.svg']
+            ['Forest Department Khandwa Seal', 'images/projects/forest_department.svg']
         ]
     },
     'pench-tiger-reserve': {
@@ -92,7 +92,7 @@ const projectDetails = {
             'Ranger and eco-guide operational drills and maintenance handover'
         ],
         gallery: [
-            ['Pench Tiger Reserve Official Logo', 'images/logos/pench_logo.webp']
+            ['Pench Tiger Reserve Official Logo', 'images/projects/pench_logo.webp']
         ]
     },
     'devgad-zipline': {
@@ -116,7 +116,7 @@ const projectDetails = {
             'Full operator certification, harness safety inspections, and rescue protocol training'
         ],
         gallery: [
-            ['Flying Kokan Zipline Logo', 'images/logos/flying_kokan.webp']
+            ['Flying Kokan Zipline Logo', 'images/projects/flying_kokan.jpeg']
         ]
     },
     'maniratna-resort': {
@@ -140,7 +140,7 @@ const projectDetails = {
             'Staff training on customer safety gear management and ride supervision'
         ],
         gallery: [
-            ['Maniratna Resort Logo', 'images/logos/maniratna.jpeg']
+            ['Maniratna Resort Logo', 'images/projects/maniratna.jpeg']
         ]
     },
     'srushti-farms': {
@@ -164,7 +164,7 @@ const projectDetails = {
             'Operational training and preventative maintenance guidelines for farm staff'
         ],
         gallery: [
-            ['Srushti Farms Logo', 'images/logos/srushti_farm.png']
+            ['Srushti Farms Logo', 'images/projects/srushti_farm.png']
         ]
     }
 };
@@ -221,7 +221,7 @@ function renderProjectDetails() {
         galleryEl.innerHTML = project.gallery
             .map(([caption, src]) => `
                 <figure class="project-gallery-item">
-                    <img src="${src}" alt="${caption} - ${project.name}" loading="lazy" onerror="this.onerror=null; this.src='images/logo.jpeg';">
+                    <img src="${src}" alt="${caption} - ${project.name}" loading="lazy" onerror="this.onerror=null; this.src=images/logo/logo.jpeg;">
                     <figcaption>${caption}</figcaption>
                 </figure>
             `)

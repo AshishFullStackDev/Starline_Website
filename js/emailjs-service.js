@@ -73,6 +73,32 @@
     return sdkLoadPromise;
   }
 
+  function generateRandomAlphanumeric(length = 6) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      const bytes = new Uint8Array(length);
+      crypto.getRandomValues(bytes);
+      for (let i = 0; i < length; i++) {
+        result += chars[bytes[i] % chars.length];
+      }
+    } else {
+      for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+    }
+    return result;
+  }
+
+  function generateEnquiryId(date = new Date()) {
+    const yyyy = String(date.getFullYear());
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const dateStr = `${yyyy}${mm}${dd}`;
+    const randStr = generateRandomAlphanumeric(6);
+    return `ENQ-${dateStr}-${randStr}`;
+  }
+
   /**
    * Dispatch Enquiry Email via EmailJS
    * @param {Object} data - { id, name, email, phone, message, product, company, location, formType }
@@ -109,7 +135,7 @@
       email: email,
       phone: phone,
       message: message,
-      enquiry_id: enquiryId || ('SA-ENQ-' + Date.now().toString(36)),
+      enquiry_id: enquiryId || generateEnquiryId(),
       product: product,
       to_email: config.recipientEmail || 'starlineadventure@gmail.com',
       reply_to: email,

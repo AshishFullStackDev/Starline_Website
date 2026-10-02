@@ -32,7 +32,7 @@
     const productImageMap = {
         // 1. Giant Swing
         "giant-swing": {
-            image: "images/Giant swing.jpeg",
+            image: "images/activities/giant-swing.jpeg",
             alt: "Giant Pendulum Swing High-Altitude Ride - Starline Adventures",
             title: "Giant Swing",
             category: "activities",
@@ -42,7 +42,7 @@
 
         // 2. Zip Line
         "zip-line": {
-            image: "images/zipline_square.jpeg",
+            image: "images/activities/zipline_square.jpeg",
             alt: "High-Speed Commercial Zip Line Installation - Starline Adventures",
             title: "Zip Line",
             category: "activities",
@@ -52,7 +52,7 @@
 
         // 3. Zip Bike / Sky Cycle
         "zip-bike-sky-cycle": {
-            image: "images/sky_cycle_square.jpeg",
+            image: "images/activities/sky_cycle_square.jpeg",
             alt: "Suspended High-Wire Zip Bike and Sky Cycle Ride - Starline Adventures",
             title: "Zip Bike / Sky Cycle",
             category: "activities",
@@ -62,7 +62,7 @@
 
         // 4. Sky Roller
         "sky-roller": {
-            image: "images/sky_roller_square.jpeg",
+            image: "images/activities/sky_roller_square.jpeg",
             alt: "Dynamic Overhead Sky Roller Cylinder Barrel Attraction - Starline Adventures",
             title: "Sky Roller",
             category: "activities",
@@ -72,7 +72,7 @@
 
         // 5. Wall Climbing
         "wall-climbing": {
-            image: "images/wall_climbing_square.jpeg",
+            image: "images/activities/wall_climbing_square.jpeg",
             alt: "Engineered Artificial Rock Climbing Wall Panels - Starline Adventures",
             title: "Wall Climbing",
             category: "activities",
@@ -82,7 +82,7 @@
 
         // 6. Ninja Rope Courses
         "ninja-rope-courses": {
-            image: "images/rope_course_square.jpeg",
+            image: "images/activities/rope_course_square.jpeg",
             alt: "Multi-Level Ninja Aerial Rope Obstacle Challenge Course - Starline Adventures",
             title: "Ninja Rope Courses",
             category: "activities",
@@ -92,7 +92,7 @@
 
         // 7. Multi Activity Tower
         "multi-activity-tower": {
-            image: "images/tower_square.jpeg",
+            image: "images/activities/tower_square.jpeg",
             alt: "Multi-Activity Adventure Tower Structural Hub - Starline Adventures",
             title: "Multi Activity Tower",
             category: "activities",
@@ -102,7 +102,7 @@
 
         // 8. Glass Bridge
         "glass-bridge": {
-            image: "images/glass_square.jpg",
+            image: "images/activities/glass_square.jpg",
             alt: "High-Altitude Transparent Structural Glass Bridge Walkway - Starline Adventures",
             title: "Glass Bridge",
             category: "activities",
@@ -112,7 +112,7 @@
 
         // 9. Human Gyro
         "human-gyro": {
-            image: "images/gyro_square.jpeg",
+            image: "images/activities/gyro_square.jpeg",
             alt: "3-Axis 360-Degree Human Gyroscope Thrill Ride - Starline Adventures",
             title: "Human Gyro",
             category: "activities",
@@ -122,7 +122,7 @@
 
         // 10. 360 Degree Cycle
         "360-degree-cycle": {
-            image: "images/360_square.jpeg",
+            image: "images/activities/360_square.jpeg",
             alt: "Vertical 360-Degree Inverted Loop Cycling Stunt Ride - Starline Adventures",
             title: "360 Degree Cycle",
             category: "activities",
@@ -132,7 +132,7 @@
 
         // 11. Rocket Ejection
         "rocket-ejection": {
-            image: "images/ejector_square.jpeg?v=2",
+            image: "images/activities/ejector_square.jpeg?v=2",
             alt: "High-Altitude Twin-Tower Rocket Ejection Reverse Bungee Ride - Starline Adventures",
             title: "Rocket Ejection",
             category: "activities",
@@ -142,7 +142,7 @@
 
         // 12. Cup Ride / Spinning Cup
         "cup-ride": {
-            image: "images/cup_square.jpg",
+            image: "images/activities/cup_square.jpg",
             alt: "Family Mechanical Spinning Cup Theme Park Attraction - Starline Adventures",
             title: "Cup Ride",
             category: "activities",
@@ -152,7 +152,7 @@
 
         // 13. Turnkey Installation & Manufacturing (Site work)
         "turnkey-installation": {
-            image: "images/working.webp",
+            image: "images/general/working.webp",
             alt: "Starline Adventures In-House Engineering & On-Site Installation Team",
             title: "Turnkey Installation & Engineering",
             category: "installation",
@@ -162,7 +162,7 @@
 
         // 14. Net Climbing
         "net-climbing": {
-            image: "images/Net_Climbing.jpeg",
+            image: "images/activities/net_climbing.jpeg",
             alt: "Net Climbing Cargo Obstacle Course - Starline Adventures",
             title: "Net Climbing",
             category: "activities",
@@ -172,7 +172,7 @@
 
         // 15. Rifle Shooting
         "rifle-shooting": {
-            image: "images/Rifale_shooting.jpeg",
+            image: "images/activities/rifle_shooting.jpeg",
             alt: "Precision Target Air Rifle Shooting Range - Starline Adventures",
             title: "Rifle Shooting",
             category: "activities",
@@ -182,7 +182,7 @@
 
         // 16. Bull Ride
         "bull-ride": {
-            image: "images/Bull_ride.jpeg",
+            image: "images/activities/bull_ride.jpeg",
             alt: "Mechanical Rodeo Bull Ride Inflatable Arena - Starline Adventures",
             title: "Bull Ride",
             category: "activities",
@@ -192,7 +192,7 @@
 
         // 17. Trampoline
         "trampoline": {
-            image: "images/trampoline.jpeg",
+            image: "images/activities/trampoline.jpeg",
             alt: "Commercial Adventure Trampoline Setup - Starline Adventures",
             title: "Trampoline",
             category: "activities",
@@ -202,7 +202,7 @@
 
         // 18. 4 in 1 Bungee Jumping (Trampoline)
         "4-in-1-bungee-jumping": {
-            image: "images/trampoline.jpeg",
+            image: "images/activities/trampoline.jpeg",
             alt: "4 in 1 Bungee Jumping Trampoline Station - Starline Adventures",
             title: "4 in 1 Bungee Jumping",
             category: "activities",
@@ -212,7 +212,7 @@
 
         // 19. Archery
         "archery": {
-            image: "images/Archery.jpeg",
+            image: "images/activities/archery.jpeg",
             alt: "Traditional Bow and Arrow Archery Range - Starline Adventures",
             title: "Archery",
             category: "activities",
@@ -222,7 +222,7 @@
 
       
        "suspension-bridge": {
-            image: "images/suspension bridge.jpg",
+            image: "images/activities/suspension_bridge.jpg",
             alt: "Suspension Bridge Adventure Activity",
             title: "Suspension Bridge",
             category: "activities",
@@ -313,17 +313,17 @@
      * Verified Project Client Logos Mapping
      */
     const projectLogoMap = {
-        "the-grand-machal-resorts": "images/logos/grand_machal.jpg",
-        "grand-machal": "images/logos/grand_machal.jpg",
-        "ikya-island-mussoorie": "images/logos/ikya_island.jpg",
-        "ikya-island": "images/logos/ikya_island.jpg",
-        "forest-department": "images/logos/forest_department.svg",
-        "pench-tiger-reserve": "images/logos/pench_logo.webp",
-        "devgad-zipline": "images/logos/flying_kokan.webp",
-        "devgad-adventure": "images/logos/flying_kokan.webp",
-        "maniratna-resort": "images/logos/maniratna.jpeg",
-        "srushti-farms": "images/logos/srushti_farm.png",
-        "srushti-farm": "images/logos/srushti_farm.png"
+        "the-grand-machal-resorts": "images/projects/grand_machal.jpg",
+        "grand-machal": "images/projects/grand_machal.jpg",
+        "ikya-island-mussoorie": "images/projects/ikya_island.jpg",
+        "ikya-island": "images/projects/ikya_island.jpg",
+        "forest-department": "images/projects/forest_department.svg",
+        "pench-tiger-reserve": "images/projects/pench_logo.webp",
+        "devgad-zipline": "images/projects/flying_kokan.jpeg",
+        "devgad-adventure": "images/projects/flying_kokan.jpeg",
+        "maniratna-resort": "images/projects/maniratna.jpeg",
+        "srushti-farms": "images/projects/srushti_farm.png",
+        "srushti-farm": "images/projects/srushti_farm.png"
     };
 
     /**
@@ -458,7 +458,7 @@
 
     /**
      * Look up the authentic, verified image for any product or activity.
-     * Returns the image path string (e.g. "images/zipline_square.jpeg") or null if no valid image exists.
+     * Returns the image path string (e.g. "images/activities/zipline_square.jpeg") or null if no valid image exists.
      */
     function getProductImage(productOrNameOrId) {
         if (!productOrNameOrId) return null;
@@ -584,7 +584,7 @@
             {
                 id: "gallery-zip-line",
                 filename: "zipline_square.jpeg",
-                src: "images/zipline_square.jpeg",
+                src: "images/activities/zipline_square.jpeg",
                 title: "High-Speed Commercial Zip Line Installation",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -594,7 +594,7 @@
             {
                 id: "gallery-giant-swing",
                 filename: "Giant swing.jpeg",
-                src: "images/Giant swing.jpeg",
+                src: "images/activities/giant-swing.jpeg",
                 title: "Giant Pendulum Swing Free-Fall Thrill",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -604,7 +604,7 @@
             {
                 id: "gallery-sky-cycle",
                 filename: "sky_cycle_square.jpeg",
-                src: "images/sky_cycle_square.jpeg",
+                src: "images/activities/sky_cycle_square.jpeg",
                 title: "High-Wire Zip Bike & Aerial Sky Cycling",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -614,7 +614,7 @@
             {
                 id: "gallery-rope-course",
                 filename: "rope_course_square.jpeg",
-                src: "images/rope_course_square.jpeg",
+                src: "images/activities/rope_course_square.jpeg",
                 title: "Multi-Tier Ninja Aerial Rope Obstacle Course",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -624,7 +624,7 @@
             {
                 id: "gallery-wall-climbing",
                 filename: "wall_climbing_square.jpeg",
-                src: "images/wall_climbing_square.jpeg",
+                src: "images/activities/wall_climbing_square.jpeg",
                 title: "Artificial Rock Climbing Wall Panels",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -634,7 +634,7 @@
             {
                 id: "gallery-activity-tower",
                 filename: "tower_square.jpeg",
-                src: "images/tower_square.jpeg",
+                src: "images/activities/tower_square.jpeg",
                 title: "Multi-Activity Adventure Tower Hub",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -644,7 +644,7 @@
             {
                 id: "gallery-glass-bridge",
                 filename: "glass_square.jpg",
-                src: "images/glass_square.jpg",
+                src: "images/activities/glass_square.jpg",
                 title: "High-Altitude Engineered Glass Bridge Skywalk",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -654,7 +654,7 @@
             {
                 id: "gallery-human-gyro",
                 filename: "gyro_square.jpeg",
-                src: "images/gyro_square.jpeg",
+                src: "images/activities/gyro_square.jpeg",
                 title: "3-Axis Space Simulation Human Gyroscope",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -664,7 +664,7 @@
             {
                 id: "gallery-360-cycle",
                 filename: "360_square.jpeg",
-                src: "images/360_square.jpeg",
+                src: "images/activities/360_square.jpeg",
                 title: "360° Vertical Loop Stunt Cycling Challenge",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -674,7 +674,7 @@
             {
                 id: "gallery-rocket-ejection",
                 filename: "ejector_square.jpeg",
-                src: "images/ejector_square.jpeg?v=2",
+                src: "images/activities/ejector_square.jpeg?v=2",
                 title: "Twin-Tower Rocket Ejection Reverse Bungee",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -684,7 +684,7 @@
             {
                 id: "gallery-sky-roller",
                 filename: "sky_roller_square.jpeg",
-                src: "images/sky_roller_square.jpeg",
+                src: "images/activities/sky_roller_square.jpeg",
                 title: "Sky Roller Elevated Cable Rolling Capsule",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -694,7 +694,7 @@
             {
                 id: "gallery-cup-ride",
                 filename: "cup_square.jpg",
-                src: "images/cup_square.jpg",
+                src: "images/activities/cup_square.jpg",
                 title: "Mechanical Spinning Cup Theme Park Ride",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -704,7 +704,7 @@
             {
                 id: "gallery-turnkey-installation",
                 filename: "working.webp",
-                src: "images/working.webp",
+                src: "images/general/working.webp",
                 title: "In-House Structural Fabrication & Certified Installation",
                 category: "installation",
                 categoryLabel: "Installation",
@@ -714,7 +714,7 @@
             {
                 id: "gallery-net-climbing",
                 filename: "Net_Climbing.jpeg",
-                src: "images/Net_Climbing.jpeg",
+                src: "images/activities/net_climbing.jpeg",
                 title: "Tensioned Net Climbing Obstacle",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -724,7 +724,7 @@
             {
                 id: "gallery-rifle-shooting",
                 filename: "Rifale_shooting.jpeg",
-                src: "images/Rifale_shooting.jpeg",
+                src: "images/activities/rifle_shooting.jpeg",
                 title: "Precision Air Rifle Target Shooting Range",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -734,7 +734,7 @@
             {
                 id: "gallery-bull-ride",
                 filename: "Bull_ride.jpeg",
-                src: "images/Bull_ride.jpeg",
+                src: "images/activities/bull_ride.jpeg",
                 title: "Mechanical Rodeo Bull Ride",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -744,7 +744,7 @@
             {
                 id: "gallery-trampoline",
                 filename: "trampoline.jpeg",
-                src: "images/trampoline.jpeg",
+                src: "images/activities/trampoline.jpeg",
                 title: "Commercial Bungee Trampoline Attraction",
                 category: "activities",
                 categoryLabel: "Activities",
@@ -754,7 +754,7 @@
             {
                 id: "gallery-archery",
                 filename: "Archery.jpeg",
-                src: "images/Archery.jpeg",
+                src: "images/activities/archery.jpeg",
                 title: "Traditional Archery Target Sports Range",
                 category: "activities",
                 categoryLabel: "Activities",

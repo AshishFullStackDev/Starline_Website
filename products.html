@@ -12,15 +12,15 @@
     <meta property="og:url" content="https://starlineadventures.com/products.html">
     <meta property="og:title" content="Adventure Rides &amp; Equipment | Starline Adventures">
     <meta property="og:description" content="Explore commercial adventure rides and park equipment by Starline Adventures Pvt Ltd, including zip lines, giant swings, sky cycles, and obstacle towers.">
-    <meta property="og:image" content="https://starlineadventures.com/images/activity_images/Giant swing.jpeg">
+    <meta property="og:image" content="https://starlineadventures.com/images/activities/Giant swing.jpeg">
     <meta property="og:image:alt" content="Commercial giant swing and adventure rides manufactured by Starline Adventures Pvt Ltd">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Adventure Rides &amp; Equipment | Starline Adventures">
     <meta name="twitter:description" content="Explore commercial adventure rides and park equipment by Starline Adventures Pvt Ltd, including zip lines, giant swings, sky cycles, and obstacle towers.">
-    <meta name="twitter:image" content="https://starlineadventures.com/images/activity_images/Giant swing.jpeg">
+    <meta name="twitter:image" content="https://starlineadventures.com/images/activities/Giant swing.jpeg">
     <meta name="twitter:image:alt" content="Commercial giant swing and adventure rides manufactured by Starline Adventures Pvt Ltd">
-    <link rel="icon" href="images/logo.jpeg" type="image/jpeg">
-    <link rel="apple-touch-icon" href="images/logo.jpeg">
+    <link rel="icon" href=images/logo/logo.jpeg type="image/jpeg">
+    <link rel="apple-touch-icon" href=images/logo/logo.jpeg>
     <title>Adventure Rides &amp; Equipment | Starline Adventures</title>
 
     <script type="application/ld+json">
@@ -131,7 +131,7 @@
 
                     <!-- Logo -->
                     <a href="index.html" class="logo" aria-label="Starline Adventures Home">
-                        <img src="images/logo.jpeg" alt="STARLINE ADVENTURES PVT LTD" decoding="async">
+                        <img src=images/logo/logo.jpeg alt="STARLINE ADVENTURES PVT LTD" decoding="async">
                     </a>
 
                     <!-- Mobile Menu Button -->
@@ -273,11 +273,11 @@
                         </p>
                     </div>
                     <div style="display: flex; justify-content: center; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 18px;">
-                        <a href="contact.html" class="btn btn-primary" onclick="if(typeof openProductEnquiryModal === 'function'){ openProductEnquiryModal('Custom Adventure Activity / Unlisted Equipment'); return false; }" style="display: inline-flex; align-items: center; gap: 8px;">
+                        <a href="contact.html" class="btn btn-primary btn-tell-requirement" onclick="if(typeof openRequirementModal === 'function'){ openRequirementModal(); return false; }" style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
                             Tell Us Your Requirement <span aria-hidden="true">&rarr;</span>
                         </a>
-                        <a href="https://wa.me/919424904000?text=Hello%20Starline%20Adventures%2C%20I%20am%20looking%20for%20an%20activity%20or%20equipment%20not%20listed%20on%20your%20website." target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px;">
-                            <span aria-hidden="true">💬</span> Ask for Another Activity
+                        <a href="contact.html" class="btn btn-secondary btn-ask-activity" onclick="if(typeof openAskActivityModal === 'function'){ openAskActivityModal(); return false; }" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background-color: #ffffff; color: #0b192c; border: 2px solid #0b192c; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 0.98rem; text-decoration: none; opacity: 1; visibility: visible; cursor: pointer; box-shadow: 0 2px 8px rgba(11, 25, 44, 0.08);">
+                            <span aria-hidden="true">💬</span> <span>Ask for Another Activity</span>
                         </a>
                     </div>
                     <p style="font-size: 0.94rem; color: #64748b; margin: 0; line-height: 1.5;">
@@ -310,7 +310,7 @@
                 <button type="button" class="product-modal-close" id="productInfoClose" aria-label="Close product details">&times;</button>
             </div>
             <div class="product-modal-body">
-                <img src="images/logo.jpeg" alt="Product Image" id="productModalImg" class="product-modal-img" loading="lazy">
+                <img src=images/logo/logo.jpeg alt="Product Image" id="productModalImg" class="product-modal-img" loading="lazy">
                 <p id="productModalDesc" class="product-modal-desc"></p>
                 
                 <h4 style="font-size: 1.05rem; font-weight: 700; color: #0b192c; margin: 20px 0 12px;">Specifications &amp; Parameters</h4>

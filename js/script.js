@@ -224,13 +224,15 @@ function initSlider() {
             }, { passive: true });
         }
 
-        // Hero "Request a Quote" button triggers the existing enquiry modal if available
+        // Hero "Request a Quote" button triggers the quotation modal
         document.querySelectorAll('.hero-quote-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const modal = document.getElementById('productEnquiryModal');
-                if (modal && typeof openProductEnquiryModal === 'function') {
+                const product = btn.getAttribute('data-product') || 'Adventure Rides Manufacturer in India';
+                if (typeof openQuoteModal === 'function') {
                     e.preventDefault();
-                    const product = btn.getAttribute('data-product') || 'Adventure Ride Manufacturing & Installation';
+                    openQuoteModal(product);
+                } else if (typeof openProductEnquiryModal === 'function') {
+                    e.preventDefault();
                     openProductEnquiryModal(product);
                 }
             });
@@ -821,6 +823,28 @@ const escapeHtmlString = escapeHTML;
 window.escapeHTML = escapeHTML;
 window.escapeHtmlString = escapeHTML;
 
+// Helper to generate Unique Enquiry ID (Format: ENQ-YYYYMMDD-XXXXXX)
+function generateStarlineEnquiryId(date = new Date()) {
+    const yyyy = String(date.getFullYear());
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let rand = '';
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+        const bytes = new Uint8Array(6);
+        crypto.getRandomValues(bytes);
+        for (let i = 0; i < 6; i++) {
+            rand += chars[bytes[i] % chars.length];
+        }
+    } else {
+        for (let i = 0; i < 6; i++) {
+            rand += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+    }
+    return `ENQ-${yyyy}${mm}${dd}-${rand}`;
+}
+window.generateStarlineEnquiryId = generateStarlineEnquiryId;
+
 // Professional Enquiry Success Confirmation Modal
 function showEnquirySuccessModal(info) {
     let modal = document.getElementById('enquirySuccessModal');
@@ -928,7 +952,7 @@ function showEnquirySuccessModal(info) {
     const dateEl = document.getElementById('enquiryModalSummaryDate');
     const waBtn = document.getElementById('enquiryModalWhatsAppBtn');
 
-    const enquiryId = info.id || ('SA-ENQ-' + Math.floor(100000 + Math.random() * 900000));
+    const enquiryId = info.id || generateStarlineEnquiryId();
     if (refIdEl) refIdEl.textContent = enquiryId;
     if (ackMsgEl) {
         ackMsgEl.textContent = info.customerMessage || "Thank you for choosing Starline Adventures! We have successfully received your enquiry. Our team will review your requirements and get in touch with you shortly. We appreciate your interest and look forward to working with you.";
@@ -1179,7 +1203,7 @@ function handleEnquiry(event) {
         }
         setFormStatus(status, '', 'clean');
         
-        const enquiryId = data.enquiryId || data.id || ('SA-ENQ-' + Math.floor(100000 + Math.random() * 900000));
+        const enquiryId = data.enquiryId || data.id || generateStarlineEnquiryId();
         
         // Display the professional success confirmation modal popup (Requirement #12)
         showEnquirySuccessModal({
@@ -1908,7 +1932,7 @@ function bindQuoteModalEvents() {
 
             submitQuote()
             .then(data => {
-                const enquiryId = data.enquiryId || data.id || ('SA-ENQ-' + Math.floor(100000 + Math.random() * 900000));
+                const enquiryId = data.enquiryId || data.id || generateStarlineEnquiryId();
                 
                 // Show success view
                 form.style.display = 'none';
@@ -1958,8 +1982,757 @@ function bindQuoteModalEvents() {
     }
 }
 
-// Global click listener to open Quote Modal on any "Get a Quote" / "Request a Quote" trigger
+// ==========================================
+// 1. “TELL US YOUR REQUIREMENT” MODAL
+// ==========================================
+let reqModalPreviousFocus = null;
+
+function createRequirementModal() {
+    if (document.getElementById('requirementModal')) return;
+
+    const modalHTML = `
+    <div id="requirementModal" class="quote-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="reqModalTitle">
+        <div class="quote-modal-backdrop" id="reqModalBackdrop" aria-hidden="true"></div>
+        <div class="quote-modal-dialog" role="document">
+            <div class="quote-modal-header">
+                <span class="quote-modal-badge">✨ Custom Adventure Solutions</span>
+                <h2 id="reqModalTitle" class="quote-modal-title">Tell Us Your Requirement</h2>
+                <p id="reqModalSubtitle" class="quote-modal-subtitle">Share your customized adventure ride, equipment, or project specifications with our engineering team.</p>
+                <button type="button" class="quote-modal-close" id="reqModalClose" aria-label="Close requirement modal">&times;</button>
+            </div>
+
+            <div class="quote-modal-body">
+                <form id="requirementModalForm" class="quote-modal-form" novalidate>
+                    <input type="hidden" name="formType" value="Tell Us Your Requirement">
+                    
+                    <div class="quote-form-grid">
+                        <div class="quote-field-group">
+                            <label for="reqModalName">Name <span class="quote-required">*</span></label>
+                            <div class="quote-input-wrap">
+                                <span class="quote-input-icon" aria-hidden="true">👤</span>
+                                <input type="text" id="reqModalName" name="name" placeholder="Your full name" required autocomplete="name">
+                            </div>
+                            <span class="field-error-msg" id="reqErrorName"></span>
+                        </div>
+
+                        <div class="quote-field-group">
+                            <label for="reqModalPhone">Phone Number <span class="quote-required">*</span></label>
+                            <div class="quote-input-wrap">
+                                <span class="quote-input-icon" aria-hidden="true">📞</span>
+                                <input type="tel" id="reqModalPhone" name="phone" placeholder="+91-94249-04000" required autocomplete="tel">
+                            </div>
+                            <span class="field-error-msg" id="reqErrorPhone"></span>
+                        </div>
+
+                        <div class="quote-field-group full-width">
+                            <label for="reqModalEmail">Email</label>
+                            <div class="quote-input-wrap">
+                                <span class="quote-input-icon" aria-hidden="true">✉️</span>
+                                <input type="email" id="reqModalEmail" name="email" placeholder="you@example.com (optional)" autocomplete="email">
+                            </div>
+                            <span class="field-error-msg" id="reqErrorEmail"></span>
+                        </div>
+
+                        <div class="quote-field-group full-width">
+                            <label for="reqModalDetails">Requirement Details <span class="quote-required">*</span></label>
+                            <textarea id="reqModalDetails" name="details" rows="4" placeholder="Tell us about the activity, dimensions, equipment specs, or site requirements..." required></textarea>
+                            <span class="field-error-msg" id="reqErrorDetails"></span>
+                        </div>
+                    </div>
+
+                    <div class="quote-modal-trust">
+                        <span>⚡ Response within 24 Hours</span>
+                        <span>🛡️ Certified Safety Standards</span>
+                        <span>🏭 Factory Direct Customization</span>
+                    </div>
+
+                    <button type="submit" class="quote-submit-btn" id="reqSubmitBtn">
+                        Submit Requirement &rarr;
+                    </button>
+
+                    <div class="quote-modal-status" id="reqModalStatus" role="alert" aria-live="polite"></div>
+                </form>
+
+                <div class="quote-success-view" id="reqSuccessView">
+                    <div class="quote-success-icon" aria-hidden="true">✓</div>
+                    <h3 class="quote-success-title">Requirement Received!</h3>
+                    <div id="reqSuccessDesc" class="quote-success-desc">
+                        <p style="margin: 0 0 12px; font-size: 1.05rem; font-weight: 600; color: #166534; line-height: 1.6;">
+                            Thank you! Your requirement has been received. Our team will review your requirement and contact you shortly.
+                        </p>
+                    </div>
+                    <div class="quote-success-actions">
+                        <a href="https://wa.me/919424904000" target="_blank" rel="noopener noreferrer" class="quote-whatsapp-btn" id="reqSuccessWhatsApp">
+                            <span>💬 Connect on WhatsApp</span>
+                        </a>
+                        <button type="button" class="quote-close-done-btn" id="reqCloseDoneBtn">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    bindRequirementModalEvents();
+}
+
+function openRequirementModal() {
+    createRequirementModal();
+
+    const modal = document.getElementById('requirementModal');
+    if (!modal) return;
+
+    reqModalPreviousFocus = document.activeElement;
+
+    // Close any other open modals cleanly
+    document.querySelectorAll('.quote-modal.active, .product-modal.active, .enquiry-modal.active').forEach(m => {
+        if (m !== modal) {
+            m.classList.remove('active');
+            m.setAttribute('aria-hidden', 'true');
+        }
+    });
+
+    const form = document.getElementById('requirementModalForm');
+    const successView = document.getElementById('reqSuccessView');
+    const status = document.getElementById('reqModalStatus');
+    const submitBtn = document.getElementById('reqSubmitBtn');
+
+    if (form) {
+        form.style.display = 'block';
+        form.querySelectorAll('.field-error-msg').forEach(el => {
+            el.textContent = '';
+            el.classList.remove('visible');
+        });
+        form.querySelectorAll('input, textarea').forEach(el => el.classList.remove('has-error'));
+    }
+    if (successView) successView.style.display = 'none';
+    if (status) {
+        status.textContent = '';
+        status.className = 'quote-modal-status';
+        status.style.display = 'none';
+    }
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Submit Requirement &rarr;';
+    }
+
+    modal.setAttribute('aria-hidden', 'false');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    setTimeout(() => {
+        const nameInput = document.getElementById('reqModalName');
+        if (nameInput) nameInput.focus();
+    }, 120);
+}
+
+function closeRequirementModal() {
+    const modal = document.getElementById('requirementModal');
+    if (!modal) return;
+
+    modal.setAttribute('aria-hidden', 'true');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+
+    if (reqModalPreviousFocus && typeof reqModalPreviousFocus.focus === 'function') {
+        try {
+            reqModalPreviousFocus.focus();
+        } catch (e) {}
+        reqModalPreviousFocus = null;
+    }
+}
+
+function bindRequirementModalEvents() {
+    const modal = document.getElementById('requirementModal');
+    if (!modal || modal.dataset.bound === 'true') return;
+    modal.dataset.bound = 'true';
+
+    const closeBtn = document.getElementById('reqModalClose');
+    const backdrop = document.getElementById('reqModalBackdrop');
+    const doneBtn = document.getElementById('reqCloseDoneBtn');
+    const form = document.getElementById('requirementModalForm');
+
+    if (closeBtn) closeBtn.addEventListener('click', closeRequirementModal);
+    if (backdrop) backdrop.addEventListener('click', closeRequirementModal);
+    if (doneBtn) doneBtn.addEventListener('click', closeRequirementModal);
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeRequirementModal();
+        }
+    });
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nameInput = document.getElementById('reqModalName');
+            const phoneInput = document.getElementById('reqModalPhone');
+            const emailInput = document.getElementById('reqModalEmail');
+            const detailsInput = document.getElementById('reqModalDetails');
+            const status = document.getElementById('reqModalStatus');
+            const submitBtn = document.getElementById('reqSubmitBtn');
+            const successView = document.getElementById('reqSuccessView');
+            const successDesc = document.getElementById('reqSuccessDesc');
+            const whatsAppBtn = document.getElementById('reqSuccessWhatsApp');
+
+            // Reset errors
+            form.querySelectorAll('.field-error-msg').forEach(el => {
+                el.textContent = '';
+                el.classList.remove('visible');
+            });
+            form.querySelectorAll('input, textarea').forEach(el => el.classList.remove('has-error'));
+            if (status) {
+                status.textContent = '';
+                status.className = 'quote-modal-status';
+                status.style.display = 'none';
+            }
+
+            const name = nameInput ? nameInput.value.trim() : '';
+            const phone = phoneInput ? phoneInput.value.trim() : '';
+            const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+            const details = detailsInput ? detailsInput.value.trim() : '';
+
+            let isValid = true;
+            let firstInvalid = null;
+
+            function setFieldError(input, errorId, msg) {
+                isValid = false;
+                if (input) {
+                    input.classList.add('has-error');
+                    if (!firstInvalid) firstInvalid = input;
+                }
+                const errSpan = document.getElementById(errorId);
+                if (errSpan) {
+                    errSpan.textContent = msg;
+                    errSpan.classList.add('visible');
+                }
+            }
+
+            // 1. Name* (Required)
+            if (!name || name.length < 2) {
+                setFieldError(nameInput, 'reqErrorName', 'Please enter your full name (minimum 2 characters).');
+            }
+
+            // 2. Phone Number* (Required)
+            const phoneClean = phone.replace(/[^\d+]/g, '');
+            if (!phone || phoneClean.length < 8) {
+                setFieldError(phoneInput, 'reqErrorPhone', 'Please enter a valid phone number (minimum 8 digits).');
+            }
+
+            // 3. Email (Optional, but if supplied validate pattern)
+            if (email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    setFieldError(emailInput, 'reqErrorEmail', 'Please enter a valid email address.');
+                }
+            }
+
+            // 4. Requirement Details* (Required)
+            if (!details || details.length < 2) {
+                setFieldError(detailsInput, 'reqErrorDetails', 'Please provide details about your requirement.');
+            }
+
+            if (!isValid) {
+                if (firstInvalid) firstInvalid.focus();
+                return;
+            }
+
+            // Loading state
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span> Submitting...';
+            }
+            if (status) {
+                status.textContent = 'Submitting your requirement...';
+                status.className = 'quote-modal-status loading';
+                status.style.display = 'block';
+            }
+
+            const payload = {
+                name,
+                phone,
+                email: email || 'no-email@starline.customer',
+                message: details,
+                product: 'Custom Requirement / Unlisted Activity',
+                company: 'N/A',
+                location: 'Not specified',
+                formType: 'Tell Us Your Requirement'
+            };
+
+            const submitRequirement = async () => {
+                let directFbError = null;
+                try {
+                    if (typeof window.StarlineFirebase === 'undefined' || typeof window.StarlineFirebase.saveEnquiry !== 'function') {
+                        try {
+                            await import('/js/firebase-init.js');
+                        } catch (impErr) {}
+                    }
+                    if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                        return await window.StarlineFirebase.saveEnquiry(payload);
+                    }
+                } catch (fbErr) {
+                    console.warn('[Requirement Modal]: Direct Firestore notice:', fbErr.message);
+                    directFbError = fbErr;
+                }
+
+                try {
+                    const res = await fetch('/api/enquiry', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) {
+                        return await res.json();
+                    }
+                } catch (apiErr) {
+                    console.warn('[Requirement Modal]: Server API notice:', apiErr.message);
+                }
+
+                if (directFbError) throw directFbError;
+                throw new Error('Unable to submit requirement. Please try again or reach out on WhatsApp.');
+            };
+
+            submitRequirement()
+            .then(data => {
+                const enquiryId = data.enquiryId || data.id || generateStarlineEnquiryId();
+                
+                form.style.display = 'none';
+                successView.style.display = 'block';
+
+                if (successDesc) {
+                    successDesc.innerHTML = `
+                        <div style="background: #0f172a; color: #fff; padding: 8px 14px; border-radius: 6px; margin-bottom: 14px; font-family: monospace; font-size: 0.95rem;">
+                            Requirement ID: <strong style="color: #F47621;">${escapeHTML(enquiryId)}</strong>
+                        </div>
+                        <div style="background: rgba(34,197,94,0.08); border-left: 4px solid #22c55e; padding: 14px; border-radius: 6px; text-align: left; margin-bottom: 16px; font-size: 0.96rem; line-height: 1.6; color: #15803d; font-weight: 600;">
+                            Thank you! Your requirement has been received. Our team will review your requirement and contact you shortly.
+                        </div>
+                    `;
+                }
+
+                if (whatsAppBtn) {
+                    const waText = encodeURIComponent(`Hello Starline Adventures,\n\nI just submitted my custom requirement [ID: ${enquiryId}] on your website:\n- Name: ${name}\n- Phone: ${phone}${email ? '\n- Email: ' + email : ''}\n- Requirement: ${details}`);
+                    whatsAppBtn.href = `https://wa.me/919424904000?text=${waText}`;
+                }
+
+                form.reset();
+            })
+            .catch(err => {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Submit Requirement &rarr;';
+                }
+                if (status) {
+                    status.textContent = `❌ ${err.message || 'Unable to submit requirement. Please try again.'}`;
+                    status.className = 'quote-modal-status error';
+                    status.style.display = 'block';
+                }
+            });
+        });
+    }
+}
+
+// ==========================================
+// 2. “ASK FOR ANOTHER ACTIVITY” MODAL
+// ==========================================
+let askModalPreviousFocus = null;
+
+function createAskActivityModal() {
+    if (document.getElementById('askActivityModal')) return;
+
+    const modalHTML = `
+    <div id="askActivityModal" class="quote-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="askModalTitle">
+        <div class="quote-modal-backdrop" id="askModalBackdrop" aria-hidden="true"></div>
+        <div class="quote-modal-dialog" role="document">
+            <div class="quote-modal-header">
+                <span class="quote-modal-badge">💬 Unlisted Activity Enquiry</span>
+                <h2 id="askModalTitle" class="quote-modal-title">Ask for Another Activity</h2>
+                <p id="askModalSubtitle" class="quote-modal-subtitle">Looking for an adventure ride or equipment not listed on our website? Share your request with us.</p>
+                <button type="button" class="quote-modal-close" id="askModalClose" aria-label="Close ask activity modal">&times;</button>
+            </div>
+
+            <div class="quote-modal-body">
+                <form id="askActivityModalForm" class="quote-modal-form" novalidate>
+                    <input type="hidden" name="formType" value="Ask for Another Activity">
+                    
+                    <div class="quote-form-grid">
+                        <div class="quote-field-group">
+                            <label for="askModalName">Name <span class="quote-required">*</span></label>
+                            <div class="quote-input-wrap">
+                                <span class="quote-input-icon" aria-hidden="true">👤</span>
+                                <input type="text" id="askModalName" name="name" placeholder="Your full name" required autocomplete="name">
+                            </div>
+                            <span class="field-error-msg" id="askErrorName"></span>
+                        </div>
+
+                        <div class="quote-field-group">
+                            <label for="askModalPhone">Phone Number <span class="quote-required">*</span></label>
+                            <div class="quote-input-wrap">
+                                <span class="quote-input-icon" aria-hidden="true">📞</span>
+                                <input type="tel" id="askModalPhone" name="phone" placeholder="+91-94249-04000" required autocomplete="tel">
+                            </div>
+                            <span class="field-error-msg" id="askErrorPhone"></span>
+                        </div>
+
+                        <div class="quote-field-group full-width">
+                            <label for="askModalEmail">Email</label>
+                            <div class="quote-input-wrap">
+                                <span class="quote-input-icon" aria-hidden="true">✉️</span>
+                                <input type="email" id="askModalEmail" name="email" placeholder="you@example.com (optional)" autocomplete="email">
+                            </div>
+                            <span class="field-error-msg" id="askErrorEmail"></span>
+                        </div>
+
+                        <div class="quote-field-group full-width">
+                            <label for="askModalActivity">Activity / Equipment Required <span class="quote-required">*</span></label>
+                            <div class="quote-input-wrap">
+                                <span class="quote-input-icon" aria-hidden="true">🎡</span>
+                                <input type="text" id="askModalActivity" name="activity" placeholder="e.g. Roller Coaster, FlowRider, Ninja Obstacle Course..." required>
+                            </div>
+                            <span class="field-error-msg" id="askErrorActivity"></span>
+                        </div>
+
+                        <div class="quote-field-group full-width">
+                            <label for="askModalDetails">Requirement Details <span class="quote-required">*</span></label>
+                            <textarea id="askModalDetails" name="details" rows="3" placeholder="Describe your required features, site space, or operational goals..." required></textarea>
+                            <span class="field-error-msg" id="askErrorDetails"></span>
+                        </div>
+                    </div>
+
+                    <div class="quote-modal-trust">
+                        <span>⚡ Response within 24 Hours</span>
+                        <span>🛡️ Certified Safety Standards</span>
+                        <span>🏗️ Custom Engineering & Setup</span>
+                    </div>
+
+                    <button type="submit" class="quote-submit-btn" id="askSubmitBtn">
+                        Send Request &rarr;
+                    </button>
+
+                    <div class="quote-modal-status" id="askModalStatus" role="alert" aria-live="polite"></div>
+                </form>
+
+                <div class="quote-success-view" id="askSuccessView">
+                    <div class="quote-success-icon" aria-hidden="true">✓</div>
+                    <h3 class="quote-success-title">Request Received!</h3>
+                    <div id="askSuccessDesc" class="quote-success-desc">
+                        <p style="margin: 0 0 12px; font-size: 1.05rem; font-weight: 600; color: #166534; line-height: 1.6;">
+                            Thank you! Your request has been received. Our team will review your request and contact you shortly.
+                        </p>
+                    </div>
+                    <div class="quote-success-actions">
+                        <a href="https://wa.me/919424904000" target="_blank" rel="noopener noreferrer" class="quote-whatsapp-btn" id="askSuccessWhatsApp">
+                            <span>💬 Connect on WhatsApp</span>
+                        </a>
+                        <button type="button" class="quote-close-done-btn" id="askCloseDoneBtn">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    bindAskActivityModalEvents();
+}
+
+function openAskActivityModal() {
+    createAskActivityModal();
+
+    const modal = document.getElementById('askActivityModal');
+    if (!modal) return;
+
+    askModalPreviousFocus = document.activeElement;
+
+    // Close any other open modals cleanly
+    document.querySelectorAll('.quote-modal.active, .product-modal.active, .enquiry-modal.active').forEach(m => {
+        if (m !== modal) {
+            m.classList.remove('active');
+            m.setAttribute('aria-hidden', 'true');
+        }
+    });
+
+    const form = document.getElementById('askActivityModalForm');
+    const successView = document.getElementById('askSuccessView');
+    const status = document.getElementById('askModalStatus');
+    const submitBtn = document.getElementById('askSubmitBtn');
+
+    if (form) {
+        form.style.display = 'block';
+        form.querySelectorAll('.field-error-msg').forEach(el => {
+            el.textContent = '';
+            el.classList.remove('visible');
+        });
+        form.querySelectorAll('input, textarea').forEach(el => el.classList.remove('has-error'));
+    }
+    if (successView) successView.style.display = 'none';
+    if (status) {
+        status.textContent = '';
+        status.className = 'quote-modal-status';
+        status.style.display = 'none';
+    }
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Send Request &rarr;';
+    }
+
+    modal.setAttribute('aria-hidden', 'false');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    setTimeout(() => {
+        const nameInput = document.getElementById('askModalName');
+        if (nameInput) nameInput.focus();
+    }, 120);
+}
+
+function closeAskActivityModal() {
+    const modal = document.getElementById('askActivityModal');
+    if (!modal) return;
+
+    modal.setAttribute('aria-hidden', 'true');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+
+    if (askModalPreviousFocus && typeof askModalPreviousFocus.focus === 'function') {
+        try {
+            askModalPreviousFocus.focus();
+        } catch (e) {}
+        askModalPreviousFocus = null;
+    }
+}
+
+function bindAskActivityModalEvents() {
+    const modal = document.getElementById('askActivityModal');
+    if (!modal || modal.dataset.bound === 'true') return;
+    modal.dataset.bound = 'true';
+
+    const closeBtn = document.getElementById('askModalClose');
+    const backdrop = document.getElementById('askModalBackdrop');
+    const doneBtn = document.getElementById('askCloseDoneBtn');
+    const form = document.getElementById('askActivityModalForm');
+
+    if (closeBtn) closeBtn.addEventListener('click', closeAskActivityModal);
+    if (backdrop) backdrop.addEventListener('click', closeAskActivityModal);
+    if (doneBtn) doneBtn.addEventListener('click', closeAskActivityModal);
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeAskActivityModal();
+        }
+    });
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nameInput = document.getElementById('askModalName');
+            const phoneInput = document.getElementById('askModalPhone');
+            const emailInput = document.getElementById('askModalEmail');
+            const activityInput = document.getElementById('askModalActivity');
+            const detailsInput = document.getElementById('askModalDetails');
+            const status = document.getElementById('askModalStatus');
+            const submitBtn = document.getElementById('askSubmitBtn');
+            const successView = document.getElementById('askSuccessView');
+            const successDesc = document.getElementById('askSuccessDesc');
+            const whatsAppBtn = document.getElementById('askSuccessWhatsApp');
+
+            // Reset errors
+            form.querySelectorAll('.field-error-msg').forEach(el => {
+                el.textContent = '';
+                el.classList.remove('visible');
+            });
+            form.querySelectorAll('input, textarea').forEach(el => el.classList.remove('has-error'));
+            if (status) {
+                status.textContent = '';
+                status.className = 'quote-modal-status';
+                status.style.display = 'none';
+            }
+
+            const name = nameInput ? nameInput.value.trim() : '';
+            const phone = phoneInput ? phoneInput.value.trim() : '';
+            const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+            const activity = activityInput ? activityInput.value.trim() : '';
+            const details = detailsInput ? detailsInput.value.trim() : '';
+
+            let isValid = true;
+            let firstInvalid = null;
+
+            function setFieldError(input, errorId, msg) {
+                isValid = false;
+                if (input) {
+                    input.classList.add('has-error');
+                    if (!firstInvalid) firstInvalid = input;
+                }
+                const errSpan = document.getElementById(errorId);
+                if (errSpan) {
+                    errSpan.textContent = msg;
+                    errSpan.classList.add('visible');
+                }
+            }
+
+            // 1. Name* (Required)
+            if (!name || name.length < 2) {
+                setFieldError(nameInput, 'askErrorName', 'Please enter your full name (minimum 2 characters).');
+            }
+
+            // 2. Phone Number* (Required)
+            const phoneClean = phone.replace(/[^\d+]/g, '');
+            if (!phone || phoneClean.length < 8) {
+                setFieldError(phoneInput, 'askErrorPhone', 'Please enter a valid phone number (minimum 8 digits).');
+            }
+
+            // 3. Email (Optional, but if supplied validate pattern)
+            if (email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    setFieldError(emailInput, 'askErrorEmail', 'Please enter a valid email address.');
+                }
+            }
+
+            // 4. Activity / Equipment Required* (Required)
+            if (!activity || activity.length < 2) {
+                setFieldError(activityInput, 'askErrorActivity', 'Please specify the activity or equipment required.');
+            }
+
+            // 5. Requirement Details* (Required)
+            if (!details || details.length < 2) {
+                setFieldError(detailsInput, 'askErrorDetails', 'Please provide details about your request.');
+            }
+
+            if (!isValid) {
+                if (firstInvalid) firstInvalid.focus();
+                return;
+            }
+
+            // Loading state
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span> Submitting...';
+            }
+            if (status) {
+                status.textContent = 'Submitting your request...';
+                status.className = 'quote-modal-status loading';
+                status.style.display = 'block';
+            }
+
+            const payload = {
+                name,
+                phone,
+                email: email || 'no-email@starline.customer',
+                product: activity,
+                message: details,
+                company: 'N/A',
+                location: 'Not specified',
+                formType: 'Ask for Another Activity'
+            };
+
+            const submitAskRequest = async () => {
+                let directFbError = null;
+                try {
+                    if (typeof window.StarlineFirebase === 'undefined' || typeof window.StarlineFirebase.saveEnquiry !== 'function') {
+                        try {
+                            await import('/js/firebase-init.js');
+                        } catch (impErr) {}
+                    }
+                    if (typeof window.StarlineFirebase !== 'undefined' && typeof window.StarlineFirebase.saveEnquiry === 'function') {
+                        return await window.StarlineFirebase.saveEnquiry(payload);
+                    }
+                } catch (fbErr) {
+                    console.warn('[Ask Activity Modal]: Direct Firestore notice:', fbErr.message);
+                    directFbError = fbErr;
+                }
+
+                try {
+                    const res = await fetch('/api/enquiry', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) {
+                        return await res.json();
+                    }
+                } catch (apiErr) {
+                    console.warn('[Ask Activity Modal]: Server API notice:', apiErr.message);
+                }
+
+                if (directFbError) throw directFbError;
+                throw new Error('Unable to submit request. Please try again or reach out on WhatsApp.');
+            };
+
+            submitAskRequest()
+            .then(data => {
+                const enquiryId = data.enquiryId || data.id || generateStarlineEnquiryId();
+                
+                form.style.display = 'none';
+                successView.style.display = 'block';
+
+                if (successDesc) {
+                    successDesc.innerHTML = `
+                        <div style="background: #0f172a; color: #fff; padding: 8px 14px; border-radius: 6px; margin-bottom: 14px; font-family: monospace; font-size: 0.95rem;">
+                            Request ID: <strong style="color: #F47621;">${escapeHTML(enquiryId)}</strong>
+                        </div>
+                        <div style="background: rgba(34,197,94,0.08); border-left: 4px solid #22c55e; padding: 14px; border-radius: 6px; text-align: left; margin-bottom: 16px; font-size: 0.96rem; line-height: 1.6; color: #15803d; font-weight: 600;">
+                            Thank you! Your request has been received. Our team will review your request and contact you shortly.
+                        </div>
+                    `;
+                }
+
+                if (whatsAppBtn) {
+                    const waText = encodeURIComponent(`Hello Starline Adventures,\n\nI just requested an unlisted activity [ID: ${enquiryId}] on your website:\n- Name: ${name}\n- Phone: ${phone}${email ? '\n- Email: ' + email : ''}\n- Requested Activity: ${activity}\n- Details: ${details}`);
+                    whatsAppBtn.href = `https://wa.me/919424904000?text=${waText}`;
+                }
+
+                form.reset();
+            })
+            .catch(err => {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Send Request &rarr;';
+                }
+                if (status) {
+                    status.textContent = `❌ ${err.message || 'Unable to submit request. Please try again.'}`;
+                    status.className = 'quote-modal-status error';
+                    status.style.display = 'block';
+                }
+            });
+        });
+    }
+}
+
+// Window global exports
+window.openRequirementModal = openRequirementModal;
+window.closeRequirementModal = closeRequirementModal;
+window.openAskActivityModal = openAskActivityModal;
+window.closeAskActivityModal = closeAskActivityModal;
+
+// Global click listener to open Modals
 document.addEventListener('click', function(e) {
+    // 1. "Tell Us Your Requirement" trigger
+    const reqTrigger = e.target.closest('.btn-tell-requirement, [data-open-requirement-modal]');
+    if (reqTrigger) {
+        if (reqTrigger.type === 'submit' && !reqTrigger.classList.contains('btn-tell-requirement')) {
+            return;
+        }
+        e.preventDefault();
+        openRequirementModal();
+        return;
+    }
+
+    // 2. "Ask for Another Activity" trigger
+    const askTrigger = e.target.closest('.btn-ask-activity, [data-open-ask-modal]');
+    if (askTrigger) {
+        if (askTrigger.type === 'submit' && !askTrigger.classList.contains('btn-ask-activity')) {
+            return;
+        }
+        e.preventDefault();
+        openAskActivityModal();
+        return;
+    }
+
+    // 3. General Quote triggers
     const quoteTrigger = e.target.closest(
         '.nav-cta-btn, .hero-quote-btn, .btn-product-enquire, .btn-footer-quote, .open-quote-modal, .btn-quote, [data-open-quote-modal], #productModalEnquireBtn'
     );
@@ -1988,19 +2761,27 @@ document.addEventListener('click', function(e) {
 
     // Check for any anchor or button with text matching quote variations
     const buttonOrLink = e.target.closest('a, button');
-    if (buttonOrLink && !buttonOrLink.closest('#quoteModal')) {
+    if (buttonOrLink && !buttonOrLink.closest('#quoteModal') && !buttonOrLink.closest('#requirementModal') && !buttonOrLink.closest('#askActivityModal')) {
         const href = buttonOrLink.getAttribute('href') || '';
-        if (href.startsWith('tel:') || href.startsWith('mailto:') || href.includes('wa.me')) {
-            return;
-        }
-
-        // Skip submit buttons inside forms unless specifically marked
-        if (buttonOrLink.type === 'submit' && !buttonOrLink.classList.contains('open-quote-modal')) {
+        if (href.startsWith('tel:') || href.startsWith('mailto:')) {
             return;
         }
 
         const rawText = buttonOrLink.textContent.trim().toLowerCase();
         const text = rawText.replace(/[→\s]+$/, '');
+
+        if (text === 'tell us your requirement' || text.startsWith('tell us your requirement')) {
+            e.preventDefault();
+            openRequirementModal();
+            return;
+        }
+
+        if (text === 'ask for another activity' || text.startsWith('ask for another activity')) {
+            e.preventDefault();
+            openAskActivityModal();
+            return;
+        }
+
         if (
             text === 'get a quote' ||
             text === 'request a quote' ||
@@ -2028,25 +2809,37 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// Close quote modal on Escape key
+// Close all modals on Escape key
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-        const modal = document.getElementById('quoteModal');
-        if (modal && modal.classList.contains('active')) {
+        const reqModal = document.getElementById('requirementModal');
+        if (reqModal && reqModal.classList.contains('active')) {
+            closeRequirementModal();
+        }
+        const askModal = document.getElementById('askActivityModal');
+        if (askModal && askModal.classList.contains('active')) {
+            closeAskActivityModal();
+        }
+        const quoteModal = document.getElementById('quoteModal');
+        if (quoteModal && quoteModal.classList.contains('active')) {
             closeQuoteModal();
         }
     }
 });
 
-// Initialize quote modal and contact form on DOM ready
+// Initialize modals on DOM ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         createQuoteModal();
+        createRequirementModal();
+        createAskActivityModal();
         initTestimonialsCarousel();
         initContactForm();
     });
 } else {
     createQuoteModal();
+    createRequirementModal();
+    createAskActivityModal();
     initTestimonialsCarousel();
     initContactForm();
 }
@@ -2179,7 +2972,7 @@ function initContactForm() {
 
         submitContactForm()
         .then(data => {
-            const enquiryId = data.enquiryId || data.id || ('SA-ENQ-' + Math.floor(100000 + Math.random() * 900000));
+            const enquiryId = data.enquiryId || data.id || generateStarlineEnquiryId();
             if (statusDiv) {
                 const waText = encodeURIComponent(`Hello Starline Adventures, I am interested in your adventure rides/equipment. I would like to discuss a project [Enquiry ID: ${enquiryId}]`);
                 statusDiv.innerHTML = `
