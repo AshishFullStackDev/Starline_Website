@@ -1,11 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-// 1. Gather all actual files on disk
+// 1. Gather all actual physical files on disk
 function getAllFiles(dir, fileList = []) {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
     for (const entry of entries) {
-        if (entry.name === 'node_modules' || entry.name === '.git') continue;
+        if (entry.name === 'node_modules' || entry.name === '.git' || entry.name === '.secure_store') continue;
         const fullPath = path.join(dir, entry.name);
         if (entry.isDirectory()) {
             getAllFiles(fullPath, fileList);
@@ -18,10 +18,6 @@ function getAllFiles(dir, fileList = []) {
 
 const allDiskFiles = getAllFiles('.');
 const diskFileSet = new Set(allDiskFiles.map(f => f.replace(/^\.\//, '')));
-const diskLowerMap = new Map();
-for (const f of diskFileSet) {
-    diskLowerMap.set(f.toLowerCase(), f);
-}
 
 // All image files on disk
 const imageExtensions = new Set(['.jpeg', '.jpg', '.png', '.webp', '.svg', '.gif', '.ico']);
@@ -38,16 +34,41 @@ for (const img of Array.from(diskImages).sort()) {
     console.log(`  - ${img}`);
 }
 
-// 2. Scan every file in codebase for image references
+// 2. Scan every source file for image references
 const filesToScan = allDiskFiles.filter(f => {
     const ext = path.extname(f).toLowerCase();
-    return ['.html', '.js', '.css', '.json', '.xml', '.md'].includes(ext);
+    return ['.html', '.js', '.css', '.json'].includes(ext) && !f.includes('scripts/');
 });
 
 console.log(`\n[Scan Audit] Scanning ${filesToScan.length} source files for image references...`);
 
-const references = []; // { sourceFile, lineNumber, rawRef, resolvedFromSource, resolvedFromRoot, status, suggestedFix }
+// Check for any forbidden paths
+let forbiddenCount = 0;
+const forbiddenFindings = [];
+const forbiddenPatterns = [
+    { name: 'images/products/', regex: /images\/products\//g },
+    { name: 'images/product/', regex: /images\/product\//g },
+    { name: 'images/activity/', regex: /images\/activity\//g }
+];
 
+for (const filePath of filesToScan) {
+    const content = fs.readFileSync(filePath, 'utf8');
+    for (const pat of forbiddenPatterns) {
+        const matches = content.match(pat.regex);
+        if (matches) {
+            forbiddenCount += matches.length;
+            forbiddenFindings.push({ file: filePath, pattern: pat.name, count: matches.length });
+        }
+    }
+}
+
+console.log(`\n[Forbidden Path Audit] Deprecated references count: ${forbiddenCount}`);
+if (forbiddenCount > 0) {
+    console.log('Forbidden matches:', forbiddenFindings);
+}
+
+// Check all image references against disk
+const references = [];
 const imgRegex = /(?:src|href|content|data-src|data-lazy|image|fallbackImage|poster|url)\s*[:=]\s*["'`]([^"'`]+?\.(?:jpeg|jpg|png|webp|svg|gif|ico)(?:\?[^"'`]*)?)["'`]|url\(\s*["']?([^"')]+?\.(?:jpeg|jpg|png|webp|svg|gif|ico)(?:\?[^"')]+)?)["']?\s*\)|["']([^"'\s]+\.(?:jpeg|jpg|png|webp|svg|gif|ico)(?:\?[^"'\s]*)?)["']/gi;
 
 for (const filePath of filesToScan) {
@@ -57,31 +78,23 @@ for (const filePath of filesToScan) {
 
     lines.forEach((line, idx) => {
         let match;
-        // reset regex
         imgRegex.lastIndex = 0;
         while ((match = imgRegex.exec(line)) !== null) {
             const rawRef = match[1] || match[2] || match[3];
             if (!rawRef) continue;
-            // Ignore external URLs that don't belong to our site
+            // Ignore external CDN / third party URLs
             if ((rawRef.startsWith('http://') || rawRef.startsWith('https://')) && 
-                !rawRef.includes('localhost') && 
                 !rawRef.includes('starlineadventures.com') && 
-                !rawRef.includes('starline') &&
                 !rawRef.includes('images/')) {
                 continue;
             }
 
-            // Clean query params / hashes
             let cleanRef = rawRef.split('?')[0].split('#')[0];
-            // Remove full domain if local domain
             cleanRef = cleanRef.replace(/^https?:\/\/[^\/]+/, '');
+            cleanRef = decodeURIComponent(cleanRef);
 
-            // Figure out source directory depth
             const sourceDir = path.dirname(normalizedSource);
-
-            // Path resolved from source file directory
             let fromSource = path.normalize(path.join(sourceDir, cleanRef)).replace(/^\.\//, '');
-            // Path resolved assuming root-relative or leading slash
             let fromRoot = cleanRef.replace(/^\//, '');
 
             references.push({
@@ -99,46 +112,27 @@ for (const filePath of filesToScan) {
 
 console.log(`Found ${references.length} image reference occurrences in codebase.`);
 
-// Check validity
 const brokenRefs = [];
 const okRefs = [];
 
 for (const ref of references) {
-    // Does it exist fromSource?
     const existsFromSource = diskFileSet.has(ref.fromSource);
-    // Does it exist fromRoot?
     const existsFromRoot = diskFileSet.has(ref.fromRoot);
 
     if (existsFromSource || existsFromRoot) {
         okRefs.push({ ...ref, foundAt: existsFromSource ? ref.fromSource : ref.fromRoot });
     } else {
-        // Try case-insensitive or filename search
-        const basename = path.basename(ref.cleanRef).toLowerCase();
-        let candidate = null;
-        for (const img of diskImages) {
-            if (path.basename(img).toLowerCase() === basename) {
-                candidate = img;
-                break;
-            }
-        }
-        brokenRefs.push({ ...ref, candidate });
+        brokenRefs.push(ref);
     }
 }
 
 console.log(`\n--- AUDIT SUMMARY ---`);
-console.log(`Valid/Found References: ${okRefs.length}`);
+console.log(`Valid References: ${okRefs.length}`);
 console.log(`Broken/Missing References: ${brokenRefs.length}`);
 
-console.log(`\n--- LIST OF BROKEN / PROBLEMATIC REFERENCES (${brokenRefs.length}) ---`);
-const brokenBySource = {};
-for (const b of brokenRefs) {
-    brokenBySource[b.sourceFile] = brokenBySource[b.sourceFile] || [];
-    brokenBySource[b.sourceFile].push(b);
-}
-
-for (const [src, list] of Object.entries(brokenBySource)) {
-    console.log(`\nFile: ${src}`);
-    for (const b of list) {
-        console.log(`  Line ${b.lineNum}: "${b.rawRef}" -> candidate: ${b.candidate ? b.candidate : 'NONE FOUND'}`);
+if (brokenRefs.length > 0) {
+    console.log(`\n--- LIST OF BROKEN REFERENCES (${brokenRefs.length}) ---`);
+    for (const b of brokenRefs) {
+        console.log(`File: ${b.sourceFile}:${b.lineNum} -> "${b.rawRef}"`);
     }
 }

@@ -9,7 +9,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "rocket-ejection",
         name: "Rocket Ejection",
-        image: "images/activity/ejector_square.jpeg?v=2",
+        image: "images/activities/ejector_square.jpeg?v=2",
         shortDesc: "High-altitude twin-tower reverse bungee catapult launching riders skyward with intense thrill.",
         fullDesc: "The Rocket Ejection is a flagship high-altitude thrill attraction. Using heavy-gauge tensioned bungee cords and automated launch winches between structural steel towers, riders are propelled rapidly skyward to experience intense vertical acceleration and breathtaking zero-gravity freefall.",
         specs: [
@@ -23,7 +23,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "giant-swing",
         name: "Giant Swing",
-        image: "images/activity/giant-swing.jpeg",
+        image: "images/activities/giant-swing.jpeg",
         shortDesc: "Massive A-frame pendulum swing providing exhilarating free-fall release and wide weightless arcs.",
         fullDesc: "The Giant Swing hoists 2 to 4 riders to great heights before an instantaneous mechanical release drops them in a high-speed pendulum swing over open valleys or resort grounds, offering unmatched weightless thrills.",
         specs: [
@@ -37,7 +37,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "4-in-1-bungee-jumping",
         name: "4 in 1 Bungee Jumping",
-        image: "images/activity/trampoline.jpeg",
+        image: "images/activities/trampoline.jpeg",
         shortDesc: "Four-station bungee trampolines that let a group bounce and flip together.",
         fullDesc: "A high-throughput crowd favorite for amusement parks and family entertainment zones. Four motorized winch stations combined with elastic bungee cords allow jumpers to achieve heights up to 25 feet and execute flips safely.",
         specs: [
@@ -51,7 +51,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "zip-line",
         name: "Zip Line",
-        image: "images/activity/zipline_square.jpeg",
+        image: "images/activities/zipline_square.jpeg",
         shortDesc: "A classic overhead zip line that carries riders on a cable run through the site.",
         fullDesc: "Engineered to international safety standards, Starline zip lines connect takeoff and landing platforms with heavy-duty galvanized wire ropes, enabling participants to glide at high speeds across nature canopies, lakes, and rugged terrain.",
         specs: [
@@ -65,7 +65,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "zip-bike-sky-cycle",
         name: "Zip Bike / Sky Cycle",
-        image: "images/activity/sky_cycle_square.jpeg",
+        image: "images/activities/sky_cycle_square.jpeg",
         shortDesc: "A cycle suspended from an overhead cable, letting riders pedal high above the ground.",
         fullDesc: "Participants pedal specially modified aerodynamic bicycles across elevated overhead cable lines. Engineered with counterweights and redundant safety tethers to provide a smooth, exhilarating, self-balancing aerial ride.",
         specs: [
@@ -79,7 +79,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "sky-roller",
         name: "Sky Roller",
-        image: "images/activity/sky_roller_square.jpeg",
+        image: "images/activities/sky_roller_square.jpeg",
         shortDesc: "A rolling wheel-cage that carries a rider along an elevated cable line.",
         fullDesc: "A distinctive aerial motion attraction where participants step inside a rolling cylindrical capsule that glides suspended on high-tension wire ropes, delivering rotating views and smooth forward momentum.",
         specs: [
@@ -93,7 +93,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "wall-climbing",
         name: "Wall Climbing",
-        image: "images/activity/wall-climbing.jpeg",
+        image: "images/activities/wall-climbing.jpeg",
         shortDesc: "A textured climbing panel with holds set in a colour and layout of your choice.",
         fullDesc: "Custom-manufactured climbing walls built for high durability and authentic feel. Available in rock-realistic FRP textures and vibrant bouldering modular setups with auto-belays and multi-pitch safety anchors.",
         specs: [
@@ -107,7 +107,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "net-climbing",
         name: "Net Climbing",
-        image: "images/activity/net-climbing.jpeg",
+        image: "images/activities/net-climbing.jpeg",
         shortDesc: "A tensioned rope net for riders to climb up, across or through.",
         fullDesc: "Constructed with industrial-strength braided nylon and steel-core ropes, Net Climbing develops physical coordination, agility, and stamina. Can be mounted vertically or diagonally across towers and obstacle arenas.",
         specs: [
@@ -121,7 +121,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "ninja-rope-courses",
         name: "Ninja Rope Courses",
-        image: "images/activity/rope_course_square.jpeg",
+        image: "images/activities/rope_course_square.jpeg",
         shortDesc: "A multi-level obstacle rig of ropes, nets and beams inspired by ninja-warrior courses.",
         fullDesc: "A modular, multi-tier aerial obstacle course featuring a continuous safety belay lifeline. Participants navigate suspended bridges, swinging logs, rope webs, balance beams, and cargo nets designed for high guest throughput.",
         specs: [
@@ -135,7 +135,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "multi-activity-tower",
         name: "Multi Activity Tower",
-        image: "images/activity/tower_square.jpeg",
+        image: "images/activities/tower_square.jpeg",
         shortDesc: "A layered adventure tower combining climbs, nets, swings and zip elements in one structure.",
         fullDesc: "The Multi Activity Tower consolidates 4 to 8 popular adventure activities into a single compact footprint. Accommodates wall climbing, rappelling, zipline takeoff, net climb, and quick-jump freefall from a centralized steel structure.",
         specs: [
@@ -149,7 +149,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "glass-bridge",
         name: "Glass Bridge",
-        image: "images/activity/glass_square.jpg",
+        image: "images/activities/glass_square.jpg",
         shortDesc: "A see-through glass walkway suspended across a gap or canyon.",
         fullDesc: "A spectacular engineering marvel and tourist magnet. Constructed with triple-layer toughened laminated safety glass and heavy-duty structural steel trusses, offering visitors breathtaking views directly beneath their feet.",
         specs: [
@@ -163,7 +163,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "suspension-bridge",
         name: "Suspension Bridge",
-        image: "images/activity/suspension_bridge.jpg",
+        image: "images/activities/suspension_bridge.jpg",
         shortDesc: "A swaying rope-and-plank bridge for crossing valleys and rivers.",
         fullDesc: "A classic adventure walkway suspended across gorges, water bodies, or tree canopies. Built with heavy-gauge galvanized main cables, anti-slip decking, and high-tensile safety netting for a scenic, gently swaying crossing.",
         specs: [
@@ -177,7 +177,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "human-gyro",
         name: "Human Gyro",
-        image: "images/activity/gyro_square.jpeg",
+        image: "images/activities/gyro_square.jpeg",
         shortDesc: "A rotating gyroscope ride that spins seated riders through 360° in every direction.",
         fullDesc: "Modeled after space simulation and aerospace pilot training systems, the Human Gyro rotates riders freely across three concentric axes. Gives riders an incredible sensation of weightlessness and 3D rotational motion in total safety.",
         specs: [
@@ -191,7 +191,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "360-degree-cycle",
         name: "360 Degree Cycle",
-        image: "images/activity/360_square.jpeg",
+        image: "images/activities/360_square.jpeg",
         shortDesc: "A single wheel-frame cycle that lets riders pedal a full vertical loop.",
         fullDesc: "Riders pedal a counterbalanced sports bicycle inside a vertical circular steel loop, generating kinetic energy to complete a full 360-degree loop-the-loop inversion safely locked to the circular rail.",
         specs: [
@@ -205,7 +205,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "bull-ride",
         name: "Bull Ride",
-        image: "images/activity/bull_ride.jpeg", 
+        image: "images/activities/bull_ride.jpeg", 
         shortDesc: "A mechanical rodeo bull set on a cushioned inflatable ring.",
         fullDesc: "The ultimate carnival and party attraction. Features a realistic bucking and spinning mechanical bull with dual-axis motorized movement and multiple operator speed settings, surrounded by a cushioned commercial inflatable arena.",
         specs: [
@@ -219,7 +219,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "rifle-shooting",
         name: "Rifle Shooting",
-        image: "images/activity/rifle_shooting.jpeg",
+        image: "images/activities/rifle_shooting.jpeg",
         shortDesc: "A dedicated target range for precision shooting with air rifles.",
         fullDesc: "A supervised skill range featuring target backdrops, pellet-catch boxes, and individual lane dividers. Engineered with strict ballistic safety containment for engaging resort target sports.",
         specs: [
@@ -233,7 +233,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "archery",
         name: "Archery",
-        image: "images/activity/archery.jpeg",
+        image: "images/activities/archery.jpeg",
         shortDesc: "A traditional bow-and-arrow range for testing focus and accuracy.",
         fullDesc: "A complete archery range solution equipped with lightweight recurve and compound bows, safe fiberglass arrows, high-density layered foam and straw target stands, and perimeter safety backdrop netting.",
         specs: [
@@ -247,7 +247,7 @@ const STARLINE_PRODUCTS = [
     {
         id: "trampoline",
         name: "Trampoline",
-        image: "images/activity/trampoline.jpeg",
+        image: "images/activities/trampoline.jpeg",
         shortDesc: "Commercial heavy-duty adventure trampoline and bungee flip arena for all age groups.",
         fullDesc: "Commercial grade high-bounce adventure trampolines and multi-station bungee jumping setups designed for resorts, adventure parks, and amusement destinations. Engineered with reinforced tubular steel frames, heavy-gauge steel springs, UV-resistant jump mats, and 360° padded enclosure nets.",
         specs: [
@@ -427,7 +427,7 @@ const STARLINE_PRODUCTS = [
         id: "tyre-balance-obstacles",
         name: "Tyre & Balance Obstacles",
         category: "equipment",
-        image: "images/activity/tyre-wall.jpeg",
+        image: "images/activities/tyre-wall.jpeg",
         shortDesc: "Suspended swinging tyre steps, horizontal tyre crawl tunnels, and elevated anti-slip balance beams.",
         fullDesc: "Challenging agility and balance elements designed for ninja courses, tactical fitness tracks, and low/high rope challenge arenas. Features reinforced industrial automobile tyres with drainage weep holes suspended by calibrated short-link chains and sleeved cables, paired with treated timber or steel balance beams coated with non-slip quartz grit.",
         specs: [

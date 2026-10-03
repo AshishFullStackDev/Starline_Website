@@ -1,8 +1,12 @@
-node_modules
+node_modules/
 .env
+.env.*
+.secure_store/
 .DS_Store
-dist
+dist/
 bun.lock
 yarn.lock
 pnpm-lock.yaml
 *.local
+firebase-debug.log
+firebase-debug.*.log

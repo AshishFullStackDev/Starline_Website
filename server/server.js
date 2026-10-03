@@ -1731,7 +1731,7 @@ app.all('/:page', (req, res, next) => {
 
 // Root images / favicon fallback
 app.get('/working.png', (req, res) => {
-  const p = path.join(ROOT_DIR, 'working.png');
+  const p = path.join(ROOT_DIR, 'images/general/working.png');
   if (fs.existsSync(p)) return res.sendFile(p);
   res.status(404).send('Not Found');
 });
