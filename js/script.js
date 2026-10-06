@@ -3233,32 +3233,18 @@ window.openQuoteModal = openQuoteModal;
 window.closeQuoteModal = closeQuoteModal;
 
 /* ============================================================
-   LEAD CAPTURE ENTRY POPUP (STARLINE ADVENTURES)
-   - Appears 2.5 seconds after page loads for new/returning visitors
+   LEAD CAPTURE MODAL / ENQUIRY POPUP (STARLINE ADVENTURES)
+   - Opened ONLY via explicit user interaction (e.g. clicking buttons)
+   - All automatic popup triggers (onload, setTimeout, scroll, exit-intent) are disabled
    - Fields: Name*, Email (optional), Phone Number*, Submit button
    - Clearly visible × close button in top-right corner
    - Closes when clicking × or outside the card (stops bubbling inside)
-   - 7-day suppression in localStorage on close or submit
-   - Saves lead to existing Firebase / server enquiry system
-   ============================================================ */
-/* ============================================================
-   WEBSITE ENTRY POPUP (Lead Capture Modal / leadCaptureModal)
-   Lead Capture Popup localStorage logic:
-   - Dedicated key: starline_lead_popup_closed
-   - Appears 2.5 seconds after page loads for eligible visitors
-   - Fields: Name*, Email (optional), Phone Number*, Submit button
-   - Closes when clicking ×, Escape key, or outside card (backdrop)
-   - Clicking inside card does NOT close popup
-   - Suppresses 7 days on submission, 24 hours on close / backdrop
    - Saves lead to existing Firebase / /api/enquiry backend
-   - Lead Source: Website Entry Popup
-   - Restores body overflow to auto on close, hidden on open
    ============================================================ */
 (function initLeadCaptureModule() {
     const STORAGE_KEY = 'starline_lead_popup_closed';
     const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
     const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
-    const POPUP_DELAY_MS = 2500; // 2.5 seconds
 
     // Lead Capture Popup localStorage logic
     function isVisitorEligible() {
@@ -3606,8 +3592,6 @@ window.closeQuoteModal = closeQuoteModal;
     }
 
     function openLeadCapturePopup() {
-        if (!isVisitorEligible()) return;
-
         const modal = createLeadCaptureModal();
         if (!modal) return;
 
@@ -3664,27 +3648,22 @@ window.closeQuoteModal = closeQuoteModal;
         recordPopupAction(actionType);
     }
 
-    function startLeadCapturePopupLifecycle() {
-        // 1 & 2 & 3: Wait until DOM is loaded, create popup, append directly to document.body
-        const modal = createLeadCaptureModal();
-
-        // 4 & 5 & 6: Wait 2.5 seconds, check localStorage, open if eligible
-        setTimeout(() => {
-            if (isVisitorEligible()) {
-                openLeadCapturePopup();
-            }
-        }, POPUP_DELAY_MS);
-    }
-
-    // Expose for external testing & programmatic control
+    // Expose for explicit button/programmatic triggers only (no auto triggers)
     window.openLeadCapturePopup = openLeadCapturePopup;
     window.closeLeadCapturePopup = closeLeadCapturePopup;
     window.isVisitorEligible = isVisitorEligible;
 
-    // Execute when DOM is ready
+    // Bind event handlers on existing static modal if present in HTML without auto-opening
+    function initExistingModal() {
+        const existing = document.getElementById('leadCaptureModal');
+        if (existing) {
+            bindModalEvents(existing);
+        }
+    }
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', startLeadCapturePopupLifecycle);
+        document.addEventListener('DOMContentLoaded', initExistingModal);
     } else {
-        startLeadCapturePopupLifecycle();
+        initExistingModal();
     }
 })();
