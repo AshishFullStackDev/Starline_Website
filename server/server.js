@@ -14,7 +14,8 @@ const { getFirestore, doc, setDoc, getDoc, getDocs, collection, setLogLevel } = 
 const { getAuth } = require('firebase/auth');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+// AI Studio dev server requires binding strictly to port 3000 (environment PORT is 8080 for the container ingress)
+const PORT = 3000;
 const NODE_ENV = process.env.NODE_ENV || 'production';
 app.set('env', NODE_ENV);
 app.set('trust proxy', 1);

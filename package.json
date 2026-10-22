@@ -16,11 +16,23 @@
     "express": "^4.21.2",
     "firebase": "^12.19.0",
     "firebase-admin": "^14.5.0",
+    "lucide-react": "^1.61.0",
     "nodemailer": "^10.0.10",
     "opentype.js": "^2.0.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "sharp": "^0.35.4"
   },
   "devDependencies": {
-    "@firebase/eslint-plugin-security-rules": "^0.0.2"
+    "@firebase/eslint-plugin-security-rules": "^0.0.2",
+    "@types/compression": "^1.8.1",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5"
   }
 }
