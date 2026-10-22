@@ -3246,10 +3246,18 @@ window.closeQuoteModal = closeQuoteModal;
     const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
     const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
-    // Lead Capture Popup localStorage logic
+    // Lead Capture Popup localStorage logic with test mode bypasses
     function isVisitorEligible() {
         if (typeof window === 'undefined') return false;
         if (window.location.pathname.includes('thank-you')) return false;
+
+        // Temporary testing mode / bypasses
+        try {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('test_popup') === '1' || params.get('popup_test') === 'true' || window.forceLeadPopup === true || localStorage.getItem('starline_debug_popup') === 'true') {
+                return true;
+            }
+        } catch (e) {}
 
         try {
             const raw = localStorage.getItem(STORAGE_KEY);
@@ -3727,6 +3735,14 @@ window.closeQuoteModal = closeQuoteModal;
     window.openLeadCapturePopup = openLeadCapturePopup;
     window.closeLeadCapturePopup = closeLeadCapturePopup;
     window.isVisitorEligible = isVisitorEligible;
+    window.testLeadPopup = function() {
+        try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+        openLeadCapturePopup();
+    };
+    window.resetLeadPopupStorage = function() {
+        try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+        console.log('[Lead Popup]: Storage cleared. Popup will appear on landing page after 3.5 seconds.');
+    };
 
     // Bind event handlers on existing static modal and schedule auto popup on landing page
     function initLeadCaptureModule() {
