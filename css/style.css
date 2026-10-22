@@ -388,17 +388,24 @@ summary:focus-visible,
     display: block;
     padding: 11px 13px;
     white-space: nowrap;
+    color: #0b192c !important;
+    text-decoration: none !important;
 }
 
 .nav-dropdown-menu a:hover,
-.nav-dropdown-menu a:focus-visible {
-    background: #fff4ec;
-    color: var(--primary-color);
+.nav-dropdown-menu a:focus,
+.nav-dropdown-menu a:focus-visible,
+.nav-dropdown-menu a:visited,
+.nav-dropdown-menu a:active {
+    background: #fff4ec !important;
+    color: var(--primary-color) !important;
+    text-decoration: none !important;
 }
 
 .nav-dropdown-menu a.active,
 .nav-dropdown-menu a.current-page {
     color: var(--primary-color) !important;
+    text-decoration: none !important;
     font-weight: 600 !important;
     background: #fff4ec !important;
     border-left: 3px solid var(--primary-color);
