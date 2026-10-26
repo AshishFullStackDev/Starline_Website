@@ -84,6 +84,7 @@ for (const filePath of filesToScan) {
             if (!rawRef) continue;
             // Ignore external CDN / third party URLs
             if ((rawRef.startsWith('http://') || rawRef.startsWith('https://')) && 
+                !rawRef.includes('starlineadventure.com') && 
                 !rawRef.includes('starlineadventures.com') && 
                 !rawRef.includes('images/')) {
                 continue;

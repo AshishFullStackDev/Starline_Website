@@ -6,4 +6,4 @@ Allow: /images/
 Disallow: /api/
 Disallow: /.secure_store/
 
-Sitemap: https://starlineadventures.com/sitemap.xml
+Sitemap: https://starlineadventure.com/sitemap.xml

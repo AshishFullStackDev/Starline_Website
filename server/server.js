@@ -101,6 +101,8 @@ app.use((req, res, next) => {
 // 3. CORS CONFIGURATION
 // ============================================================
 const PRODUCTION_ALLOWED_ORIGINS = [
+  'https://starlineadventure.com',
+  'https://www.starlineadventure.com',
   'https://starlineadventures.com',
   'https://www.starlineadventures.com'
 ];
@@ -687,7 +689,7 @@ Email: starlineadventure@gmail.com
 Warm regards,
 Starline Adventures Pvt Ltd
 Opposite Government Guest House, Nagpur – 441302
-https://starlineadventures.com
+https://starlineadventure.com
 `;
 
   const htmlBody = `

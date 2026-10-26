@@ -46,12 +46,12 @@ var STARLINE_CONFIG = (typeof window !== 'undefined' && window.STARLINE_CONFIG) 
     // ============================================================
     // BACKEND API URL CONFIGURATION
     // ============================================================
-    // The live website frontend is hosted on static hosting at https://starlineadventures.com
+    // The live website frontend is hosted on static hosting at https://starlineadventure.com
     // (e.g. GitHub Pages / GoDaddy static / Netlify / Vercel).
     // Static hosting cannot execute server.js, returning HTTP 405 Method Not Allowed for POST /api/enquiry.
     //
     // The Node.js / Express backend (server.js) runs on a separate Node-compatible service:
-    // e.g. https://api.starlineadventures.com (Render, Railway, Cloud Run, VPS, etc.).
+    // e.g. https://api.starlineadventure.com (Render, Railway, Cloud Run, VPS, etc.).
     //
     // Set this to your live backend server URL once deployed (e.g. 'https://your-api.onrender.com/api/enquiry').
     // By default, leave empty ('') or 'direct-firebase' to use serverless direct Firestore saving,
@@ -96,7 +96,7 @@ var STARLINE_CONFIG = (typeof window !== 'undefined' && window.STARLINE_CONFIG) 
     },
     
     // Website metadata
-    websiteUrl: 'https://starlineadventures.com',
+    websiteUrl: 'https://starlineadventure.com',
     
     // Social Media Profiles
     socialMedia: {
