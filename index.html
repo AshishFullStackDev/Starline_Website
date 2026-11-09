@@ -83,7 +83,8 @@
         <title>Adventure Rides &amp; Adventure Park Equipment Manufacturer in India | Starline Adventures</title>
 
         <link rel="preload" href="images/logo/logo.jpeg" as="image">
-        <link rel="preload" href="images/general/devgad_zipline.jpg" as="image">
+        <link rel="preload" href="images/general/devgad_zipline_desktop.webp" as="image" type="image/webp" media="(min-width: 769px)">
+        <link rel="preload" href="images/general/devgad_zipline_mobile.webp" as="image" type="image/webp" media="(max-width: 768px)">
 
         <!-- Initial Session Visit Detector (Prevents Homepage Flash) -->
         <script>
@@ -311,11 +312,15 @@
                     <article class="slide hero-slide-achievement active" 
                              data-duration="25000" 
                              aria-label="Slide 1: India's First Coastal Zipline and Maharashtra's Longest Zipline - Starline Adventures">
-                        <img src="images/general/devgad_zipline.jpg" 
-                             alt="India's First Coastal Zipline at Devgad Beach manufactured and installed by Starline Adventures" 
-                             class="slide-bg-img"
-                             fetchpriority="high"
-                             decoding="async">
+                        <picture class="hero-bg-picture">
+                            <source media="(max-width: 768px)" srcset="images/general/devgad_zipline_mobile.webp" type="image/webp">
+                            <source media="(min-width: 769px)" srcset="images/general/devgad_zipline_desktop.webp" type="image/webp">
+                            <img src="images/general/devgad_zipline.jpg" 
+                                 alt="India's First Coastal Zipline at Devgad Beach manufactured and installed by Starline Adventures" 
+                                 class="slide-bg-img"
+                                 fetchpriority="high"
+                                 decoding="async">
+                        </picture>
                         <div class="slide-overlay hero-achievement-overlay">
                             <div class="container hero-slide-content-wrap">
                                 <div class="slide-content hero-achievement-content">

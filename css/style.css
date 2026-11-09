@@ -1189,22 +1189,50 @@ summary:focus-visible,
    Premium Corporate Styling with Starline Orange & Dark Charcoal
 ============================================================ */
 .hero-achievement-overlay {
-    background: linear-gradient(180deg, rgba(11, 25, 44, 0.72) 0%, rgba(11, 25, 44, 0.44) 35%, rgba(11, 25, 44, 0.64) 75%, rgba(11, 25, 44, 0.9) 100%) !important;
+    background: linear-gradient(90deg, rgba(11, 25, 44, 0.10) 0%, rgba(11, 25, 44, 0.18) 42%, rgba(11, 25, 44, 0.48) 68%, rgba(11, 25, 44, 0.78) 100%),
+                linear-gradient(180deg, rgba(11, 25, 44, 0.4) 0%, transparent 20%, transparent 80%, rgba(11, 25, 44, 0.45) 100%) !important;
 }
 
 .hero-achievement-content {
-    width: min(760px, 92vw) !important;
-    max-width: 760px !important;
-    padding: clamp(20px, 3vh, 30px) clamp(18px, 3vw, 34px) !important;
-    background: rgba(11, 25, 44, 0.62) !important;
+    width: min(580px, 94vw) !important;
+    max-width: 580px !important;
+    padding: clamp(20px, 2.8vh, 28px) clamp(18px, 2.5vw, 28px) !important;
+    background: rgba(11, 25, 44, 0.65) !important;
     backdrop-filter: blur(14px) saturate(135%) !important;
     -webkit-backdrop-filter: blur(14px) saturate(135%) !important;
     border-radius: 18px !important;
-    border: 1px solid rgba(255, 255, 255, 0.16) !important;
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
     text-align: center;
     margin: 0 auto;
     box-sizing: border-box !important;
+}
+
+@media (min-width: 992px) {
+    body.home-page .hero-slide-achievement .hero-slide-content-wrap {
+        display: flex !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+    }
+    body.home-page .hero-slide-achievement .hero-achievement-content {
+        margin: 0 0 0 auto !important;
+        max-width: 580px !important;
+        text-align: left !important;
+    }
+    body.home-page .hero-slide-achievement .hero-achievement-headings {
+        align-items: flex-start !important;
+    }
+    body.home-page .hero-slide-achievement .hero-achievement-metrics {
+        justify-content: flex-start !important;
+        margin-left: 0 !important;
+    }
+    body.home-page .hero-slide-achievement .hero-achievement-desc {
+        text-align: left !important;
+        margin-left: 0 !important;
+    }
+    body.home-page .hero-slide-achievement .hero-actions {
+        justify-content: flex-start !important;
+    }
 }
 
 .hero-achievement-headings {
@@ -1217,7 +1245,7 @@ summary:focus-visible,
 
 .hero-achievement-title-1 {
     display: block;
-    font-size: clamp(1.6rem, 3.2vw, 2.6rem) !important;
+    font-size: clamp(1.45rem, 2.4vw, 2.1rem) !important;
     font-weight: 800 !important;
     line-height: 1.15 !important;
     letter-spacing: -0.015em !important;
@@ -1229,7 +1257,7 @@ summary:focus-visible,
 
 .hero-achievement-title-2 {
     display: block;
-    font-size: clamp(1.45rem, 2.9vw, 2.35rem) !important;
+    font-size: clamp(1.3rem, 2.1vw, 1.85rem) !important;
     font-weight: 800 !important;
     line-height: 1.15 !important;
     letter-spacing: -0.01em !important;
@@ -14644,8 +14672,20 @@ body.home-page .slide:nth-of-type(2)::before {
 }
 
 /* Hero image fills the entire screen: width: 100%; height: 100%; object-fit: cover; object-position: center center; */
+body.home-page .hero-section .slide picture,
+body.home-page .hero-section .slide .hero-bg-picture {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    z-index: 1 !important;
+}
+
 body.home-page .hero-section .slide img,
-body.home-page .hero-section .slide .slide-bg-img {
+body.home-page .hero-section .slide .slide-bg-img,
+body.home-page .hero-section .slide picture img {
     position: absolute !important;
     top: 0 !important;
     left: 0 !important;
@@ -14660,11 +14700,19 @@ body.home-page .hero-section .slide .slide-bg-img {
     display: block !important;
     z-index: 1 !important;
     transform: none !important;
-    filter: brightness(1.05) contrast(1.05) !important;
+    filter: brightness(1.03) contrast(1.03) !important;
+}
+
+/* Explicitly keep the rider visible in natural daylight on Devgad Beach slide */
+body.home-page .hero-slide-achievement .slide-bg-img,
+body.home-page .hero-slide-achievement picture img {
+    object-position: 28% center !important;
+    filter: brightness(1.02) contrast(1.03) !important;
 }
 
 body.home-page .hero-section .slide.active img,
-body.home-page .hero-section .slide.active .slide-bg-img {
+body.home-page .hero-section .slide.active .slide-bg-img,
+body.home-page .hero-section .slide.active picture img {
     transform: none !important;
 }
 
@@ -14684,11 +14732,12 @@ body.home-page .hero-section .slide-overlay {
     z-index: 2 !important;
 }
 
-/* High-contrast dark gradient overlay explicitly for the achievement slide */
+/* High-contrast, bright and realistic gradient overlay for the achievement slide */
 body.home-page .hero-section .hero-achievement-overlay,
 body.home-page .slide.hero-slide-achievement .slide-overlay {
-    background: linear-gradient(180deg, rgba(11, 25, 44, 0.85) 0%, rgba(11, 25, 44, 0.58) 35%, rgba(11, 25, 44, 0.74) 75%, rgba(11, 25, 44, 0.94) 100%) !important;
-    padding: 24px 16px 44px !important;
+    background: linear-gradient(90deg, rgba(11, 25, 44, 0.10) 0%, rgba(11, 25, 44, 0.18) 42%, rgba(11, 25, 44, 0.48) 68%, rgba(11, 25, 44, 0.78) 100%),
+                linear-gradient(180deg, rgba(11, 25, 44, 0.4) 0%, transparent 20%, transparent 80%, rgba(11, 25, 44, 0.45) 100%) !important;
+    padding: 24px 24px 44px !important;
 }
 
 @media (max-width: 768px) {
@@ -14700,9 +14749,23 @@ body.home-page .slide.hero-slide-achievement .slide-overlay {
     body.home-page .hero-section .slider {
         min-height: calc(100vh - 70px) !important;
     }
-    body.home-page .hero-section .slide-overlay,
-    body.home-page .hero-section .hero-achievement-overlay {
+    body.home-page .hero-slide-achievement .slide-bg-img,
+    body.home-page .hero-slide-achievement picture img {
+        object-position: center top !important;
+    }
+    body.home-page .hero-section .slide-overlay {
         padding: 20px 12px 40px !important;
+    }
+    body.home-page .hero-section .hero-achievement-overlay,
+    body.home-page .slide.hero-slide-achievement .slide-overlay {
+        background: linear-gradient(180deg, rgba(11, 25, 44, 0.22) 0%, rgba(11, 25, 44, 0.12) 30%, rgba(11, 25, 44, 0.52) 64%, rgba(11, 25, 44, 0.88) 100%) !important;
+        padding: 20px 12px 36px !important;
+    }
+    body.home-page .hero-slide-achievement .hero-slide-content-wrap {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: flex-end !important;
+        padding-bottom: 20px !important;
     }
 }
 
@@ -14715,9 +14778,15 @@ body.home-page .slide.hero-slide-achievement .slide-overlay {
     body.home-page .hero-section .slider {
         min-height: calc(100vh - 65px) !important;
     }
-    body.home-page .hero-section .slide-overlay,
-    body.home-page .hero-section .hero-achievement-overlay {
+    body.home-page .hero-section .slide-overlay {
         padding: 16px 10px 38px !important;
+    }
+    body.home-page .hero-section .hero-achievement-overlay,
+    body.home-page .slide.hero-slide-achievement .slide-overlay {
+        padding: 16px 10px 32px !important;
+    }
+    body.home-page .hero-slide-achievement .hero-slide-content-wrap {
+        padding-bottom: 16px !important;
     }
 }
 
