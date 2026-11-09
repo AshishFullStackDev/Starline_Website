@@ -1189,151 +1189,155 @@ summary:focus-visible,
    Premium Corporate Styling with Starline Orange & Dark Charcoal
 ============================================================ */
 .hero-achievement-overlay {
-    background: linear-gradient(90deg, rgba(11, 25, 44, 0.10) 0%, rgba(11, 25, 44, 0.18) 42%, rgba(11, 25, 44, 0.48) 68%, rgba(11, 25, 44, 0.78) 100%),
-                linear-gradient(180deg, rgba(11, 25, 44, 0.4) 0%, transparent 20%, transparent 80%, rgba(11, 25, 44, 0.45) 100%) !important;
+    background: linear-gradient(180deg, rgba(11, 25, 44, 0.42) 0%, rgba(11, 25, 44, 0.20) 38%, rgba(11, 25, 44, 0.28) 68%, rgba(11, 25, 44, 0.58) 100%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 30px 20px 48px !important;
 }
 
+.hero-slide-achievement .hero-slide-content-wrap {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+}
+
+.hero-achievement-direct-content,
 .hero-achievement-content {
-    width: min(580px, 94vw) !important;
-    max-width: 580px !important;
-    padding: clamp(20px, 2.8vh, 28px) clamp(18px, 2.5vw, 28px) !important;
-    background: rgba(11, 25, 44, 0.65) !important;
-    backdrop-filter: blur(14px) saturate(135%) !important;
-    -webkit-backdrop-filter: blur(14px) saturate(135%) !important;
-    border-radius: 18px !important;
-    border: 1px solid rgba(255, 255, 255, 0.18) !important;
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
-    text-align: center;
-    margin: 0 auto;
+    background: none !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 960px !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
     box-sizing: border-box !important;
 }
 
-@media (min-width: 992px) {
-    body.home-page .hero-slide-achievement .hero-slide-content-wrap {
-        display: flex !important;
-        justify-content: flex-end !important;
-        align-items: center !important;
-    }
-    body.home-page .hero-slide-achievement .hero-achievement-content {
-        margin: 0 0 0 auto !important;
-        max-width: 580px !important;
-        text-align: left !important;
-    }
-    body.home-page .hero-slide-achievement .hero-achievement-headings {
-        align-items: flex-start !important;
-    }
-    body.home-page .hero-slide-achievement .hero-achievement-metrics {
-        justify-content: flex-start !important;
-        margin-left: 0 !important;
-    }
-    body.home-page .hero-slide-achievement .hero-achievement-desc {
-        text-align: left !important;
-        margin-left: 0 !important;
-    }
-    body.home-page .hero-slide-achievement .hero-actions {
-        justify-content: flex-start !important;
-    }
-}
-
 .hero-achievement-headings {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 12px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 0 12px 0 !important;
+    width: 100% !important;
 }
 
 .hero-achievement-title-1 {
-    display: block;
-    font-size: clamp(1.45rem, 2.4vw, 2.1rem) !important;
+    display: block !important;
+    font-size: clamp(2rem, 4.2vw, 3.4rem) !important;
     font-weight: 800 !important;
     line-height: 1.15 !important;
     letter-spacing: -0.015em !important;
     color: #ffffff !important;
     text-transform: uppercase !important;
-    text-shadow: 0 3px 16px rgba(0, 0, 0, 0.95) !important;
-    margin: 0 !important;
+    text-align: center !important;
+    margin: 0 0 6px 0 !important;
+    text-shadow: 0 3px 18px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 0.9) !important;
 }
 
 .hero-achievement-title-2 {
-    display: block;
-    font-size: clamp(1.3rem, 2.1vw, 1.85rem) !important;
+    display: block !important;
+    font-size: clamp(1.8rem, 3.8vw, 3.05rem) !important;
     font-weight: 800 !important;
     line-height: 1.15 !important;
     letter-spacing: -0.01em !important;
     color: #E8771F !important;
     text-transform: uppercase !important;
-    text-shadow: 0 3px 16px rgba(0, 0, 0, 0.95), 0 0 20px rgba(232, 119, 31, 0.35) !important;
-    margin: 4px 0 0 0 !important;
+    text-align: center !important;
+    margin: 0 !important;
+    text-shadow: 0 3px 18px rgba(0, 0, 0, 0.95), 0 0 24px rgba(232, 119, 31, 0.45) !important;
 }
 
 .hero-achievement-highlight {
-    display: inline-block;
-    font-size: clamp(0.8rem, 1.4vw, 0.95rem);
-    font-weight: 700;
-    color: #f8fafc;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin: 0 0 14px 0;
-    padding: 5px 16px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 6px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    display: block !important;
+    background: none !important;
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 12px 0 14px 0 !important;
+    font-size: clamp(0.92rem, 1.5vw, 1.12rem) !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    text-align: center !important;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 0.9) !important;
 }
 
 .hero-achievement-metrics {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin: 0 auto 14px;
-    max-width: 720px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+    background: none !important;
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 auto 16px !important;
+    width: 100% !important;
 }
 
-.achievement-metric-chip {
-    display: inline-flex;
-    align-items: center;
-    background: rgba(11, 25, 44, 0.75);
-    border: 1px solid rgba(232, 119, 31, 0.45);
-    padding: 7px 18px;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s ease, border-color 0.2s ease;
+.achievement-metric-val {
+    font-size: clamp(0.95rem, 1.6vw, 1.15rem) !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 0.9) !important;
 }
 
-.achievement-metric-chip:hover {
-    transform: translateY(-2px);
-    border-color: rgba(232, 119, 31, 0.8);
-}
-
-.achievement-metric-chip .metric-value {
-    font-size: clamp(0.82rem, 1.3vw, 0.92rem);
-    font-weight: 700;
-    color: #ffffff;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+.achievement-metric-divider {
+    color: #E8771F !important;
+    font-size: 1.1rem !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8) !important;
 }
 
 .hero-achievement-desc {
-    font-size: clamp(0.9rem, 1.4vw, 1.02rem) !important;
+    font-size: clamp(1rem, 1.6vw, 1.25rem) !important;
     line-height: 1.5 !important;
-    color: #cbd5e1 !important;
-    max-width: 600px !important;
-    margin: 0 auto 18px !important;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7) !important;
-    font-weight: 500;
+    color: #ffffff !important;
+    max-width: 760px !important;
+    margin: 0 auto 24px !important;
+    text-align: center !important;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 0.9) !important;
+    font-weight: 500 !important;
+}
+
+.hero-slide-achievement .hero-actions {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 16px !important;
+    flex-wrap: wrap !important;
+    margin: 0 auto !important;
 }
 
 .hero-btn-achievement {
     background: #E8771F !important;
     border-color: #E8771F !important;
     color: #ffffff !important;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.05em !important;
     font-weight: 800 !important;
-    text-transform: uppercase;
-    box-shadow: 0 6px 20px rgba(232, 119, 31, 0.45) !important;
+    text-transform: uppercase !important;
+    padding: 13px 30px !important;
+    border-radius: 6px !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 2px 10px rgba(232, 119, 31, 0.5) !important;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
@@ -1341,61 +1345,78 @@ summary:focus-visible,
 .hero-btn-achievement:focus {
     background: #d46313 !important;
     border-color: #d46313 !important;
-    box-shadow: 0 10px 24px rgba(232, 119, 31, 0.6) !important;
+    box-shadow: 0 10px 24px rgba(232, 119, 31, 0.65) !important;
+    transform: translateY(-2px);
+}
+
+.hero-slide-achievement .hero-quote-btn {
+    background: rgba(11, 25, 44, 0.45) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: 2px solid rgba(255, 255, 255, 0.9) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em !important;
+    padding: 12px 28px !important;
+    border-radius: 6px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.hero-slide-achievement .hero-quote-btn:hover,
+.hero-slide-achievement .hero-quote-btn:focus {
+    background: rgba(255, 255, 255, 0.25) !important;
+    border-color: #ffffff !important;
+    color: #ffffff !important;
     transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {
+    .hero-achievement-direct-content,
     .hero-achievement-content {
-        width: calc(100% - 20px) !important;
-        max-width: 440px !important;
-        padding: 20px 14px 18px !important;
-        border-radius: 14px !important;
-        margin: 0 auto;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 12px !important;
     }
     .hero-achievement-title-1 {
-        font-size: clamp(1.28rem, 5.2vw, 1.7rem) !important;
+        font-size: clamp(1.4rem, 6.2vw, 2.1rem) !important;
         line-height: 1.18 !important;
     }
     .hero-achievement-title-2 {
-        font-size: clamp(1.16rem, 4.6vw, 1.55rem) !important;
+        font-size: clamp(1.25rem, 5.4vw, 1.85rem) !important;
         line-height: 1.18 !important;
         margin-top: 3px !important;
     }
     .hero-achievement-highlight {
-        font-size: 0.74rem !important;
-        padding: 4px 10px !important;
-        letter-spacing: 0.06em !important;
-        margin: 0 0 10px 0 !important;
+        font-size: 0.78rem !important;
+        letter-spacing: 0.08em !important;
+        margin: 10px 0 !important;
     }
     .hero-achievement-metrics {
         flex-direction: column !important;
-        gap: 8px !important;
+        gap: 6px !important;
         margin-bottom: 12px !important;
         width: 100% !important;
     }
-    .achievement-metric-chip {
-        padding: 6px 14px !important;
-        width: 100% !important;
-        max-width: 320px !important;
-        justify-content: center !important;
+    .achievement-metric-divider {
+        display: none !important;
     }
-    .achievement-metric-chip .metric-value {
-        font-size: 0.8rem !important;
+    .achievement-metric-val {
+        font-size: 0.86rem !important;
     }
     .hero-achievement-desc {
-        font-size: 0.86rem !important;
+        font-size: 0.92rem !important;
         line-height: 1.45 !important;
-        margin-bottom: 14px !important;
-        max-width: 320px !important;
+        margin-bottom: 18px !important;
+        max-width: 340px !important;
     }
-    .hero-actions {
+    .hero-slide-achievement .hero-actions {
         flex-direction: column !important;
         align-items: center !important;
         gap: 10px !important;
         width: 100% !important;
     }
-    .hero-actions .btn {
+    .hero-slide-achievement .hero-actions .btn {
         width: 100% !important;
         max-width: 280px !important;
         min-height: 46px !important;
@@ -14732,12 +14753,28 @@ body.home-page .hero-section .slide-overlay {
     z-index: 2 !important;
 }
 
-/* High-contrast, bright and realistic gradient overlay for the achievement slide */
+/* Subtle full-image dark gradient overlay for the achievement slide */
 body.home-page .hero-section .hero-achievement-overlay,
 body.home-page .slide.hero-slide-achievement .slide-overlay {
-    background: linear-gradient(90deg, rgba(11, 25, 44, 0.10) 0%, rgba(11, 25, 44, 0.18) 42%, rgba(11, 25, 44, 0.48) 68%, rgba(11, 25, 44, 0.78) 100%),
-                linear-gradient(180deg, rgba(11, 25, 44, 0.4) 0%, transparent 20%, transparent 80%, rgba(11, 25, 44, 0.45) 100%) !important;
-    padding: 24px 24px 44px !important;
+    background: linear-gradient(180deg, rgba(11, 25, 44, 0.42) 0%, rgba(11, 25, 44, 0.20) 38%, rgba(11, 25, 44, 0.28) 68%, rgba(11, 25, 44, 0.58) 100%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 30px 20px 48px !important;
+}
+
+body.home-page .hero-slide-achievement .hero-slide-content-wrap {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+}
+
+body.home-page .hero-slide-achievement .slide-bg-img,
+body.home-page .hero-slide-achievement picture img {
+    object-position: center center !important;
+    filter: brightness(1.02) contrast(1.04) !important;
 }
 
 @media (max-width: 768px) {
@@ -14751,20 +14788,20 @@ body.home-page .slide.hero-slide-achievement .slide-overlay {
     }
     body.home-page .hero-slide-achievement .slide-bg-img,
     body.home-page .hero-slide-achievement picture img {
-        object-position: center top !important;
+        object-position: center center !important;
     }
     body.home-page .hero-section .slide-overlay {
         padding: 20px 12px 40px !important;
     }
     body.home-page .hero-section .hero-achievement-overlay,
     body.home-page .slide.hero-slide-achievement .slide-overlay {
-        background: linear-gradient(180deg, rgba(11, 25, 44, 0.22) 0%, rgba(11, 25, 44, 0.12) 30%, rgba(11, 25, 44, 0.52) 64%, rgba(11, 25, 44, 0.88) 100%) !important;
-        padding: 20px 12px 36px !important;
+        background: linear-gradient(180deg, rgba(11, 25, 44, 0.48) 0%, rgba(11, 25, 44, 0.26) 35%, rgba(11, 25, 44, 0.36) 65%, rgba(11, 25, 44, 0.65) 100%) !important;
+        padding: 24px 14px 40px !important;
     }
     body.home-page .hero-slide-achievement .hero-slide-content-wrap {
         display: flex !important;
         justify-content: center !important;
-        align-items: flex-end !important;
+        align-items: center !important;
         padding-bottom: 20px !important;
     }
 }
@@ -14786,6 +14823,9 @@ body.home-page .slide.hero-slide-achievement .slide-overlay {
         padding: 16px 10px 32px !important;
     }
     body.home-page .hero-slide-achievement .hero-slide-content-wrap {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
         padding-bottom: 16px !important;
     }
 }
