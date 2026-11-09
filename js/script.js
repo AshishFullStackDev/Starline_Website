@@ -173,7 +173,20 @@ if (hamburger && navMenu) {
 // Slider functionality - Initialize after DOM is loaded
 let currentSlide = 0;
 let slides;
-let sliderInterval;
+let sliderInterval = null;
+
+function getSlideDuration(slide) {
+    if (!slide) return 5000;
+    const durationAttr = slide.getAttribute('data-duration');
+    if (durationAttr) {
+        const parsed = parseInt(durationAttr, 10);
+        if (!isNaN(parsed) && parsed > 0) return parsed;
+    }
+    if (slide.classList.contains('hero-slide-achievement')) {
+        return 25000;
+    }
+    return 5000;
+}
 
 function initSlider() {
     slides = document.querySelectorAll('.slide');
@@ -181,18 +194,28 @@ function initSlider() {
     if (slides.length > 0) {
         // Ensure first slide is active
         slides[0].classList.add('active');
-        startSliderInterval();
         
         // Pause slider on hover
         const heroSection = document.querySelector('.hero-section');
         if (heroSection) {
             heroSection.addEventListener('mouseenter', () => {
-                clearInterval(sliderInterval);
+                clearTimeout(sliderInterval);
+                sliderInterval = null;
             });
             heroSection.addEventListener('mouseleave', () => {
                 startSliderInterval();
             });
         }
+
+        // Pause on tab visibility change to avoid jumping
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                clearTimeout(sliderInterval);
+                sliderInterval = null;
+            } else {
+                startSliderInterval();
+            }
+        });
 
         // Touch / Swipe support for mobile devices
         const sliderEl = document.querySelector('.slider');
@@ -279,6 +302,9 @@ function showSlide(index) {
         dot.classList.toggle('active', i === currentSlide);
         dot.setAttribute('aria-current', i === currentSlide ? 'true' : 'false');
     });
+
+    // Auto-schedule next transition using the current slide's duration
+    startSliderInterval();
 }
 
 function nextSlide() {
@@ -299,16 +325,21 @@ function changeSlide(direction) {
     } else {
         prevSlide();
     }
-    // Reset auto-advance timer
     resetSliderInterval();
 }
 
 function startSliderInterval() {
-    sliderInterval = setInterval(nextSlide, 4000);
+    clearTimeout(sliderInterval);
+    if (!slides || slides.length <= 1) return;
+    const currentEl = slides[currentSlide];
+    const duration = getSlideDuration(currentEl);
+    sliderInterval = setTimeout(() => {
+        nextSlide();
+    }, duration);
 }
 
 function resetSliderInterval() {
-    clearInterval(sliderInterval);
+    clearTimeout(sliderInterval);
     startSliderInterval();
 }
 
