@@ -76,15 +76,14 @@ var STARLINE_CONFIG = (typeof window !== 'undefined' && window.STARLINE_CONFIG) 
         return 'direct-firebase';
     },
 
-    // Base URL helper for other server endpoints (/api/health, /api/firebase-config)
+    // Base URL helper for server API endpoints (/api/health, /api/firebase-config)
     getBaseApiUrl: function() {
-        const fullUrl = this.getEnquiryApiUrl();
-        if (fullUrl.startsWith('http://') || fullUrl.startsWith('https://')) {
+        const apiUrl = this.getEnquiryApiUrl();
+        if (apiUrl && (apiUrl.startsWith('http://') || apiUrl.startsWith('https://'))) {
             try {
-                const u = new URL(fullUrl);
-                return u.origin;
+                return new URL(apiUrl).origin;
             } catch (e) {
-                return fullUrl.replace(/\/api\/enquiry\/?$/, '');
+                return apiUrl.replace(/\/api\/enquiry\/?$/, '').replace(/\/+$/, '');
             }
         }
         return '';

@@ -3790,27 +3790,3 @@ window.closeQuoteModal = closeQuoteModal;
         initLeadCaptureModule();
     }
 })();
-
-// ==========================================
-// Starline AI Chatbot Global Bootstrapper
-// Ensures chatbot loads across all pages (including /product/*.html)
-// ==========================================
-(function ensureStarlineChatbotLoaded() {
-    if (typeof document === 'undefined' || window.__STARLINE_CHATBOT_BOOTSTRAPPED__) return;
-    window.__STARLINE_CHATBOT_BOOTSTRAPPED__ = true;
-
-    if (!document.querySelector('link[href*="chatbot.css"]')) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = '/css/chatbot.css';
-        document.head.appendChild(link);
-    }
-
-    if (!window.__STARLINE_CHATBOT_INIT__ && !document.querySelector('script[src*="chatbot.js"]')) {
-        const script = document.createElement('script');
-        script.src = '/js/chatbot.js';
-        script.defer = true;
-        document.body.appendChild(script);
-    }
-})();
-
