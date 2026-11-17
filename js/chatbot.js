@@ -214,7 +214,7 @@
                 <span class="sl-chatbot-status-dot" aria-hidden="true"></span>
                 <span class="sl-chatbot-status-label">Online</span>
                 <span aria-hidden="true">&bull;</span>
-                <span>EN / HI / MR</span>
+                <span aria-label="English, Hindi, Marathi, Hinglish">EN / HI / MR</span>
               </div>
             </div>
           </div>
@@ -273,7 +273,7 @@
           </div>
         </header>
 
-        <div class="sl-chatbot-confirm-bar" id="slChatbotConfirmBar" role="region" aria-label="Confirm clear chat" aria-hidden="true">
+        <div class="sl-chatbot-confirm-bar" id="slChatbotConfirmBar" role="region" aria-label="Confirm clear chat" aria-hidden="true" hidden>
           <p class="sl-chatbot-confirm-text">Clear conversation history?</p>
           <div class="sl-chatbot-confirm-actions">
             <button type="button" class="sl-chatbot-confirm-btn is-cancel" id="slChatbotCancelClearBtn">Cancel</button>
@@ -311,7 +311,7 @@
             <a href="/contact.html" class="sl-chatbot-privacy-link" id="slChatbotPrivacyLink">Privacy Policy</a>
           </p>
           <div class="sl-chatbot-footer-meta">
-            <span>STARLINE ADVENTURES</span>
+            <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">STARLINE ADVENTURES PVT. LTD.</span>
             <div class="sl-chatbot-footer-actions">
               <a href="${WHATSAPP_URL}" target="_blank" rel="noopener noreferrer" class="sl-chatbot-footer-wa" aria-label="Chat with Starline Adventures on WhatsApp">WhatsApp</a>
               <a href="${PHONE_HREF}" class="sl-chatbot-footer-phone" aria-label="Call Starline Adventures at +91 94249 04000">+91 94249 04000</a>
@@ -461,7 +461,7 @@
     if (existing) existing.remove();
   }
 
-  function appendActionCard({ title, desc, showFormBtn = true, showWhatsapp = true, showCall = false }) {
+  function appendActionCard({ title, desc, showFormBtn = true, showWhatsapp = false, showCall = false }) {
     const box = document.getElementById('slChatbotMessages');
     if (!box) return;
 

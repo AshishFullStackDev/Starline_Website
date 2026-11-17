@@ -20,7 +20,7 @@ const ROOT_DIR = path.resolve(__dirname, '..');
 const CHATBOT_STORE_DIR = path.join(ROOT_DIR, '.secure_store');
 const CHATBOT_STORE_FILE = path.join(CHATBOT_STORE_DIR, 'chatbot_leads.json');
 
-const GEMINI_MODEL = (process.env.GEMINI_MODEL || process.env.AI_MODEL || 'gemini-4-hydrogen').trim();
+const GEMINI_MODEL = (process.env.GEMINI_MODEL || '').trim();
 
 // ============================================================
 // 1. VERIFIED COMPANY KNOWLEDGE & SYSTEM INSTRUCTIONS
