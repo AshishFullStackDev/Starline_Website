@@ -20,7 +20,7 @@ const ROOT_DIR = path.resolve(__dirname, '..');
 const CHATBOT_STORE_DIR = path.join(ROOT_DIR, '.secure_store');
 const CHATBOT_STORE_FILE = path.join(CHATBOT_STORE_DIR, 'chatbot_leads.json');
 
-const GEMINI_MODEL = (process.env.GEMINI_MODEL || '').trim();
+const GEMINI_MODEL = (process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite').trim();
 
 // ============================================================
 // 1. VERIFIED COMPANY KNOWLEDGE & SYSTEM INSTRUCTIONS
@@ -637,7 +637,7 @@ function createChatbotRouter({ firebaseConfig, db, firestoreFns, requireAdminAut
         };
         if (ThinkingLevel) {
           genConfig.thinkingConfig = {
-            thinkingLevel: currentModel.includes('flash') || currentModel.includes('hydrogen')
+            thinkingLevel: currentModel.includes('flash')
               ? (ThinkingLevel.MINIMAL || ThinkingLevel.LOW)
               : ThinkingLevel.LOW
           };

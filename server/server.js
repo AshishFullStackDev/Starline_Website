@@ -1772,7 +1772,38 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start HTTP server on port 3000
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Starline Adventures secured server running on http://0.0.0.0:${PORT} in [${NODE_ENV}] mode`);
+function getArgValue(flag, fallback) {
+  const idx = process.argv.indexOf(flag);
+  if (idx !== -1 && process.argv[idx + 1] && !process.argv[idx + 1].startsWith('--')) {
+    return process.argv[idx + 1];
+  }
+  const prefix = `${flag}=`;
+  const eqArg = process.argv.find(a => a.startsWith(prefix));
+  if (eqArg) return eqArg.slice(prefix.length);
+  return fallback;
+}
+
+const LISTEN_PORT = Number(getArgValue('--port', PORT)) || PORT;
+const LISTEN_HOST = getArgValue('--host', '0.0.0.0');
+
+// Start HTTP server on port 3000 (0.0.0.0)
+const httpServer = app.listen(LISTEN_PORT, LISTEN_HOST, () => {
+  console.log(`Starline Adventures secured server running on http://${LISTEN_HOST}:${LISTEN_PORT} in [${NODE_ENV}] mode`);
 });
+
+httpServer.on('error', (err) => {
+  console.error('[HTTP Server Error]:', err && err.message ? err.message : err);
+  process.exit(1);
+});
+
+function gracefulShutdown(signal) {
+  console.log(`[Server Shutdown]: Received ${signal}, closing HTTP server...`);
+  httpServer.close(() => {
+    process.exit(0);
+  });
+  setTimeout(() => process.exit(0), 3000).unref();
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
