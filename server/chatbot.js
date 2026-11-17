@@ -1,10 +1,14 @@
 /**
  * Starline Adventures Pvt. Ltd. - AI Website Chatbot & Lead Generation Backend
  * Endpoints:
+ *   GET  /api/chatbot/status
+ *   GET  /api/chatbot/health
  *   POST /api/chatbot/message
  *   POST /api/chatbot/leads
  *   GET  /api/chatbot/leads (Admin protected)
  */
+
+require('dotenv').config();
 
 const express = require('express');
 const fs = require('fs');
@@ -15,6 +19,8 @@ const nodemailer = require('nodemailer');
 const ROOT_DIR = path.resolve(__dirname, '..');
 const CHATBOT_STORE_DIR = path.join(ROOT_DIR, '.secure_store');
 const CHATBOT_STORE_FILE = path.join(CHATBOT_STORE_DIR, 'chatbot_leads.json');
+
+const GEMINI_MODEL = (process.env.GEMINI_MODEL || process.env.AI_MODEL || 'gemini-4-hydrogen').trim();
 
 // ============================================================
 // 1. VERIFIED COMPANY KNOWLEDGE & SYSTEM INSTRUCTIONS
@@ -384,9 +390,88 @@ function createChatbotRouter({ firebaseConfig, db, firestoreFns, requireAdminAut
     return res.json({
       ok: true,
       aiConfigured: Boolean((process.env.GEMINI_API_KEY || '').trim()),
+      model: GEMINI_MODEL,
       firestoreConfigured: Boolean(firebaseConfig && firebaseConfig.projectId),
       emailConfigured: getEmailCredentials().hasPassword
     });
+  });
+
+  // ------------------------------------------------------------
+  // GET /api/chatbot/health (Makes a test AI call)
+  // ------------------------------------------------------------
+  router.get('/health', async (req, res) => {
+    const apiKey = (process.env.GEMINI_API_KEY || '').trim();
+    const missingEnv = [];
+    if (!apiKey) missingEnv.push('GEMINI_API_KEY');
+    if (!GEMINI_MODEL) missingEnv.push('GEMINI_MODEL');
+
+    if (missingEnv.length > 0) {
+      console.error(`[Chatbot Health Check Error]: Missing environment variables: ${missingEnv.join(', ')}`);
+      return res.status(503).json({
+        ok: false,
+        errorCode: 'config',
+        reason: `Missing required environment variables: ${missingEnv.join(', ')}`,
+        missingEnv
+      });
+    }
+
+    try {
+      const sdk = await getGenAISdk();
+      const ai = new sdk.GoogleGenAI({
+        apiKey,
+        httpOptions: { timeout: 15000, retryOptions: { attempts: 1 } }
+      });
+
+      const tryGenerate = async (modelToTest) => {
+        return await ai.models.generateContent({
+          model: modelToTest,
+          contents: 'Reply with JSON {"status": "ok"}',
+          config: {
+            responseMimeType: 'application/json',
+            httpOptions: { timeout: 15000 }
+          }
+        });
+      };
+
+      let testRes;
+      let usedModel = GEMINI_MODEL;
+      try {
+        testRes = await tryGenerate(GEMINI_MODEL);
+      } catch (primaryHealthErr) {
+        const pStatus = primaryHealthErr?.status || 500;
+        const pMsg = primaryHealthErr?.message || '';
+        if (pStatus === 503 || pStatus === 504 || pMsg.includes('UNAVAILABLE') || pMsg.includes('DEADLINE_EXCEEDED')) {
+          usedModel = 'gemini-3.1-flash-lite';
+          testRes = await tryGenerate(usedModel);
+        } else {
+          throw primaryHealthErr;
+        }
+      }
+
+      const text = testRes?.text ? testRes.text.trim() : '';
+      console.log(`[Chatbot Health Check Success]: Model ${usedModel} responded successfully.`);
+      return res.json({ ok: true, model: usedModel, responsePreview: text.slice(0, 100) });
+    } catch (healthErr) {
+      const status = healthErr?.status || 500;
+      const errMsg = healthErr?.message || 'Unknown error';
+      console.error(`[Chatbot Health Check Failure]: Status ${status}, Message: ${errMsg}, Model: ${GEMINI_MODEL}`);
+
+      let errorCode = 'server';
+      if (status === 401 || status === 403 || errMsg.includes('API_KEY') || errMsg.includes('PERMISSION_DENIED')) {
+        errorCode = 'auth';
+      } else if (status === 429 || errMsg.includes('429') || errMsg.includes('RESOURCE_EXHAUSTED')) {
+        errorCode = 'rate_limit';
+      } else if (status === 504 || errMsg.includes('timeout') || errMsg.includes('DEADLINE_EXCEEDED')) {
+        errorCode = 'timeout';
+      }
+
+      return res.status(status >= 400 && status < 600 ? status : 503).json({
+        ok: false,
+        errorCode,
+        reason: errMsg,
+        status
+      });
+    }
   });
 
   // ------------------------------------------------------------
@@ -397,7 +482,7 @@ function createChatbotRouter({ firebaseConfig, db, firestoreFns, requireAdminAut
     if (!checkRateLimit(chatMessageRateMap, clientIp, CHAT_WINDOW_MS, CHAT_MAX_REQUESTS)) {
       return res.status(429).json({
         ok: false,
-        errorCode: 'RATE_LIMITED',
+        errorCode: 'rate_limit',
         error: 'Too many chat requests. Please wait a moment or contact us directly on WhatsApp (+91 94249 04000).'
       });
     }
@@ -405,10 +490,10 @@ function createChatbotRouter({ firebaseConfig, db, firestoreFns, requireAdminAut
     const body = req.body || {};
     const rawMessage = typeof body.message === 'string' ? body.message.trim() : '';
     if (!rawMessage || rawMessage.length < 1) {
-      return res.status(400).json({ ok: false, errorCode: 'INVALID_INPUT', error: 'Message is required.' });
+      return res.status(400).json({ ok: false, errorCode: 'server', error: 'Message is required.' });
     }
     if (rawMessage.length > 1500) {
-      return res.status(400).json({ ok: false, errorCode: 'INVALID_INPUT', error: 'Message exceeds 1,500 characters.' });
+      return res.status(400).json({ ok: false, errorCode: 'server', error: 'Message exceeds 1,500 characters.' });
     }
 
     const sessionId = (typeof body.sessionId === 'string' && /^[a-zA-Z0-9_\-]{6,64}$/.test(body.sessionId.trim()))
@@ -417,10 +502,30 @@ function createChatbotRouter({ firebaseConfig, db, firestoreFns, requireAdminAut
 
     const sourcePage = sanitizeText(body.sourcePage || req.headers.referer || 'Website', 300);
 
+    // Check configuration environment variables
+    const apiKey = (process.env.GEMINI_API_KEY || '').trim();
+    const missingEnv = [];
+    if (!apiKey) missingEnv.push('GEMINI_API_KEY');
+    if (!GEMINI_MODEL) missingEnv.push('GEMINI_MODEL');
+
+    if (missingEnv.length > 0) {
+      console.error(`[Chatbot Config Error]: Missing environment variables: ${missingEnv.join(', ')}. API key present: ${Boolean(apiKey)}`);
+      return res.status(503).json({
+        ok: false,
+        errorCode: 'config',
+        error: `AI assistant is not configured (missing: ${missingEnv.join(', ')}). Please set GEMINI_API_KEY in environment variables.`,
+        fallbackContact: {
+          phone: '+91 94249 04000',
+          email: 'starlineadventure@gmail.com',
+          whatsapp: 'https://wa.me/919424904000'
+        }
+      });
+    }
+
     // Load or reconstruct bounded session conversation history
     let session = chatSessions.get(sessionId);
     if (!session) {
-      session = { messages: [], updatedAt: Date.now() };
+      session = { messages: [], updatedAt: Date.now(), hasShownFallbackCard: false };
       if (Array.isArray(body.history)) {
         for (const item of body.history.slice(-MAX_SESSION_TURNS)) {
           if (!item || typeof item !== 'object') continue;
@@ -445,7 +550,7 @@ function createChatbotRouter({ firebaseConfig, db, firestoreFns, requireAdminAut
       console.error('[Chatbot SDK Load Error]:', sdkErr.message);
       return res.status(503).json({
         ok: false,
-        errorCode: 'AI_SDK_ERROR',
+        errorCode: 'server',
         error: 'AI assistant service is temporarily unavailable. Please submit an enquiry form or contact us on WhatsApp.',
         fallbackContact: {
           phone: '+91 94249 04000',
@@ -456,10 +561,11 @@ function createChatbotRouter({ firebaseConfig, db, firestoreFns, requireAdminAut
     }
 
     if (!ai) {
+      console.error('[Chatbot Error]: Gemini client could not be initialized. GEMINI_API_KEY is missing or invalid.');
       return res.status(503).json({
         ok: false,
-        errorCode: 'AI_NOT_CONFIGURED',
-        error: 'AI assistant is currently offline. You can submit an enquiry directly here or reach our team on WhatsApp (+91 94249 04000).',
+        errorCode: 'config',
+        error: 'AI assistant is currently unconfigured. Please set GEMINI_API_KEY.',
         fallbackContact: {
           phone: '+91 94249 04000',
           email: 'starlineadventure@gmail.com',
@@ -521,42 +627,60 @@ function createChatbotRouter({ firebaseConfig, db, firestoreFns, requireAdminAut
     };
 
     try {
-      const callModel = async (modelName, timeoutMs) => {
+      const callModelWithRetry = async (currentModel) => {
+        const timeoutMs = 20000;
         const genConfig = {
           systemInstruction: STARLINE_SYSTEM_INSTRUCTION,
           responseMimeType: 'application/json',
           responseSchema,
-          httpOptions: {
-            timeout: timeoutMs,
-            retryOptions: { attempts: 1 }
-          }
+          httpOptions: { timeout: timeoutMs, retryOptions: { attempts: 1 } }
         };
         if (ThinkingLevel) {
           genConfig.thinkingConfig = {
-            thinkingLevel: modelName === 'gemini-3.1-flash-lite'
+            thinkingLevel: currentModel.includes('flash') || currentModel.includes('hydrogen')
               ? (ThinkingLevel.MINIMAL || ThinkingLevel.LOW)
               : ThinkingLevel.LOW
           };
         }
-        return await Promise.race([
-          ai.models.generateContent({
-            model: modelName,
-            contents,
-            config: genConfig
-          }),
-          new Promise((_, reject) => setTimeout(() => reject(new Error(`Gemini timeout after ${timeoutMs}ms`)), timeoutMs + 2000))
-        ]);
+
+        const runAttempt = async () => {
+          return await Promise.race([
+            ai.models.generateContent({
+              model: currentModel,
+              contents,
+              config: genConfig
+            }),
+            new Promise((_, reject) => setTimeout(() => reject(new Error(`AI request timeout after ${timeoutMs}ms`)), timeoutMs + 2000))
+          ]);
+        };
+
+        try {
+          return await runAttempt();
+        } catch (firstErr) {
+          const fMsg = firstErr?.message || '';
+          const fStatus = firstErr?.status || 500;
+          const isTransient = fStatus === 429 || fStatus >= 500 || fMsg.includes('timeout') || fMsg.includes('DEADLINE_EXCEEDED') || fMsg.includes('503') || fMsg.includes('504');
+          if (!isTransient) throw firstErr;
+          console.warn(`[Chatbot Warning]: Transient AI error on model ${currentModel} (HTTP ${fStatus}: ${fMsg}). Retrying once after 1s...`);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          return await runAttempt();
+        }
       };
 
       let response;
       try {
-        response = await callModel('gemini-4-hydrogen', 12000);
+        response = await callModelWithRetry(GEMINI_MODEL);
       } catch (primaryErr) {
-        const pMsg = primaryErr && primaryErr.message ? primaryErr.message : '';
-        const isTransient = primaryErr?.status === 503 || primaryErr?.status === 504 || pMsg.includes('504') || pMsg.includes('503') || pMsg.includes('DEADLINE_EXCEEDED') || pMsg.includes('timeout');
-        if (!isTransient) throw primaryErr;
-        console.warn('[Chatbot Gemini Fallback]: Primary model timed out/unavailable, trying gemini-3.1-flash-lite...');
-        response = await callModel('gemini-3.1-flash-lite', 12000);
+        const pMsg = primaryErr?.message || '';
+        const pStatus = primaryErr?.status || 500;
+        console.error(`[Chatbot Primary Model Error]: Model ${GEMINI_MODEL} failed with HTTP ${pStatus}: ${pMsg}`);
+        const fallbackModel = 'gemini-3.1-flash-lite';
+        if (GEMINI_MODEL !== fallbackModel) {
+          console.warn(`[Chatbot Fallback]: Trying fallback model ${fallbackModel}...`);
+          response = await callModelWithRetry(fallbackModel);
+        } else {
+          throw primaryErr;
+        }
       }
 
       const rawText = (response && response.text ? response.text : '').trim();
@@ -589,6 +713,8 @@ function createChatbotRouter({ firebaseConfig, db, firestoreFns, requireAdminAut
       session.updatedAt = Date.now();
       chatSessions.set(sessionId, session);
 
+      const showFallbackCard = !session.hasShownFallbackCard;
+
       return res.json({
         ok: true,
         sessionId,
@@ -597,6 +723,7 @@ function createChatbotRouter({ firebaseConfig, db, firestoreFns, requireAdminAut
         intent: sanitizeText(parsed.intent || 'general_info', 40),
         shouldOfferLeadForm: Boolean(parsed.shouldOfferLeadForm),
         escalateToHuman: Boolean(parsed.escalateToHuman),
+        showFallbackCard,
         extractedLead: parsed.extractedLead && typeof parsed.extractedLead === 'object' ? {
           fullName: sanitizeText(parsed.extractedLead.fullName || '', 100),
           company: sanitizeText(parsed.extractedLead.company || '', 120),
@@ -613,17 +740,39 @@ function createChatbotRouter({ firebaseConfig, db, firestoreFns, requireAdminAut
       });
     } catch (aiErr) {
       const errMsg = aiErr && aiErr.message ? aiErr.message : 'AI service error';
-      console.error('[Chatbot Gemini Error]:', errMsg);
-      const statusCode = (aiErr && (aiErr.status === 429 || errMsg.includes('429') || errMsg.includes('RESOURCE_EXHAUSTED')))
-        ? 429
-        : 503;
+      const status = aiErr?.status || 503;
+      console.error(`[Chatbot AI Call Failure]: HTTP Status ${status}, Provider Error: ${errMsg}, Model: ${GEMINI_MODEL}, MissingEnv: ${missingEnv.join(', ')}`);
 
-      return res.status(statusCode).json({
+      let errorCode = 'server';
+      if (status === 401 || status === 403 || errMsg.includes('API_KEY') || errMsg.includes('PERMISSION_DENIED') || errMsg.includes('auth')) {
+        errorCode = 'auth';
+      } else if (status === 429 || errMsg.includes('429') || errMsg.includes('RESOURCE_EXHAUSTED')) {
+        errorCode = 'rate_limit';
+      } else if (status === 504 || errMsg.includes('timeout') || errMsg.includes('DEADLINE_EXCEEDED')) {
+        errorCode = 'timeout';
+      } else if (!apiKey) {
+        errorCode = 'config';
+      }
+
+      const showFallbackCard = !session.hasShownFallbackCard;
+      if (showFallbackCard) {
+        session.hasShownFallbackCard = true;
+        chatSessions.set(sessionId, session);
+      }
+
+      const errorMessages = {
+        config: 'AI assistant is not configured. Please check GEMINI_API_KEY.',
+        auth: 'AI authentication error. Please verify your Gemini API key permissions.',
+        rate_limit: 'Our AI assistant is experiencing high demand right now. Please try again shortly.',
+        timeout: 'AI request timed out. Please try again.',
+        server: 'Our AI assistant is temporarily unavailable. You can try again or reach our team on WhatsApp.'
+      };
+
+      return res.status(status >= 400 && status < 600 ? status : 503).json({
         ok: false,
-        errorCode: statusCode === 429 ? 'AI_RATE_LIMITED' : 'AI_UNAVAILABLE',
-        error: statusCode === 429
-          ? 'Our AI assistant is experiencing high demand right now. Please try again shortly or submit an enquiry below.'
-          : 'Our AI assistant is temporarily unavailable. You can still submit your project enquiry directly or message us on WhatsApp.',
+        errorCode,
+        error: errorMessages[errorCode] || errorMessages.server,
+        showFallbackCard,
         fallbackContact: {
           phone: '+91 94249 04000',
           email: 'starlineadventure@gmail.com',

@@ -309,11 +309,11 @@
   content: '';
   position: absolute;
   top: calc(100% + 2px);
-  right: 11px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-3px);
   border: 5px solid transparent;
   border-bottom-color: var(--sl-charcoal);
   opacity: 0;
-  transform: translateY(-3px);
   pointer-events: none;
   transition: opacity 0.15s ease, transform 0.15s ease;
   z-index: 50;
@@ -323,7 +323,8 @@
   content: attr(data-tooltip);
   position: absolute;
   top: calc(100% + 11px);
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(-3px);
   background: var(--sl-charcoal);
   color: var(--sl-white);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -334,7 +335,6 @@
   border-radius: 6px;
   white-space: nowrap;
   opacity: 0;
-  transform: translateY(-3px);
   pointer-events: none;
   transition: opacity 0.15s ease, transform 0.15s ease;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
@@ -346,7 +346,7 @@
 .sl-chatbot-icon-btn[data-tooltip]:hover::after,
 .sl-chatbot-icon-btn[data-tooltip]:focus-visible::after {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(-50%) translateY(0);
 }
 
 /* ==========================================================================
@@ -945,23 +945,22 @@
 #sl-chatbot-root .sl-chatbot-disclaimer {
   margin: 7px 0 0;
   font-size: 11.5px;
-  line-height: 1.3;
+  line-height: 1.35;
   color: var(--sl-muted);
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
 }
 
 #sl-chatbot-root .sl-chatbot-privacy-link {
-  color: var(--sl-orange);
+  color: #C2410C;
   font-weight: 600;
   text-decoration: none;
   margin-left: 4px;
+  display: inline;
 }
 
 #sl-chatbot-root .sl-chatbot-privacy-link:hover {
-  color: var(--sl-orange-hover);
+  color: #171717;
   text-decoration: underline;
 }
 
@@ -970,7 +969,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+  gap: 6px;
   font-size: 12px;
   color: #374151;
   padding: 0 2px;
@@ -1006,15 +1007,22 @@
 }
 
 #sl-chatbot-root .sl-chatbot-footer-phone {
-  color: var(--sl-orange);
+  color: #C2410C;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
 }
 
 #sl-chatbot-root .sl-chatbot-footer-phone:hover {
-  color: var(--sl-charcoal);
+  color: #171717;
   text-decoration: underline;
+}
+
+@media (max-width: 400px) {
+  #sl-chatbot-root .sl-chatbot-footer-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 /* Hide external site WhatsApp float only while the chat window is open */
