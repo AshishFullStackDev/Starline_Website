@@ -12,6 +12,7 @@ const StarlineImageMap = require(path.join(ROOT_DIR, 'js/image-map.js'));
 const { initializeApp } = require('firebase/app');
 const { getFirestore, doc, setDoc, getDoc, getDocs, collection, setLogLevel } = require('firebase/firestore');
 const { getAuth } = require('firebase/auth');
+const { createChatbotRouter } = require('./chatbot');
 
 const app = express();
 // AI Studio dev server requires binding strictly to port 3000 (environment PORT is 8080 for the container ingress)
@@ -158,7 +159,7 @@ app.use((req, res, next) => {
   }
 
   // Guard sensitive POST endpoints against cross-origin forgery
-  if (origin && !isOriginAllowed(origin) && (req.path.startsWith('/api/enquiry') || req.path.startsWith('/api/rfq') || req.path.startsWith('/api/quote'))) {
+  if (origin && !isOriginAllowed(origin) && (req.path.startsWith('/api/enquiry') || req.path.startsWith('/api/rfq') || req.path.startsWith('/api/quote') || req.path.startsWith('/api/chatbot'))) {
     return res.status(403).json({ ok: false, error: 'Unauthorized cross-origin submission.' });
   }
 
@@ -1315,6 +1316,14 @@ app.get('/api/enquiries-firestore', requireAdminAuth, async (req, res) => {
 app.post('/api/enquiry', (req, res) => handleSubmission(req, res, 'Contact Form'));
 app.post('/api/rfq', (req, res) => handleSubmission(req, res, 'Quick RFQ'));
 app.post('/api/quote', (req, res) => handleSubmission(req, res, 'Quick RFQ'));
+
+// AI Website Chatbot & Lead Generation Routes
+app.use('/api/chatbot', createChatbotRouter({
+  firebaseConfig,
+  db,
+  firestoreFns: { doc, getDoc, setDoc },
+  requireAdminAuth
+}));
 
 // Dynamic Gallery Images Endpoint - reads authentic verified gallery images from centralized image system
 app.get('/api/gallery-images', (req, res) => {

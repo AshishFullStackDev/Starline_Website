@@ -142,6 +142,88 @@
         "email",
         "createdAt"
       ]
+    },
+    "ChatbotLead": {
+      "title": "ChatbotLead",
+      "description": "Qualified business leads collected via the Starline AI Website Assistant",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "company": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "phone": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 30
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 120
+        },
+        "projectLocation": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "projectType": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "requiredEquipment": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "expectedTimeline": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "sourcePage": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "language": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "consentGiven": {
+          "type": "boolean"
+        },
+        "conversationSummary": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "createdAt": {
+          "type": "string",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "id",
+        "fullName",
+        "phone",
+        "email",
+        "sourcePage",
+        "consentGiven",
+        "createdAt"
+      ]
     }
   },
   "firestore": {
@@ -162,6 +244,12 @@
         "$ref": "#/entities/User"
       },
       "description": "User profile records"
+    },
+    "/website_chatbot_leads/{leadId}": {
+      "schema": {
+        "$ref": "#/entities/ChatbotLead"
+      },
+      "description": "Collection of qualified project leads submitted through the website AI chatbot"
     }
   }
 }

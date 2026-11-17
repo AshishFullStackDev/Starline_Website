@@ -76,6 +76,33 @@ service cloud.firestore {
         && (!('photoURL' in data) || (data.photoURL is string && data.photoURL.size() <= 500));
     }
 
+    // Chatbot Lead validation
+    function isValidChatbotLead(data) {
+      return data.keys().hasAll(['id', 'fullName', 'phone', 'email', 'sourcePage', 'consentGiven', 'createdAt'])
+        && data.keys().hasOnly([
+          'id', 'fullName', 'company', 'phone', 'email',
+          'projectLocation', 'projectType', 'requiredEquipment', 'expectedTimeline',
+          'notes', 'sourcePage', 'language', 'consentGiven', 'conversationSummary',
+          'status', 'createdAt'
+        ])
+        && data.id is string && data.id.size() > 0 && data.id.size() <= 128
+        && data.fullName is string && data.fullName.size() >= 2 && data.fullName.size() <= 100
+        && data.phone is string && data.phone.size() >= 8 && data.phone.size() <= 30
+        && data.email is string && data.email.size() >= 5 && data.email.size() <= 120
+        && data.sourcePage is string && data.sourcePage.size() > 0 && data.sourcePage.size() <= 500
+        && data.consentGiven is bool && data.consentGiven == true
+        && ((data.createdAt is timestamp && data.createdAt == request.time) || (data.createdAt is string && data.createdAt.size() > 0 && data.createdAt.size() <= 64))
+        && (!('company' in data) || (data.company is string && data.company.size() <= 120))
+        && (!('projectLocation' in data) || (data.projectLocation is string && data.projectLocation.size() <= 120))
+        && (!('projectType' in data) || (data.projectType is string && data.projectType.size() <= 100))
+        && (!('requiredEquipment' in data) || (data.requiredEquipment is string && data.requiredEquipment.size() <= 500))
+        && (!('expectedTimeline' in data) || (data.expectedTimeline is string && data.expectedTimeline.size() <= 100))
+        && (!('notes' in data) || (data.notes is string && data.notes.size() <= 2000))
+        && (!('language' in data) || (data.language is string && data.language.size() <= 40))
+        && (!('conversationSummary' in data) || (data.conversationSummary is string && data.conversationSummary.size() <= 2000))
+        && (!('status' in data) || (data.status is string && data.status.size() <= 30));
+    }
+
     // Safe connection test path - only single document get allowed for health probes, write strictly blocked
     match /test/{testId} {
       allow get: if true;
@@ -100,6 +127,12 @@ service cloud.firestore {
     match /users/{userId} {
       allow get, create, update: if (isOwner(userId) || isAdmin()) && isValidUser(incoming());
       allow list, delete: if isAdmin();
+    }
+
+    // Chatbot leads collection rules - Consent-verified creation, admin-only read/manage
+    match /website_chatbot_leads/{leadId} {
+      allow create: if isValidId(leadId) && isValidChatbotLead(incoming());
+      allow get, list, update, delete: if isAdmin();
     }
   }
 }
