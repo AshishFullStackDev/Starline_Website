@@ -518,6 +518,12 @@
   box-shadow: 0 2px 10px rgba(23, 23, 23, 0.08), 0 1px 2px rgba(23, 23, 23, 0.05);
 }
 
+.sl-chatbot-msg-row.is-assistant .sl-chatbot-bubble.is-error {
+  background: #FEF2F2;
+  color: #991B1B;
+  border-color: #FECACA;
+}
+
 .sl-chatbot-msg-row.is-user .sl-chatbot-bubble {
   background: linear-gradient(135deg, #F47621 0%, #e46512 100%);
   color: var(--sl-white);
@@ -958,6 +964,15 @@
 .sl-chatbot-send-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+.sl-chatbot-send-btn.is-loading svg {
+  animation: slSendPulse 1s ease-in-out infinite;
+}
+
+@keyframes slSendPulse {
+  0%, 100% { opacity: 0.45; transform: scale(0.92); }
+  50% { opacity: 1; transform: scale(1.05); }
 }
 
 #sl-chatbot-root .sl-chatbot-disclaimer {

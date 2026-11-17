@@ -398,12 +398,12 @@
     }
 
     const bubble = document.createElement('div');
-    bubble.className = 'sl-chatbot-bubble';
+    bubble.className = `sl-chatbot-bubble${msg.isError ? ' is-error' : ''}`;
     bubble.innerHTML = `${formatMessageHtml(msg.text)}<span class="sl-chatbot-msg-time">${escapeHtml(formatTime(msg.timestamp))}</span>`;
     row.appendChild(bubble);
     box.appendChild(row);
 
-    if (showSuggestions && !hasUserMessages() && Array.isArray(msg.suggestions) && msg.suggestions.length > 0) {
+    if (showSuggestions && Array.isArray(msg.suggestions) && msg.suggestions.length > 0) {
       const sugWrap = document.createElement('div');
       sugWrap.className = 'sl-chatbot-suggestions';
       msg.suggestions.forEach(text => {
@@ -421,10 +421,13 @@
 
     if (showSuggestions && msg.shouldOfferLeadForm && !state.leadSubmittedId) {
       appendActionCard({
-        title: 'Request a Customized Project Quotation',
-        desc: 'Share your project details in 30 seconds and our engineering team will prepare a tailored proposal.',
+        title: msg.isError ? 'Need Help Right Away?' : 'Request a Customized Project Quotation',
+        desc: msg.isError
+          ? 'You can retry your question or reach our team directly via enquiry form or WhatsApp.'
+          : 'Share your project details in 30 seconds and our engineering team will prepare a tailored proposal.',
         showFormBtn: true,
-        showWhatsapp: true
+        showWhatsapp: true,
+        retryText: msg.retryText || ''
       });
     } else if (showSuggestions && msg.escalateToHuman) {
       appendActionCard({
@@ -432,7 +435,8 @@
         desc: 'Speak directly with our specialists or share your contact details for a callback.',
         showFormBtn: true,
         showWhatsapp: true,
-        showCall: true
+        showCall: true,
+        retryText: msg.retryText || ''
       });
     }
   }
@@ -461,7 +465,7 @@
     if (existing) existing.remove();
   }
 
-  function appendActionCard({ title, desc, showFormBtn = true, showWhatsapp = false, showCall = false }) {
+  function appendActionCard({ title, desc, showFormBtn = true, showWhatsapp = false, showCall = false, retryText = '' }) {
     const box = document.getElementById('slChatbotMessages');
     if (!box) return;
 
@@ -480,6 +484,18 @@
 
     const actions = document.createElement('div');
     actions.className = 'sl-chatbot-card-actions';
+
+    if (retryText) {
+      const retryBtn = document.createElement('button');
+      retryBtn.type = 'button';
+      retryBtn.className = 'sl-chatbot-action-btn is-dark';
+      retryBtn.textContent = 'Try Again';
+      retryBtn.addEventListener('click', () => {
+        card.remove();
+        sendMessage(retryText);
+      });
+      actions.appendChild(retryBtn);
+    }
 
     if (showFormBtn) {
       const formBtn = document.createElement('button');
@@ -768,17 +784,26 @@
     scrollToBottom();
 
     isSending = true;
-    if (sendBtn) sendBtn.disabled = true;
+    if (sendBtn) {
+      sendBtn.disabled = true;
+      sendBtn.classList.add('is-loading');
+      sendBtn.setAttribute('aria-busy', 'true');
+    }
     appendTypingIndicator();
+
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timeoutTimer = controller ? setTimeout(() => controller.abort(), 30000) : null;
 
     try {
       const historyPayload = state.messages
-        .slice(-12, -1)
+        .slice(-13, -1)
+        .filter(m => m && !m.isError && m.text)
         .map(m => ({ role: m.role === 'user' ? 'user' : 'model', text: m.text }));
 
       const res = await fetch('/api/chatbot/message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller ? controller.signal : undefined,
         body: JSON.stringify({
           sessionId: state.sessionId,
           message: text,
@@ -796,6 +821,8 @@
           role: 'assistant',
           text: errMsg,
           timestamp: new Date().toISOString(),
+          isError: true,
+          retryText: text,
           shouldOfferLeadForm: true,
           escalateToHuman: true
         };
@@ -832,10 +859,15 @@
       scrollToBottom();
     } catch (networkErr) {
       removeTypingIndicator();
+      const isTimeout = networkErr && networkErr.name === 'AbortError';
       const offlineMsg = {
         role: 'assistant',
-        text: 'Network connection interrupted. You can still fill out an enquiry form below or reach our team directly on WhatsApp (+91 94249 04000).',
+        text: isTimeout
+          ? 'The AI response took longer than expected. Please try again or reach our team directly on WhatsApp (+91 94249 04000).'
+          : 'Network connection interrupted. You can still fill out an enquiry form below or reach our team directly on WhatsApp (+91 94249 04000).',
         timestamp: new Date().toISOString(),
+        isError: true,
+        retryText: text,
         shouldOfferLeadForm: true,
         escalateToHuman: true
       };
@@ -844,8 +876,13 @@
       appendMessageElement(offlineMsg, true);
       scrollToBottom();
     } finally {
+      if (timeoutTimer) clearTimeout(timeoutTimer);
       isSending = false;
-      if (sendBtn) sendBtn.disabled = false;
+      if (sendBtn) {
+        sendBtn.disabled = false;
+        sendBtn.classList.remove('is-loading');
+        sendBtn.removeAttribute('aria-busy');
+      }
       if (inputEl) inputEl.focus();
     }
   }

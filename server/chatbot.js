@@ -204,7 +204,7 @@ async function getGenAISdk() {
   return genaiSdkCache;
 }
 
-function getGeminiClient(GoogleGenAI) {
+function getGeminiClient(GoogleGenAI, timeoutMs = 25000) {
   const apiKey = (process.env.GEMINI_API_KEY || '').trim();
   if (!apiKey) {
     return null;
@@ -212,7 +212,7 @@ function getGeminiClient(GoogleGenAI) {
   return new GoogleGenAI({
     apiKey,
     httpOptions: {
-      timeout: 25000,
+      timeout: timeoutMs,
       retryOptions: { attempts: 1 },
       headers: {
         'User-Agent': 'aistudio-build'
@@ -417,10 +417,7 @@ function createChatbotRouter({ firebaseConfig, db, firestoreFns, requireAdminAut
 
     try {
       const sdk = await getGenAISdk();
-      const ai = new sdk.GoogleGenAI({
-        apiKey,
-        httpOptions: { timeout: 15000, retryOptions: { attempts: 1 } }
-      });
+      const ai = getGeminiClient(sdk.GoogleGenAI, 15000);
 
       const tryGenerate = async (modelToTest) => {
         return await ai.models.generateContent({
@@ -579,7 +576,23 @@ function createChatbotRouter({ firebaseConfig, db, firestoreFns, requireAdminAut
       parts: [{ text: `[Visitor is currently viewing: ${sourcePage}]\n${rawMessage}` }]
     };
 
-    const contents = [...session.messages.slice(-MAX_SESSION_TURNS), userContent];
+    // Ensure history passed to Gemini starts with a 'user' turn and alternates cleanly
+    const normalizedHistory = [];
+    for (const turn of session.messages.slice(-MAX_SESSION_TURNS)) {
+      if (!turn || !turn.parts || !turn.parts[0] || !turn.parts[0].text) continue;
+      if (normalizedHistory.length === 0 && turn.role !== 'user') continue;
+      const last = normalizedHistory[normalizedHistory.length - 1];
+      if (last && last.role === turn.role) {
+        last.parts[0].text += `\n${turn.parts[0].text}`;
+      } else {
+        normalizedHistory.push({ role: turn.role, parts: [{ text: turn.parts[0].text }] });
+      }
+    }
+    if (normalizedHistory.length > 0 && normalizedHistory[normalizedHistory.length - 1].role === 'user') {
+      normalizedHistory.pop();
+    }
+
+    const contents = [...normalizedHistory, userContent];
 
     const responseSchema = {
       type: Type.OBJECT,
