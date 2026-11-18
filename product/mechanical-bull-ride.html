@@ -35,8 +35,8 @@
     <meta name="twitter:image:alt" content="Mechanical Bull Ride manufactured and installed by Starline Adventures in India">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href=/images/logo/logo.jpeg>
-    <link rel="apple-touch-icon" href=/images/logo/logo.jpeg>
+    <link rel="icon" type="image/jpeg" href="../images/logo/logo.jpeg">
+    <link rel="apple-touch-icon" href="../images/logo/logo.jpeg">
 
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
@@ -179,7 +179,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="../css/style.css?v=2.0">
     <style>
         .seo-product-hero {
             background: linear-gradient(135deg, #0b192c 0%, #1e293b 100%);
@@ -225,6 +225,9 @@
             line-height: 1.6;
             margin: 0;
         }
+        .seo-layout-grid > * {
+            min-width: 0;
+        }
         .seo-layout-grid {
             display: grid;
             grid-template-columns: 1fr 380px;
@@ -244,7 +247,9 @@
             height: 420px;
             border-radius: 14px;
             overflow: hidden;
-            background: #f1f5f9;
+            background: #f8fafc;
+            padding: 12px;
+            box-sizing: border-box;
             margin-bottom: 32px;
             display: flex;
             align-items: center;
@@ -254,8 +259,12 @@
         .seo-main-img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            object-position: center center;
             display: block;
+            border-radius: 8px;
         }
         .seo-section-h2 {
             font-size: 1.55rem;
@@ -603,29 +612,29 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <a href="/index.html" class="logo" aria-label="Starline Adventures Home">
-                    <img src=/images/logo/logo.jpeg alt="STARLINE ADVENTURES PVT LTD" decoding="async">
+                <a href="../index.html" class="logo" aria-label="Starline Adventures Home">
+                    <img src="../images/logo/logo.jpeg" alt="STARLINE ADVENTURES PVT LTD" decoding="async">
                 </a>
                 <button class="hamburger" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="primary-navigation">
                     <span></span><span></span><span></span>
                 </button>
                 <nav class="nav-menu" id="primary-navigation" aria-label="Primary Navigation">
-                    <a href="/index.html">Home</a>
-                    <a href="/about.html">About</a>
-                    <a href="/products.html">Products</a>
+                    <a href="../index.html">Home</a>
+                    <a href="../about.html">About</a>
+                    <a href="../products.html">Products</a>
                     <div class="nav-dropdown">
                         <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="portfolio-navigation">
                             Projects <span class="nav-arrow" aria-hidden="true">&#9662;</span>
                         </button>
                         <div class="nav-dropdown-menu" id="portfolio-navigation">
-                            <a href="/portfolio.html">All Projects</a>
-                            <a href="/gallery.html">Gallery</a>
+                            <a href="../portfolio.html">All Projects</a>
+                            <a href="../gallery.html">Gallery</a>
                         </div>
                     </div>
-                    <a href="/team.html">Team</a>
-                    <a href="/testimonials.html">Testimonials</a>
-                    <a href="/contact.html">Contact</a>
-                    <a href="/contact.html" class="nav-cta-btn">Get a Quote</a>
+                    <a href="../team.html">Team</a>
+                    <a href="../testimonials.html">Testimonials</a>
+                    <a href="../contact.html">Contact</a>
+                    <a href="../contact.html" class="nav-cta-btn">Get a Quote</a>
                 </nav>
             </div>
         </div>
@@ -637,11 +646,11 @@
         <section class="seo-product-hero">
             <div class="container">
                 <nav class="seo-breadcrumbs" aria-label="Breadcrumb">
-                    <a href="/">Home</a>
+                    <a href="../index.html">Home</a>
                     <span class="seo-breadcrumbs-separator" aria-hidden="true">&rsaquo;</span>
-                    <a href="/products.html">Products</a>
+                    <a href="../products.html">Products</a>
                     <span class="seo-breadcrumbs-separator" aria-hidden="true">&rsaquo;</span>
-                    <a href="/product/mechanical-bull-ride.html" class="seo-breadcrumbs-current" aria-current="page">Mechanical Bull Ride</a>
+                    <a href="mechanical-bull-ride.html" class="seo-breadcrumbs-current" aria-current="page">Mechanical Bull Ride</a>
                 </nav>
                 <h1>Mechanical Bull Ride Manufacturer in India</h1>
                 <p>Starline Adventures is a Mechanical Bull Ride manufacturer in India, designing and manufacturing commercial bull rides for adventure parks, resorts, amusement zones, recreation centres and tourism projects. Our mechanical bull ride combines a rotating mechanical bull with a cushioned inflatable landing area and rider-control system. We provide customized design, manufacturing, supply and installation based on project requirements.</p>
@@ -992,12 +1001,12 @@
                     <div style="margin-top: 36px; padding-top: 24px; border-top: 1px solid #e2e8f0;">
                         <h3 style="font-size: 1.15rem; font-weight: 700; color: #0b192c; margin-bottom: 12px;">Explore Related Commercial Attractions</h3>
                         <div class="seo-internal-links">
-                            <a href="/product/human-gyro-ride.html" class="seo-internal-link-tag">Human Gyro Ride</a>
-                            <a href="/product/360-degree-cycle.html" class="seo-internal-link-tag">360 Degree Cycle</a>
-                            <a href="/product/giant-swing.html" class="seo-internal-link-tag">Giant Swing</a>
-                            <a href="/product/bungee-jumping.html" class="seo-internal-link-tag">Bungee Jumping</a>
-                            <a href="/product/rocket-ejection.html" class="seo-internal-link-tag">Rocket Ejection</a>
-                            <a href="/product/multi-activity-tower.html" class="seo-internal-link-tag">Multi Activity Tower</a>
+                            <a href="human-gyro-ride.html" class="seo-internal-link-tag">Human Gyro Ride</a>
+                            <a href="360-degree-cycle.html" class="seo-internal-link-tag">360 Degree Cycle</a>
+                            <a href="giant-swing.html" class="seo-internal-link-tag">Giant Swing</a>
+                            <a href="bungee-jumping.html" class="seo-internal-link-tag">Bungee Jumping</a>
+                            <a href="rocket-ejection.html" class="seo-internal-link-tag">Rocket Ejection</a>
+                            <a href="multi-activity-tower.html" class="seo-internal-link-tag">Multi Activity Tower</a>
                         </div>
                     </div>
                 </article>
@@ -1058,48 +1067,48 @@
                     <p style="color: #64748b;">Browse more commercial attractions engineered by Starline Adventures across India.</p>
                 </div>
                 <div class="products-grid-container">
-                    <article class="product-item-card">
-                        <div class="product-item-img-wrap">
-                            <img src="../images/activities/gyro_square.jpeg" alt="Human Gyro Ride - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
-                        </div>
-                        <div class="product-item-body">
-                            <h3 class="product-item-title">Human Gyro Ride</h3>
-                            <p class="product-item-desc">Multi-seater 360-degree rotating aerospace simulation adventure ride for parks and resorts.</p>
-                            <div class="product-item-actions">
-                                <a href="/product/human-gyro-ride.html" class="btn-product-info">View Details</a>
-                                <button type="button" class="btn-product-enquire" onclick="openProductEnquiryModal('Human Gyro Ride')">Request Quote</button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="product-item-card">
-                        <div class="product-item-img-wrap">
-                            <img src="../images/activities/giant-swing.jpeg" alt="Giant Swing - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
-                        </div>
-                        <div class="product-item-body">
-                            <h3 class="product-item-title">Giant Swing</h3>
-                            <p class="product-item-desc">Massive A-frame pendulum swing providing exhilarating free-fall release and wide weightless arcs.</p>
-                            <div class="product-item-actions">
-                                <a href="/product/giant-swing.html" class="btn-product-info">View Details</a>
-                                <button type="button" class="btn-product-enquire" onclick="openProductEnquiryModal('Giant Swing')">Request Quote</button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="product-item-card">
-                        <div class="product-item-img-wrap">
-                            <img src="../images/activities/ejector_square.jpeg?v=2" alt="Rocket Ejection - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
-                        </div>
-                        <div class="product-item-body">
-                            <h3 class="product-item-title">Rocket Ejection</h3>
-                            <p class="product-item-desc">High-altitude twin-tower reverse bungee catapult launching riders skyward with intense thrill.</p>
-                            <div class="product-item-actions">
-                                <a href="/product/rocket-ejection.html" class="btn-product-info">View Details</a>
-                                <button type="button" class="btn-product-enquire" onclick="openProductEnquiryModal('Rocket Ejection')">Request Quote</button>
-                            </div>
-                        </div>
-                    </article>
+      <article class="product-item-card">
+        <div class="product-item-img-wrap">
+          <img src="../images/activities/gyro_square.jpeg" alt="Human Gyro - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
+        </div>
+        <div class="product-item-body">
+          <h3 class="product-item-title">Human Gyro</h3>
+          <p class="product-item-desc">3-axis rotating gyroscope ride spinning seated riders through 360-degree space-simulation motion.</p>
+          <div class="product-item-actions">
+            <a href="human-gyro-ride.html" class="btn-product-info">View Info</a>
+            <button type="button" class="btn-product-enquire" onclick="openQuoteModal('Human Gyro')">Request a Quote</button>
+          </div>
+        </div>
+      </article>
+      <article class="product-item-card">
+        <div class="product-item-img-wrap">
+          <img src="../images/activities/360_square.jpeg" alt="360 Degree Cycle - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
+        </div>
+        <div class="product-item-body">
+          <h3 class="product-item-title">360 Degree Cycle</h3>
+          <p class="product-item-desc">Vertical circular loop cycling ride allowing riders to complete safe 360-degree inversions.</p>
+          <div class="product-item-actions">
+            <a href="360-degree-cycle.html" class="btn-product-info">View Info</a>
+            <button type="button" class="btn-product-enquire" onclick="openQuoteModal('360 Degree Cycle')">Request a Quote</button>
+          </div>
+        </div>
+      </article>
+      <article class="product-item-card">
+        <div class="product-item-img-wrap">
+          <img src="../images/activities/trampoline.jpeg" alt="Trampoline Park - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
+        </div>
+        <div class="product-item-body">
+          <h3 class="product-item-title">Trampoline Park</h3>
+          <p class="product-item-desc">Heavy-duty commercial trampoline arena engineered with reinforced frames, springs, and padded enclosures.</p>
+          <div class="product-item-actions">
+            <a href="trampoline-park.html" class="btn-product-info">View Info</a>
+            <button type="button" class="btn-product-enquire" onclick="openQuoteModal('Trampoline Park')">Request a Quote</button>
+          </div>
+        </div>
+      </article>
                 </div>
                 <div style="text-align: center; margin-top: 36px;">
-                    <a href="/products.html" class="btn btn-primary">View All Products &rarr;</a>
+                    <a href="../products.html" class="btn btn-primary">View All Products &rarr;</a>
                 </div>
             </div>
         </section>
@@ -1114,7 +1123,7 @@
                     <p class="footer-brand-sub">Adventure Ride Manufacturer &amp; Installation</p>
                     <p class="footer-brand-desc">Manufacturing, supplying and installing certified adventure rides, activity towers, and equipment across India.</p>
                     <div class="footer-quote-wrap">
-                        <a href="/contact.html" class="btn-footer-quote">
+                        <a href="../contact.html" class="btn-footer-quote">
                             Request a Quote <span aria-hidden="true">&rarr;</span>
                         </a>
                     </div>
@@ -1124,32 +1133,32 @@
                     <nav class="footer-column" aria-label="Company Links">
                         <h3 class="footer-title">COMPANY</h3>
                         <ul class="footer-links-list">
-                            <li><a href="/about.html">About Us</a></li>
-                            <li><a href="/portfolio.html">Projects</a></li>
-                            <li><a href="/gallery.html">Gallery</a></li>
-                            <li><a href="/team.html">Team</a></li>
+                            <li><a href="../about.html">About Us</a></li>
+                            <li><a href="../portfolio.html">Projects</a></li>
+                            <li><a href="../gallery.html">Gallery</a></li>
+                            <li><a href="../team.html">Team</a></li>
                         </ul>
                     </nav>
 
                     <nav class="footer-column" aria-label="Product Categories">
                         <h3 class="footer-title">PRODUCTS</h3>
                         <ul class="footer-links-list">
-                            <li><a href="/products.html#activities">Activities</a></li>
-                            <li><a href="/products.html#equipment">Equipment</a></li>
-                            <li><a href="/product/giant-swing.html">Giant Swing</a></li>
-                            <li><a href="/product/zipline.html">Zipline</a></li>
-                            <li><a href="/product/rope-course.html">Rope Course</a></li>
-                            <li><a href="/product/climbing-wall.html">Climbing Wall</a></li>
+                            <li><a href="../products.html#activities">Activities</a></li>
+                            <li><a href="../products.html#equipment">Equipment</a></li>
+                            <li><a href="giant-swing.html">Giant Swing</a></li>
+                            <li><a href="zipline.html">Zipline</a></li>
+                            <li><a href="rope-course.html">Rope Course</a></li>
+                            <li><a href="climbing-wall.html">Climbing Wall</a></li>
                         </ul>
                     </nav>
 
                     <nav class="footer-column" aria-label="Quick Links">
                         <h3 class="footer-title">QUICK LINKS</h3>
                         <ul class="footer-links-list">
-                            <li><a href="/index.html">Home</a></li>
-                            <li><a href="/products.html">All Products</a></li>
-                            <li><a href="/portfolio.html">Projects</a></li>
-                            <li><a href="/contact.html">Contact</a></li>
+                            <li><a href="../index.html">Home</a></li>
+                            <li><a href="../products.html">All Products</a></li>
+                            <li><a href="../portfolio.html">Projects</a></li>
+                            <li><a href="../contact.html">Contact</a></li>
                         </ul>
                     </nav>
 
@@ -1215,8 +1224,8 @@
     </a>
 
     <!-- Scripts -->
-    <script src="/js/config.js"></script>
-    <script src="/js/firebase-init.js"></script>
-    <script src="/js/script.js"></script>
+    <script src="../js/config.js?v=2.0"></script>
+    <script src="../js/firebase-init.js?v=2.0"></script>
+    <script src="../js/script.js?v=2.0"></script>
 </body>
 </html>

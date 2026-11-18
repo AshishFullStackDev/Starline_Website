@@ -187,7 +187,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="../css/style.css?v=2.0">
 
     <style>
         .seo-product-hero {
@@ -234,6 +234,9 @@
             line-height: 1.65;
             margin: 0;
         }
+        .seo-layout-grid > * {
+            min-width: 0;
+        }
         .seo-layout-grid {
             display: grid;
             grid-template-columns: 1fr 380px;
@@ -253,7 +256,9 @@
             height: 420px;
             border-radius: 14px;
             overflow: hidden;
-            background: #f1f5f9;
+            background: #f8fafc;
+            padding: 12px;
+            box-sizing: border-box;
             margin-bottom: 32px;
             display: flex;
             align-items: center;
@@ -263,8 +268,12 @@
         .seo-main-img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            object-position: center center;
             display: block;
+            border-radius: 8px;
         }
         .seo-section-h2 {
             font-size: 1.55rem;
@@ -578,29 +587,29 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <a href="/index.html" class="logo" aria-label="Starline Adventures Home">
+                <a href="../index.html" class="logo" aria-label="Starline Adventures Home">
                     <img src="../images/logo/logo.jpeg" alt="STARLINE ADVENTURES PVT LTD" decoding="async">
                 </a>
                 <button class="hamburger" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="primary-navigation">
                     <span></span><span></span><span></span>
                 </button>
                 <nav class="nav-menu" id="primary-navigation" aria-label="Primary Navigation">
-                    <a href="/index.html">Home</a>
-                    <a href="/about.html">About</a>
-                    <a href="/products.html">Products</a>
+                    <a href="../index.html">Home</a>
+                    <a href="../about.html">About</a>
+                    <a href="../products.html">Products</a>
                     <div class="nav-dropdown">
                         <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="portfolio-navigation">
                             Projects <span class="nav-arrow" aria-hidden="true">&#9662;</span>
                         </button>
                         <div class="nav-dropdown-menu" id="portfolio-navigation">
-                            <a href="/portfolio.html">All Projects</a>
-                            <a href="/gallery.html">Gallery</a>
+                            <a href="../portfolio.html">All Projects</a>
+                            <a href="../gallery.html">Gallery</a>
                         </div>
                     </div>
-                    <a href="/team.html">Team</a>
-                    <a href="/testimonials.html">Testimonials</a>
-                    <a href="/contact.html">Contact</a>
-                    <a href="/contact.html" class="nav-cta-btn">Get a Quote</a>
+                    <a href="../team.html">Team</a>
+                    <a href="../testimonials.html">Testimonials</a>
+                    <a href="../contact.html">Contact</a>
+                    <a href="../contact.html" class="nav-cta-btn">Get a Quote</a>
                 </nav>
             </div>
         </div>
@@ -612,11 +621,11 @@
         <section class="seo-product-hero">
             <div class="container">
                 <nav class="seo-breadcrumbs" aria-label="Breadcrumb">
-                    <a href="/">Home</a>
+                    <a href="../index.html">Home</a>
                     <span class="seo-breadcrumbs-separator" aria-hidden="true">&rsaquo;</span>
-                    <a href="/products.html">Products</a>
+                    <a href="../products.html">Products</a>
                     <span class="seo-breadcrumbs-separator" aria-hidden="true">&rsaquo;</span>
-                    <a href="/product/giant-swing.html" class="seo-breadcrumbs-current" aria-current="page">Giant Swing</a>
+                    <a href="giant-swing.html" class="seo-breadcrumbs-current" aria-current="page">Giant Swing</a>
                 </nav>
                 <h1>Giant Swing Manufacturer in India</h1>
                 <p>Starline Adventures is a Giant Swing manufacturer in India, providing custom design, engineering, manufacturing, supply and installation for adventure parks, resorts, tourism destinations and commercial recreation projects. Our Giant Swings can be customized according to site conditions, required height, rider capacity and project requirements.</p>
@@ -863,7 +872,7 @@
                     <!-- Internal Linking -->
                     <div class="internal-links-block">
                         <p class="seo-prose-text" style="margin: 0; font-size: 0.95rem;">
-                            In addition to commercial Giant Swings, Starline Adventures is a premier <a href="/product/zipline.html">Zipline</a> manufacturer in India, delivering turnkey adventure infrastructure including the high-acceleration <a href="/product/rocket-ejection.html">Rocket Ejection Ride</a>, multi-tier <a href="/product/rope-course.html">Rope Course</a> systems, and modular <a href="/product/climbing-wall.html">Climbing Wall</a> towers. Explore our full portfolio of commercial <a href="/products.html#activities">Adventure Activities</a>.
+                            In addition to commercial Giant Swings, Starline Adventures is a premier <a href="zipline.html">Zipline</a> manufacturer in India, delivering turnkey adventure infrastructure including the high-acceleration <a href="rocket-ejection.html">Rocket Ejection Ride</a>, multi-tier <a href="rope-course.html">Rope Course</a> systems, and modular <a href="climbing-wall.html">Climbing Wall</a> towers. Explore our full portfolio of commercial <a href="../products.html#activities">Adventure Activities</a>.
                         </p>
                     </div>
 
@@ -989,48 +998,48 @@
                     <p style="color: #64748b;">Browse more commercial attractions engineered by Starline Adventures across India.</p>
                 </div>
                 <div class="products-grid-container">
-                    <article class="product-item-card">
-                        <div class="product-item-img-wrap">
-                            <img src="../images/activities/ejector_square.jpeg?v=2" alt="Rocket Ejection Ride - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
-                        </div>
-                        <div class="product-item-body">
-                            <h3 class="product-item-title">Rocket Ejection</h3>
-                            <p class="product-item-desc">High-altitude twin-tower reverse bungee catapult launching riders skyward with intense thrill.</p>
-                            <div class="product-item-actions">
-                                <a href="/product/rocket-ejection.html" class="btn-product-info">View Details</a>
-                                <button type="button" class="btn-product-enquire" onclick="openProductEnquiryModal('Rocket Ejection')">Request Quote</button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="product-item-card">
-                        <div class="product-item-img-wrap">
-                            <img src="../images/activities/trampoline.jpeg" alt="4 in 1 Bungee Jumping - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
-                        </div>
-                        <div class="product-item-body">
-                            <h3 class="product-item-title">4 in 1 Bungee Jumping</h3>
-                            <p class="product-item-desc">Four-station bungee trampolines that let a group bounce and flip together.</p>
-                            <div class="product-item-actions">
-                                <a href="/product/bungee-jumping.html" class="btn-product-info">View Details</a>
-                                <button type="button" class="btn-product-enquire" onclick="openProductEnquiryModal('4 in 1 Bungee Jumping')">Request Quote</button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="product-item-card">
-                        <div class="product-item-img-wrap">
-                            <img src="../images/activities/zipline_square.jpeg" alt="Commercial Zipline - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
-                        </div>
-                        <div class="product-item-body">
-                            <h3 class="product-item-title">Zip Line</h3>
-                            <p class="product-item-desc">A classic overhead zip line that carries riders on a cable run through the site.</p>
-                            <div class="product-item-actions">
-                                <a href="/product/zipline.html" class="btn-product-info">View Details</a>
-                                <button type="button" class="btn-product-enquire" onclick="openProductEnquiryModal('Zip Line')">Request Quote</button>
-                            </div>
-                        </div>
-                    </article>
+      <article class="product-item-card">
+        <div class="product-item-img-wrap">
+          <img src="../images/activities/ejector_square.jpeg" alt="Rocket Ejection - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
+        </div>
+        <div class="product-item-body">
+          <h3 class="product-item-title">Rocket Ejection</h3>
+          <p class="product-item-desc">High-altitude twin-tower reverse bungee catapult launching riders skyward with intense thrill.</p>
+          <div class="product-item-actions">
+            <a href="rocket-ejection.html" class="btn-product-info">View Info</a>
+            <button type="button" class="btn-product-enquire" onclick="openQuoteModal('Rocket Ejection')">Request a Quote</button>
+          </div>
+        </div>
+      </article>
+      <article class="product-item-card">
+        <div class="product-item-img-wrap">
+          <img src="../images/activities/trampoline.jpeg" alt="4 in 1 Bungee Jumping - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
+        </div>
+        <div class="product-item-body">
+          <h3 class="product-item-title">4 in 1 Bungee Jumping</h3>
+          <p class="product-item-desc">Four-station bungee trampoline setup letting riders bounce high and perform aerial flips safely.</p>
+          <div class="product-item-actions">
+            <a href="bungee-jumping.html" class="btn-product-info">View Info</a>
+            <button type="button" class="btn-product-enquire" onclick="openQuoteModal('4 in 1 Bungee Jumping')">Request a Quote</button>
+          </div>
+        </div>
+      </article>
+      <article class="product-item-card">
+        <div class="product-item-img-wrap">
+          <img src="../images/activities/zipline_square.jpeg" alt="Zipline - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
+        </div>
+        <div class="product-item-body">
+          <h3 class="product-item-title">Zipline</h3>
+          <p class="product-item-desc">High-speed commercial steel cable zip line glide across scenic spans, valleys, and adventure parks.</p>
+          <div class="product-item-actions">
+            <a href="zipline.html" class="btn-product-info">View Info</a>
+            <button type="button" class="btn-product-enquire" onclick="openQuoteModal('Zipline')">Request a Quote</button>
+          </div>
+        </div>
+      </article>
                 </div>
                 <div style="text-align: center; margin-top: 36px;">
-                    <a href="/products.html" class="btn btn-primary">View All Products &rarr;</a>
+                    <a href="../products.html" class="btn btn-primary">View All Products &rarr;</a>
                 </div>
             </div>
         </section>
@@ -1045,7 +1054,7 @@
                     <p class="footer-brand-sub">Adventure Ride Manufacturer &amp; Installation</p>
                     <p class="footer-brand-desc">Manufacturing, supplying and installing adventure rides, activity towers, and equipment across India.</p>
                     <div class="footer-quote-wrap">
-                        <a href="/contact.html" class="btn-footer-quote">
+                        <a href="../contact.html" class="btn-footer-quote">
                             Request a Quote <span aria-hidden="true">&rarr;</span>
                         </a>
                     </div>
@@ -1055,32 +1064,32 @@
                     <nav class="footer-column" aria-label="Company Links">
                         <h3 class="footer-title">COMPANY</h3>
                         <ul class="footer-links-list">
-                            <li><a href="/about.html">About Us</a></li>
-                            <li><a href="/portfolio.html">Projects</a></li>
-                            <li><a href="/gallery.html">Gallery</a></li>
-                            <li><a href="/team.html">Team</a></li>
+                            <li><a href="../about.html">About Us</a></li>
+                            <li><a href="../portfolio.html">Projects</a></li>
+                            <li><a href="../gallery.html">Gallery</a></li>
+                            <li><a href="../team.html">Team</a></li>
                         </ul>
                     </nav>
 
                     <nav class="footer-column" aria-label="Product Categories">
                         <h3 class="footer-title">PRODUCTS</h3>
                         <ul class="footer-links-list">
-                            <li><a href="/products.html#activities">Activities</a></li>
-                            <li><a href="/products.html#equipment">Equipment</a></li>
-                            <li><a href="/product/giant-swing.html">Giant Swing</a></li>
-                            <li><a href="/product/zipline.html">Zipline</a></li>
-                            <li><a href="/product/rope-course.html">Rope Course</a></li>
-                            <li><a href="/product/climbing-wall.html">Climbing Wall</a></li>
+                            <li><a href="../products.html#activities">Activities</a></li>
+                            <li><a href="../products.html#equipment">Equipment</a></li>
+                            <li><a href="giant-swing.html">Giant Swing</a></li>
+                            <li><a href="zipline.html">Zipline</a></li>
+                            <li><a href="rope-course.html">Rope Course</a></li>
+                            <li><a href="climbing-wall.html">Climbing Wall</a></li>
                         </ul>
                     </nav>
 
                     <nav class="footer-column" aria-label="Quick Links">
                         <h3 class="footer-title">QUICK LINKS</h3>
                         <ul class="footer-links-list">
-                            <li><a href="/index.html">Home</a></li>
-                            <li><a href="/products.html">All Products</a></li>
-                            <li><a href="/portfolio.html">Projects</a></li>
-                            <li><a href="/contact.html">Contact</a></li>
+                            <li><a href="../index.html">Home</a></li>
+                            <li><a href="../products.html">All Products</a></li>
+                            <li><a href="../portfolio.html">Projects</a></li>
+                            <li><a href="../contact.html">Contact</a></li>
                         </ul>
                     </nav>
 
@@ -1146,8 +1155,8 @@
     </a>
 
     <!-- Scripts -->
-    <script src="/js/config.js"></script>
-    <script src="/js/firebase-init.js"></script>
-    <script src="/js/script.js"></script>
+    <script src="../js/config.js?v=2.0"></script>
+    <script src="../js/firebase-init.js?v=2.0"></script>
+    <script src="../js/script.js?v=2.0"></script>
 </body>
 </html>

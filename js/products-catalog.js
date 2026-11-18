@@ -592,7 +592,11 @@ function getProductCleanUrl(productId) {
         'steel-cables-anchors-rigging-equipment': 'steel-cables-anchors-rigging-equipment'
     };
     const slug = slugMap[key] || key;
-    return '/product/' + slug + '.html';
+    const isSubdir = (typeof window !== 'undefined') && (
+        window.location.pathname.includes('/product/') ||
+        window.location.pathname.endsWith('/product')
+    );
+    return (isSubdir ? '' : 'product/') + slug + '.html';
 }
 
 // Curated 8 core items for homepage display representing core manufacturing and installation
@@ -822,7 +826,6 @@ function renderProductsGrid(categoryFilter) {
                     <a href="${getProductCleanUrl(product.id)}"
                        class="btn-product-info"
                        data-product-id="${escapeHtml(product.id)}"
-                       onclick="return handleProductInfoClick(event, '${escapeHtml(product.id)}')"
                        aria-label="View Info for ${escapeHtml(product.name)}">
                         View Info
                     </a>
@@ -841,157 +844,6 @@ function renderProductsGrid(categoryFilter) {
     gridEl.innerHTML = html;
 }
 
-let productInfoModalBound = false;
-let productInfoPreviousFocus = null;
-
-function showProductModalFallback(imgEl, fallbackEl) {
-    if (imgEl) {
-        imgEl.style.display = 'none';
-        imgEl.removeAttribute('src');
-    }
-    if (fallbackEl) {
-        fallbackEl.style.display = 'flex';
-    }
-}
-
-function handleProductInfoClick(event, productId) {
-    if (event && (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button === 1)) {
-        return true;
-    }
-    if (document.getElementById('productInfoModal')) {
-        if (event && typeof event.preventDefault === 'function') {
-            event.preventDefault();
-        }
-        openProductInfoModal(productId);
-        return false;
-    }
-    return true;
-}
-
-function bindProductInfoModalEvents() {
-    if (productInfoModalBound || typeof document === 'undefined') return;
-    const modal = document.getElementById('productInfoModal');
-    if (!modal) return;
-
-    const closeBtn = document.getElementById('productInfoClose');
-    const footerCloseBtn = document.getElementById('productModalCloseBtn');
-    const backdrop = document.getElementById('productInfoBackdrop');
-
-    if (closeBtn) closeBtn.addEventListener('click', closeProductInfoModal);
-    if (footerCloseBtn) footerCloseBtn.addEventListener('click', closeProductInfoModal);
-    if (backdrop) backdrop.addEventListener('click', closeProductInfoModal);
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            const activeModal = document.getElementById('productInfoModal');
-            if (activeModal && (activeModal.classList.contains('active') || activeModal.getAttribute('aria-hidden') === 'false')) {
-                closeProductInfoModal();
-            }
-        }
-    });
-
-    productInfoModalBound = true;
-}
-
-function openProductInfoModal(productIdOrName) {
-    const modal = document.getElementById('productInfoModal');
-    if (!modal) return;
-
-    bindProductInfoModalEvents();
-
-    const lookup = String(productIdOrName || '').toLowerCase().trim();
-    const product = STARLINE_PRODUCTS.find(p =>
-        String(p.id || '').toLowerCase().trim() === lookup ||
-        String(p.name || '').toLowerCase().trim() === lookup
-    );
-    if (!product) return;
-
-    productInfoPreviousFocus = document.activeElement;
-
-    const titleEl = document.getElementById('productModalTitle');
-    const imgEl = document.getElementById('productModalImg');
-    const fallbackEl = document.getElementById('productModalFallback');
-    const descEl = document.getElementById('productModalDesc');
-    const specsEl = document.getElementById('productModalSpecs');
-    const enquireBtn = document.getElementById('productModalEnquireBtn');
-    const dialog = modal.querySelector('.product-modal-dialog');
-
-    if (titleEl) titleEl.textContent = product.name;
-    if (descEl) descEl.textContent = product.fullDesc || product.shortDesc || '';
-
-    if (enquireBtn) {
-        enquireBtn.setAttribute('data-product', product.name);
-    }
-
-    if (specsEl) {
-        const specs = Array.isArray(product.specs) ? product.specs : [];
-        specsEl.innerHTML = specs.map(s => `
-            <tr>
-                <th scope="row">${escapeHtml(s.label)}</th>
-                <td>${escapeHtml(s.value)}</td>
-            </tr>
-        `).join('');
-    }
-
-    // Reuse the exact card-mapped product image via StarlineImageMap
-    const mappedImage = (typeof getProductImage === 'function')
-        ? (getProductImage(product) || product.image || '')
-        : (product.image || '');
-    const resolvedImage = getCatalogResolvedImagePath(mappedImage);
-
-    if (imgEl) {
-        imgEl.onload = null;
-        imgEl.onerror = null;
-        if (resolvedImage) {
-            if (fallbackEl) fallbackEl.style.display = 'none';
-            imgEl.alt = `${product.name} - Starline Adventures`;
-            imgEl.style.display = 'block';
-            imgEl.onerror = function() {
-                this.onerror = null;
-                showProductModalFallback(this, fallbackEl);
-            };
-            imgEl.onload = function() {
-                if (this.naturalWidth > 0) {
-                    this.style.display = 'block';
-                    if (fallbackEl) fallbackEl.style.display = 'none';
-                } else {
-                    showProductModalFallback(this, fallbackEl);
-                }
-            };
-            imgEl.src = resolvedImage;
-        } else {
-            showProductModalFallback(imgEl, fallbackEl);
-        }
-    }
-
-    modal.classList.add('active');
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-
-    if (dialog) dialog.scrollTop = 0;
-
-    setTimeout(() => {
-        const closeBtn = document.getElementById('productInfoClose');
-        if (closeBtn) closeBtn.focus();
-    }, 60);
-}
-
-function closeProductInfoModal() {
-    const modal = document.getElementById('productInfoModal');
-    if (!modal) return;
-
-    modal.classList.remove('active');
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-
-    if (productInfoPreviousFocus && typeof productInfoPreviousFocus.focus === 'function') {
-        try {
-            productInfoPreviousFocus.focus();
-        } catch (e) {}
-        productInfoPreviousFocus = null;
-    }
-}
-
 // Master initialization function
 function initProductsCatalog() {
     // Automatically resolve all product images from the centralized StarlineImageMap
@@ -1002,7 +854,6 @@ function initProductsCatalog() {
         }
     });
 
-    bindProductInfoModalEvents();
     initProductCategoryTabs();
     renderProductsGrid();
 }
@@ -1045,8 +896,6 @@ window.renderProductsGrid = renderProductsGrid;
 window.initProductsCatalog = initProductsCatalog;
 window.getProductCategory = getProductCategory;
 window.normalizeCategory = normalizeCategory;
-window.openProductInfoModal = openProductInfoModal;
-window.closeProductInfoModal = closeProductInfoModal;
-window.handleProductInfoClick = handleProductInfoClick;
+window.getProductCleanUrl = getProductCleanUrl;
 window.openProductEnquiryModal = openProductEnquiryModal;
 window.closeProductEnquiryModal = closeProductEnquiryModal;

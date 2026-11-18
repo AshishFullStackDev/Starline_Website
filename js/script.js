@@ -1421,88 +1421,6 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// Product details modal functions
-function viewDetails(button) {
-    const card = button.closest('.product-card');
-    const title = card?.querySelector('h3')?.textContent?.trim() || 'Product Details';
-    const desc = button.getAttribute('data-desc') || card?.querySelector('.product-summary')?.textContent || 'Premium adventure equipment for custom installations.';
-    const specsText = button.getAttribute('data-specs') || '';
-    const applicationsText = button.getAttribute('data-applications') || '';
-    const image = card?.querySelector('img')?.src || '';
-    const categoryKey = card?.dataset.category || inferProductCategory(title);
-    const categoryName = getCategoryDisplayName(categoryKey);
-    const modal = document.getElementById('productModal');
-    if (!modal) return;
-
-    const modalImage = document.getElementById('modalImage');
-    const modalCategory = document.getElementById('modalCategory');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalDesc = document.getElementById('modalDesc');
-    const modalSpecs = document.getElementById('modalSpecs');
-    const modalApplications = document.getElementById('modalApplications');
-    const modalQuote = document.getElementById('modalQuote');
-    const modalWhatsApp = document.getElementById('modalWhatsApp');
-    modal.returnFocus = button;
-
-    if (modalImage) {
-        modalImage.src = image;
-        modalImage.alt = title;
-    }
-    if (modalCategory) modalCategory.textContent = categoryName;
-    if (modalTitle) modalTitle.textContent = title;
-    if (modalDesc) modalDesc.textContent = desc;
-
-    if (modalSpecs) {
-        modalSpecs.innerHTML = '';
-        if (specsText) {
-            specsText.split('|').forEach(spec => {
-                const item = document.createElement('li');
-                item.textContent = spec.trim();
-                modalSpecs.appendChild(item);
-            });
-        } else {
-            const item = document.createElement('li');
-            item.textContent = 'Custom specification available on request.';
-            modalSpecs.appendChild(item);
-        }
-    }
-
-    if (modalApplications) {
-        modalApplications.innerHTML = '';
-        const applications = applicationsText ? applicationsText.split('|') : categoryContent[categoryKey]?.focus || ['Adventure parks', 'Resorts', 'Custom installations'];
-        applications.forEach(item => {
-            const li = document.createElement('li');
-            li.textContent = item.trim();
-            modalApplications.appendChild(li);
-        });
-    }
-
-    // Update links to pass product parameter to contact form
-    if (modalQuote) modalQuote.href = `contact.html?product=${encodeURIComponent(title)}`;
-    const whatsappMsg = `Hello Starline Adventures, I would like a quote for ${title}.`;
-    if (modalWhatsApp) modalWhatsApp.href = `https://wa.me/919424904000?text=${encodeURIComponent(whatsappMsg)}`;
-
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    modal.querySelector('.modal-close')?.focus();
-}
-
-function closeProductModal() {
-    const modal = document.getElementById('productModal');
-    if (!modal) return;
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = 'auto';
-    modal.returnFocus?.focus();
-    modal.returnFocus = null;
-}
-
-// Close product modal with Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeProductModal();
-    }
-});
-
 // ===== SCROLL PROGRESS BAR =====
 function createScrollProgressBar() {
     const progressBar = document.createElement('div');
@@ -2765,7 +2683,7 @@ document.addEventListener('click', function(e) {
 
     // 3. General Quote triggers
     const quoteTrigger = e.target.closest(
-        '.nav-cta-btn, .hero-quote-btn, .btn-product-enquire, .btn-footer-quote, .open-quote-modal, .btn-quote, [data-open-quote-modal], #productModalEnquireBtn'
+        '.nav-cta-btn, .hero-quote-btn, .btn-product-enquire, .btn-footer-quote, .open-quote-modal, .btn-quote, [data-open-quote-modal]'
     );
 
     if (quoteTrigger) {
@@ -3749,11 +3667,6 @@ window.closeQuoteModal = closeQuoteModal;
         const DELAY_MS = 3500;
         setTimeout(() => {
             if (!isVisitorEligible()) return;
-            // Avoid interrupting if user already opened product info modal
-            const productModal = document.getElementById('productInfoModal');
-            if (productModal && (productModal.classList.contains('is-open') || productModal.classList.contains('active') || productModal.style.display === 'flex' || productModal.style.display === 'block')) {
-                return;
-            }
             const existingModal = document.getElementById('leadCaptureModal');
             if (existingModal && (existingModal.classList.contains('is-open') || existingModal.classList.contains('active') || existingModal.style.display === 'flex')) {
                 return;

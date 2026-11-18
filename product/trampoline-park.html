@@ -16,19 +16,19 @@
     <meta property="og:title" content="Trampoline Park Manufacturer in India | Price, Design &amp; Installation | Starline Adventures">
     <meta property="og:description" content="Starline Adventures manufactures commercial Trampoline Parks in India for adventure parks, resorts and recreation projects. Get custom design, supply and installation.">
     <meta property="og:url" content="https://starlineadventure.com/product/trampoline-park.html">
-    <meta property="og:image" content="https://starlineadventure.com../images/activities/trampoline.jpeg">
+    <meta property="og:image" content="https://starlineadventure.com/images/activities/trampoline.jpeg">
     <meta property="og:image:alt" content="Commercial Trampoline Park manufactured by Starline Adventures in India">
 
     <!-- Twitter / X Cards -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Trampoline Park Manufacturer in India | Price, Design &amp; Installation | Starline Adventures">
     <meta name="twitter:description" content="Starline Adventures manufactures commercial Trampoline Parks in India for adventure parks, resorts and recreation projects. Get custom design, supply and installation.">
-    <meta name="twitter:image" content="https://starlineadventure.com../images/activities/trampoline.jpeg">
+    <meta name="twitter:image" content="https://starlineadventure.com/images/activities/trampoline.jpeg">
     <meta name="twitter:image:alt" content="Commercial Trampoline Park manufactured by Starline Adventures in India">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href=/images/logo/logo.jpeg>
-    <link rel="apple-touch-icon" href=/images/logo/logo.jpeg>
+    <link rel="icon" type="image/jpeg" href="../images/logo/logo.jpeg">
+    <link rel="apple-touch-icon" href="../images/logo/logo.jpeg">
 
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
@@ -69,7 +69,7 @@
       "@type": "Product",
       "name": "Trampoline Park",
       "description": "Starline Adventures manufactures commercial Trampoline Parks in India for adventure parks, resorts and recreation projects. Get custom design, supply and installation.",
-      "image": "https://starlineadventure.com../images/activities/trampoline.jpeg",
+      "image": "https://starlineadventure.com/images/activities/trampoline.jpeg",
       "brand": {
         "@type": "Brand",
         "name": "Starline Adventures"
@@ -78,7 +78,7 @@
         "@type": "Organization",
         "name": "Starline Adventures Pvt Ltd",
         "url": "https://starlineadventure.com/product/trampoline-park.html",
-        "logo": "https://starlineadventures.com/images/logo/logo.jpeg",
+        "logo": "https://starlineadventure.com/images/logo/logo.jpeg",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "Opposite Government Guest House, Saraswati Nagar, Laxmi Nagar",
@@ -193,8 +193,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="/js/config.js" defer></script>
+    <link rel="stylesheet" href="../css/style.css?v=2.0">
 
     <style>
         .seo-product-hero {
@@ -241,6 +240,9 @@
             line-height: 1.6;
             margin: 0;
         }
+        .seo-layout-grid > * {
+            min-width: 0;
+        }
         .seo-layout-grid {
             display: grid;
             grid-template-columns: 1fr 380px;
@@ -260,7 +262,9 @@
             height: 420px;
             border-radius: 14px;
             overflow: hidden;
-            background: #f1f5f9;
+            background: #f8fafc;
+            padding: 12px;
+            box-sizing: border-box;
             margin-bottom: 32px;
             display: flex;
             align-items: center;
@@ -270,8 +274,12 @@
         .seo-main-img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            object-position: center center;
             display: block;
+            border-radius: 8px;
         }
         .seo-section-h2 {
             font-size: 1.55rem;
@@ -665,29 +673,29 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <a href="/index.html" class="logo" aria-label="Starline Adventures Home">
-                    <img src=/images/logo/logo.jpeg alt="STARLINE ADVENTURES PVT LTD" decoding="async">
+                <a href="../index.html" class="logo" aria-label="Starline Adventures Home">
+                    <img src="../images/logo/logo.jpeg" alt="STARLINE ADVENTURES PVT LTD" decoding="async">
                 </a>
                 <button class="hamburger" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="primary-navigation">
                     <span></span><span></span><span></span>
                 </button>
                 <nav class="nav-menu" id="primary-navigation" aria-label="Primary Navigation">
-                    <a href="/index.html">Home</a>
-                    <a href="/about.html">About</a>
-                    <a href="/products.html">Products</a>
+                    <a href="../index.html">Home</a>
+                    <a href="../about.html">About</a>
+                    <a href="../products.html">Products</a>
                     <div class="nav-dropdown">
                         <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="portfolio-navigation">
                             Projects <span class="nav-arrow" aria-hidden="true">&#9662;</span>
                         </button>
                         <div class="nav-dropdown-menu" id="portfolio-navigation">
-                            <a href="/portfolio.html">All Projects</a>
-                            <a href="/gallery.html">Gallery</a>
+                            <a href="../portfolio.html">All Projects</a>
+                            <a href="../gallery.html">Gallery</a>
                         </div>
                     </div>
-                    <a href="/team.html">Team</a>
-                    <a href="/testimonials.html">Testimonials</a>
-                    <a href="/contact.html">Contact</a>
-                    <a href="/contact.html" class="nav-cta-btn">Get a Quote</a>
+                    <a href="../team.html">Team</a>
+                    <a href="../testimonials.html">Testimonials</a>
+                    <a href="../contact.html">Contact</a>
+                    <a href="../contact.html" class="nav-cta-btn">Get a Quote</a>
                 </nav>
             </div>
         </div>
@@ -699,13 +707,13 @@
         <section class="seo-product-hero">
             <div class="container">
                 <nav class="seo-breadcrumbs" aria-label="Breadcrumb">
-                    <a href="/">Home</a>
+                    <a href="../index.html">Home</a>
                     <span class="seo-breadcrumbs-separator" aria-hidden="true">&rsaquo;</span>
-                    <a href="/products.html">Products</a>
+                    <a href="../products.html">Products</a>
                     <span class="seo-breadcrumbs-separator" aria-hidden="true">&rsaquo;</span>
-                    <a href="/products.html#activities">Activities</a>
+                    <a href="../products.html#activities">Activities</a>
                     <span class="seo-breadcrumbs-separator" aria-hidden="true">&rsaquo;</span>
-                    <a href="/product/trampoline-park.html" class="seo-breadcrumbs-current" aria-current="page">Trampoline Park</a>
+                    <a href="trampoline-park.html" class="seo-breadcrumbs-current" aria-current="page">Trampoline Park</a>
                 </nav>
                 <h1>Trampoline Park Manufacturer in India</h1>
                 <p>Starline Adventures is a Trampoline Park manufacturer in India, designing and manufacturing commercial trampoline setups for adventure parks, resorts, recreation centres, family entertainment destinations and tourism projects. Our modular trampoline systems can be configured for individual stations or larger multi-bay trampoline arenas according to the available space and project requirements.</p>
@@ -984,15 +992,15 @@
                     <p class="seo-prose-text">Adding a commercial trampoline area to an adventure park or resort creates an active, high-energy attraction that appeals strongly to children, teens, and families. Trampolines offer immediate engagement without requiring complex harness-up times, serving as an outstanding crowd-pleaser and high-capacity recreation hub.</p>
                     <p class="seo-prose-text">A trampoline park can be integrated seamlessly alongside other popular attractions manufactured by Starline Adventures:</p>
                     <div class="seo-internal-links">
-                        <a href="/product/bungee-jumping.html" class="seo-internal-link-tag">Bungee Trampoline / 4 in 1 Bungee</a>
-                        <a href="/product/rope-course.html" class="seo-internal-link-tag">Adventure Rope Course</a>
-                        <a href="/product/climbing-wall.html" class="seo-internal-link-tag">Climbing Wall</a>
-                        <a href="/product/giant-swing.html" class="seo-internal-link-tag">Giant Swing</a>
-                        <a href="/product/zipline.html" class="seo-internal-link-tag">Zipline</a>
-                        <a href="/product/net-climbing.html" class="seo-internal-link-tag">Net Climbing</a>
-                        <a href="/product/multi-activity-tower.html" class="seo-internal-link-tag">Multi Activity Tower</a>
-                        <a href="/product/sky-cycling.html" class="seo-internal-link-tag">Sky Cycling</a>
-                        <a href="/products.html#activities" class="seo-internal-link-tag">Other Adventure Activities</a>
+                        <a href="bungee-jumping.html" class="seo-internal-link-tag">Bungee Trampoline / 4 in 1 Bungee</a>
+                        <a href="rope-course.html" class="seo-internal-link-tag">Adventure Rope Course</a>
+                        <a href="climbing-wall.html" class="seo-internal-link-tag">Climbing Wall</a>
+                        <a href="giant-swing.html" class="seo-internal-link-tag">Giant Swing</a>
+                        <a href="zipline.html" class="seo-internal-link-tag">Zipline</a>
+                        <a href="net-climbing.html" class="seo-internal-link-tag">Net Climbing</a>
+                        <a href="multi-activity-tower.html" class="seo-internal-link-tag">Multi Activity Tower</a>
+                        <a href="sky-cycling.html" class="seo-internal-link-tag">Sky Cycling</a>
+                        <a href="../products.html#activities" class="seo-internal-link-tag">Other Adventure Activities</a>
                     </div>
                     <p class="seo-prose-text">By providing diverse recreational zones, destination operators can cater to multi-generational family groups, increase average stay duration, and enhance visitor satisfaction.</p>
 
@@ -1001,7 +1009,7 @@
                         <p><strong>Traditional Trampoline Park:</strong> Traditional trampoline parks use one or more trampoline surfaces for recreational jumping and activity zones. Jumpers bounce freely using their own momentum across modular stations or interconnected multi-bay arenas without harnesses or mechanical assists.</p>
                         <p><strong>Bungee Trampoline System:</strong> Bungee trampoline systems use harnesses and elastic/bungee systems to assist riders with higher vertical movement, allowing controlled somersaults and elevated bounces under active cord tension.</p>
                     </div>
-                    <p class="seo-prose-text">Learn more about our dedicated <a href="/product/bungee-jumping.html" style="color: #f47621; font-weight: 700; text-decoration: underline;">4-in-1 Bungee Trampoline &amp; Bungee Jumping Systems</a> for harness-assisted aerial attractions.</p>
+                    <p class="seo-prose-text">Learn more about our dedicated <a href="bungee-jumping.html" style="color: #f47621; font-weight: 700; text-decoration: underline;">4-in-1 Bungee Trampoline &amp; Bungee Jumping Systems</a> for harness-assisted aerial attractions.</p>
 
                     <h2 class="seo-section-h2">Selected Starline Adventures Projects</h2>
                     <p class="seo-prose-text">Starline Adventures has manufactured and installed adventure park infrastructure and recreational attractions across leading hospitality and leisure destinations throughout India:</p>
@@ -1138,7 +1146,7 @@
                     <h3 class="seo-sidebar-title">Get Trampoline Park Price &amp; Project Quote</h3>
                     <p class="seo-sidebar-sub">Share your project location, available area and required trampoline configuration with Starline Adventures for a customized Trampoline Park quotation.</p>
 
-                    <form id="sidebarProductEnquiryForm" action="/api/enquiry" method="POST" class="enquiry-form">
+                    <form id="sidebarProductEnquiryForm" action="javascript:void(0);" method="POST" class="enquiry-form">
                         <input type="hidden" name="formType" value="Product Page RFQ - Trampoline Park">
                         <input type="hidden" id="detailEnquiryProduct" name="product" value="Trampoline Park">
 
@@ -1189,48 +1197,48 @@
                     <p style="color: #64748b;">Browse more commercial attractions engineered by Starline Adventures across India.</p>
                 </div>
                 <div class="products-grid-container">
-                    <article class="product-item-card">
-                        <div class="product-item-img-wrap">
-                            <img src="../images/activities/trampoline.jpeg" alt="4 in 1 Bungee Jumping - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
-                        </div>
-                        <div class="product-item-body">
-                            <h3 class="product-item-title">4 in 1 Bungee Jumping</h3>
-                            <p class="product-item-desc">Four-station bungee trampoline setup allowing participants to bounce, flip, and experience high vertical thrills with secure harnesses.</p>
-                            <div class="product-item-actions">
-                                <a href="/product/bungee-jumping.html" class="btn-product-info">View Details</a>
-                                <button type="button" class="btn-product-enquire" onclick="openProductEnquiryModal('4 in 1 Bungee Jumping')">Request Quote</button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="product-item-card">
-                        <div class="product-item-img-wrap">
-                            <img src="../images/activities/giant-swing.jpeg" alt="Giant Swing - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
-                        </div>
-                        <div class="product-item-body">
-                            <h3 class="product-item-title">Giant Swing</h3>
-                            <p class="product-item-desc">Massive A-frame pendulum swing providing exhilarating free-fall release and wide weightless arcs.</p>
-                            <div class="product-item-actions">
-                                <a href="/product/giant-swing.html" class="btn-product-info">View Details</a>
-                                <button type="button" class="btn-product-enquire" onclick="openProductEnquiryModal('Giant Swing')">Request Quote</button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="product-item-card">
-                        <div class="product-item-img-wrap">
-                            <img src="../images/activities/rope_course_square.jpeg" alt="Adventure Rope Course - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
-                        </div>
-                        <div class="product-item-body">
-                            <h3 class="product-item-title">Adventure Rope Course</h3>
-                            <p class="product-item-desc">Multi-level elevated obstacle course engineered with certified continuous belay safety systems.</p>
-                            <div class="product-item-actions">
-                                <a href="/product/rope-course.html" class="btn-product-info">View Details</a>
-                                <button type="button" class="btn-product-enquire" onclick="openProductEnquiryModal('Adventure Rope Course')">Request Quote</button>
-                            </div>
-                        </div>
-                    </article>
+      <article class="product-item-card">
+        <div class="product-item-img-wrap">
+          <img src="../images/activities/trampoline.jpeg" alt="4 in 1 Bungee Jumping - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
+        </div>
+        <div class="product-item-body">
+          <h3 class="product-item-title">4 in 1 Bungee Jumping</h3>
+          <p class="product-item-desc">Four-station bungee trampoline setup letting riders bounce high and perform aerial flips safely.</p>
+          <div class="product-item-actions">
+            <a href="bungee-jumping.html" class="btn-product-info">View Info</a>
+            <button type="button" class="btn-product-enquire" onclick="openQuoteModal('4 in 1 Bungee Jumping')">Request a Quote</button>
+          </div>
+        </div>
+      </article>
+      <article class="product-item-card">
+        <div class="product-item-img-wrap">
+          <img src="../images/activities/rope_course_square.jpeg" alt="Ninja Rope Courses - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
+        </div>
+        <div class="product-item-body">
+          <h3 class="product-item-title">Ninja Rope Courses</h3>
+          <p class="product-item-desc">Modular multi-level aerial obstacle course with continuous belay systems, bridges, and balance beams.</p>
+          <div class="product-item-actions">
+            <a href="rope-course.html" class="btn-product-info">View Info</a>
+            <button type="button" class="btn-product-enquire" onclick="openQuoteModal('Ninja Rope Courses')">Request a Quote</button>
+          </div>
+        </div>
+      </article>
+      <article class="product-item-card">
+        <div class="product-item-img-wrap">
+          <img src="../images/equipment/Open Gym Equipment.jpeg" alt="Open Gym Equipment - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
+        </div>
+        <div class="product-item-body">
+          <h3 class="product-item-title">Open Gym Equipment</h3>
+          <p class="product-item-desc">Heavy-duty outdoor fitness and workout stations built with galvanized MS pipe and dual-layer powder coating.</p>
+          <div class="product-item-actions">
+            <a href="open-gym-equipment.html" class="btn-product-info">View Info</a>
+            <button type="button" class="btn-product-enquire" onclick="openQuoteModal('Open Gym Equipment')">Request a Quote</button>
+          </div>
+        </div>
+      </article>
                 </div>
                 <div style="text-align: center; margin-top: 36px;">
-                    <a href="/products.html" class="btn btn-primary">View All Products &rarr;</a>
+                    <a href="../products.html" class="btn btn-primary">View All Products &rarr;</a>
                 </div>
             </div>
         </section>
@@ -1245,7 +1253,7 @@
                     <p class="footer-brand-sub">Adventure Ride Manufacturer &amp; Installation</p>
                     <p class="footer-brand-desc">Manufacturing, supplying and installing certified adventure rides, activity towers, and equipment across India.</p>
                     <div class="footer-quote-wrap">
-                        <a href="/contact.html" class="btn-footer-quote">
+                        <a href="../contact.html" class="btn-footer-quote">
                             Request a Quote <span aria-hidden="true">&rarr;</span>
                         </a>
                     </div>
@@ -1255,32 +1263,32 @@
                     <nav class="footer-column" aria-label="Company Links">
                         <h3 class="footer-title">COMPANY</h3>
                         <ul class="footer-links-list">
-                            <li><a href="/about.html">About Us</a></li>
-                            <li><a href="/portfolio.html">Projects</a></li>
-                            <li><a href="/gallery.html">Gallery</a></li>
-                            <li><a href="/team.html">Team</a></li>
+                            <li><a href="../about.html">About Us</a></li>
+                            <li><a href="../portfolio.html">Projects</a></li>
+                            <li><a href="../gallery.html">Gallery</a></li>
+                            <li><a href="../team.html">Team</a></li>
                         </ul>
                     </nav>
 
                     <nav class="footer-column" aria-label="Product Categories">
                         <h3 class="footer-title">PRODUCTS</h3>
                         <ul class="footer-links-list">
-                            <li><a href="/products.html#activities">Activities</a></li>
-                            <li><a href="/products.html#equipment">Equipment</a></li>
-                            <li><a href="/product/giant-swing.html">Giant Swing</a></li>
-                            <li><a href="/product/zipline.html">Zipline</a></li>
-                            <li><a href="/product/rope-course.html">Rope Course</a></li>
-                            <li><a href="/product/climbing-wall.html">Climbing Wall</a></li>
+                            <li><a href="../products.html#activities">Activities</a></li>
+                            <li><a href="../products.html#equipment">Equipment</a></li>
+                            <li><a href="giant-swing.html">Giant Swing</a></li>
+                            <li><a href="zipline.html">Zipline</a></li>
+                            <li><a href="rope-course.html">Rope Course</a></li>
+                            <li><a href="climbing-wall.html">Climbing Wall</a></li>
                         </ul>
                     </nav>
 
                     <nav class="footer-column" aria-label="Quick Links">
                         <h3 class="footer-title">QUICK LINKS</h3>
                         <ul class="footer-links-list">
-                            <li><a href="/index.html">Home</a></li>
-                            <li><a href="/products.html">All Products</a></li>
-                            <li><a href="/portfolio.html">Projects</a></li>
-                            <li><a href="/contact.html">Contact</a></li>
+                            <li><a href="../index.html">Home</a></li>
+                            <li><a href="../products.html">All Products</a></li>
+                            <li><a href="../portfolio.html">Projects</a></li>
+                            <li><a href="../contact.html">Contact</a></li>
                         </ul>
                     </nav>
 
@@ -1346,67 +1354,8 @@
     </a>
 
     <!-- Scripts -->
-    <script src="/js/script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('sidebarProductEnquiryForm');
-            if (!form) return;
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const statusEl = form.querySelector('.form-status');
-                const submitBtn = form.querySelector('button[type="submit"]');
-
-                const name = document.getElementById('detailEnquiryName').value.trim();
-                const email = document.getElementById('detailEnquiryEmail').value.trim();
-                const phone = document.getElementById('detailEnquiryPhone').value.trim();
-                const product = document.getElementById('detailEnquiryProduct') ? document.getElementById('detailEnquiryProduct').value.trim() : "Trampoline Park";
-                const message = document.getElementById('detailEnquiryMessage').value.trim();
-
-                if (!name || !email || !phone || !message) {
-                    if (statusEl) {
-                        statusEl.className = 'form-status error';
-                        statusEl.textContent = '❌ Please fill in all required fields.';
-                    }
-                    return;
-                }
-
-                if (statusEl) {
-                    statusEl.className = 'form-status loading';
-                    statusEl.textContent = '⏳ Sending your quote request...';
-                }
-                if (submitBtn) submitBtn.disabled = true;
-
-                try {
-                    const res = await fetch('/api/enquiry', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify({
-                            name, email, phone, message, product,
-                            location: 'Not specified',
-                            company: 'N/A',
-                            formType: 'Product Page RFQ'
-                        })
-                    });
-                    const data = await res.json();
-                    if (res.ok && data.ok !== false) {
-                        form.reset();
-                        if (statusEl) {
-                            statusEl.className = 'form-status success';
-                            statusEl.textContent = '✅ ' + (data.message || 'Thank you! Your quote request has been received.');
-                        }
-                    } else {
-                        throw new Error(data.error || 'Submission failed.');
-                    }
-                } catch (err) {
-                    if (statusEl) {
-                        statusEl.className = 'form-status error';
-                        statusEl.textContent = '❌ ' + (err.message || 'Submission failed. Please call +91-94249-04000.');
-                    }
-                } finally {
-                    if (submitBtn) submitBtn.disabled = false;
-                }
-            });
-        });
-    </script>
+    <script src="../js/config.js?v=2.0"></script>
+    <script src="../js/firebase-init.js?v=2.0"></script>
+    <script src="../js/script.js?v=2.0"></script>
 </body>
 </html>

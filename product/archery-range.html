@@ -201,7 +201,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="../css/style.css?v=2.0">
     <style>
         .seo-product-hero {
             background: linear-gradient(135deg, #0b192c 0%, #1e293b 100%);
@@ -247,6 +247,9 @@
             line-height: 1.6;
             margin: 0;
         }
+        .seo-layout-grid > * {
+            min-width: 0;
+        }
         .seo-layout-grid {
             display: grid;
             grid-template-columns: 1fr 380px;
@@ -266,7 +269,9 @@
             height: 420px;
             border-radius: 14px;
             overflow: hidden;
-            background: #f1f5f9;
+            background: #f8fafc;
+            padding: 12px;
+            box-sizing: border-box;
             margin-bottom: 32px;
             display: flex;
             align-items: center;
@@ -276,8 +281,12 @@
         .seo-main-img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            object-position: center center;
             display: block;
+            border-radius: 8px;
         }
         .seo-section-h2 {
             font-size: 1.55rem;
@@ -654,29 +663,29 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <a href="/index.html" class="logo" aria-label="Starline Adventures Home">
+                <a href="../index.html" class="logo" aria-label="Starline Adventures Home">
                     <img src="../images/logo/logo.jpeg" alt="STARLINE ADVENTURES PVT LTD" decoding="async">
                 </a>
                 <button class="hamburger" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="primary-navigation">
                     <span></span><span></span><span></span>
                 </button>
                 <nav class="nav-menu" id="primary-navigation" aria-label="Primary Navigation">
-                    <a href="/index.html">Home</a>
-                    <a href="/about.html">About</a>
-                    <a href="/products.html">Products</a>
+                    <a href="../index.html">Home</a>
+                    <a href="../about.html">About</a>
+                    <a href="../products.html">Products</a>
                     <div class="nav-dropdown">
                         <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="portfolio-navigation">
                             Projects <span class="nav-arrow" aria-hidden="true">&#9662;</span>
                         </button>
                         <div class="nav-dropdown-menu" id="portfolio-navigation">
-                            <a href="/portfolio.html">All Projects</a>
-                            <a href="/gallery.html">Gallery</a>
+                            <a href="../portfolio.html">All Projects</a>
+                            <a href="../gallery.html">Gallery</a>
                         </div>
                     </div>
-                    <a href="/team.html">Team</a>
-                    <a href="/testimonials.html">Testimonials</a>
-                    <a href="/contact.html">Contact</a>
-                    <a href="/contact.html" class="nav-cta-btn">Get a Quote</a>
+                    <a href="../team.html">Team</a>
+                    <a href="../testimonials.html">Testimonials</a>
+                    <a href="../contact.html">Contact</a>
+                    <a href="../contact.html" class="nav-cta-btn">Get a Quote</a>
                 </nav>
             </div>
         </div>
@@ -688,13 +697,13 @@
         <section class="seo-product-hero">
             <div class="container">
                 <nav class="seo-breadcrumbs" aria-label="Breadcrumb">
-                    <a href="/">Home</a>
+                    <a href="../index.html">Home</a>
                     <span class="seo-breadcrumbs-separator" aria-hidden="true">&rsaquo;</span>
-                    <a href="/products.html">Products</a>
+                    <a href="../products.html">Products</a>
                     <span class="seo-breadcrumbs-separator" aria-hidden="true">&rsaquo;</span>
-                    <a href="/products.html#activities">Activities</a>
+                    <a href="../products.html#activities">Activities</a>
                     <span class="seo-breadcrumbs-separator" aria-hidden="true">&rsaquo;</span>
-                    <a href="/product/archery-range.html" class="seo-breadcrumbs-current" aria-current="page">Archery Range</a>
+                    <a href="archery-range.html" class="seo-breadcrumbs-current" aria-current="page">Archery Range</a>
                 </nav>
                 <h1>Archery Range Manufacturer in India</h1>
                 <p>Starline Adventures is an Archery Range manufacturer in India, providing customized archery range setups for adventure parks, resorts, schools, tourism destinations and recreational projects. We design and manufacture target lanes, target systems, safety arrangements and supporting infrastructure according to the available site and project requirements.</p>
@@ -972,15 +981,15 @@
                     <p class="seo-prose-text">Integrating an Archery Range into a commercial resort or adventure park creates a balanced activity mix. While high-thrill rides cater to adrenaline seekers, target sports provide engaging, focus-driven recreation that appeals to children, families, corporate groups, and seniors alike.</p>
                     <p class="seo-prose-text">Archery ranges operate exceptionally well when paired with complementary adventure attractions engineered by Starline Adventures:</p>
                     <div class="seo-internal-links">
-                        <a href="/product/rifle-shooting-range.html" class="seo-internal-link-tag">Rifle Shooting Range</a>
-                        <a href="/product/rope-course.html" class="seo-internal-link-tag">Adventure Rope Course</a>
-                        <a href="/product/climbing-wall.html" class="seo-internal-link-tag">Climbing Wall</a>
-                        <a href="/product/zipline.html" class="seo-internal-link-tag">Zipline</a>
-                        <a href="/product/multi-activity-tower.html" class="seo-internal-link-tag">Multi Activity Tower</a>
-                        <a href="/product/giant-swing.html" class="seo-internal-link-tag">Giant Swing</a>
-                        <a href="/product/net-climbing.html" class="seo-internal-link-tag">Net Climbing</a>
-                        <a href="/product/sky-cycling.html" class="seo-internal-link-tag">Sky Cycling</a>
-                        <a href="/products.html#activities" class="seo-internal-link-tag">Other Adventure Activities</a>
+                        <a href="rifle-shooting-range.html" class="seo-internal-link-tag">Rifle Shooting Range</a>
+                        <a href="rope-course.html" class="seo-internal-link-tag">Adventure Rope Course</a>
+                        <a href="climbing-wall.html" class="seo-internal-link-tag">Climbing Wall</a>
+                        <a href="zipline.html" class="seo-internal-link-tag">Zipline</a>
+                        <a href="multi-activity-tower.html" class="seo-internal-link-tag">Multi Activity Tower</a>
+                        <a href="giant-swing.html" class="seo-internal-link-tag">Giant Swing</a>
+                        <a href="net-climbing.html" class="seo-internal-link-tag">Net Climbing</a>
+                        <a href="sky-cycling.html" class="seo-internal-link-tag">Sky Cycling</a>
+                        <a href="../products.html#activities" class="seo-internal-link-tag">Other Adventure Activities</a>
                     </div>
                     <p class="seo-prose-text">By offering target sports alongside aerial rope courses and ziplines, adventure parks and resorts maximize visitor dwell time, broaden customer demographics, and support diverse ticket bundling options.</p>
 
@@ -1170,48 +1179,48 @@
                     <p style="color: #64748b;">Browse more commercial attractions engineered by Starline Adventures across India.</p>
                 </div>
                 <div class="products-grid-container">
-                    <article class="product-item-card">
-                        <div class="product-item-img-wrap">
-                            <img src="../images/activities/rifle_shooting.jpeg" alt="Rifle Shooting Range - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
-                        </div>
-                        <div class="product-item-body">
-                            <h3 class="product-item-title">Rifle Shooting Range</h3>
-                            <p class="product-item-desc">Precision target shooting range with 10m lanes, target boxes, and safety partitions.</p>
-                            <div class="product-item-actions">
-                                <a href="/product/rifle-shooting-range.html" class="btn-product-info">View Details</a>
-                                <button type="button" class="btn-product-enquire" onclick="openProductEnquiryModal('Rifle Shooting Range')">Request Quote</button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="product-item-card">
-                        <div class="product-item-img-wrap">
-                            <img src="../images/activities/giant-swing.jpeg" alt="Giant Swing - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
-                        </div>
-                        <div class="product-item-body">
-                            <h3 class="product-item-title">Giant Swing</h3>
-                            <p class="product-item-desc">Massive A-frame pendulum swing providing exhilarating free-fall release and wide weightless arcs.</p>
-                            <div class="product-item-actions">
-                                <a href="/product/giant-swing.html" class="btn-product-info">View Details</a>
-                                <button type="button" class="btn-product-enquire" onclick="openProductEnquiryModal('Giant Swing')">Request Quote</button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="product-item-card">
-                        <div class="product-item-img-wrap">
-                            <img src="../images/activities/rope_course_square.jpeg" alt="Adventure Rope Course - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
-                        </div>
-                        <div class="product-item-body">
-                            <h3 class="product-item-title">Adventure Rope Course</h3>
-                            <p class="product-item-desc">Multi-level elevated obstacle course engineered with certified continuous belay safety systems.</p>
-                            <div class="product-item-actions">
-                                <a href="/product/rope-course.html" class="btn-product-info">View Details</a>
-                                <button type="button" class="btn-product-enquire" onclick="openProductEnquiryModal('Adventure Rope Course')">Request Quote</button>
-                            </div>
-                        </div>
-                    </article>
+      <article class="product-item-card">
+        <div class="product-item-img-wrap">
+          <img src="../images/activities/rifle_shooting.jpeg" alt="Rifle Shooting - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
+        </div>
+        <div class="product-item-body">
+          <h3 class="product-item-title">Rifle Shooting</h3>
+          <p class="product-item-desc">Supervised 10-meter air rifle target range with ballistic backdrops, pellet catchers, and lane partitions.</p>
+          <div class="product-item-actions">
+            <a href="rifle-shooting-range.html" class="btn-product-info">View Info</a>
+            <button type="button" class="btn-product-enquire" onclick="openQuoteModal('Rifle Shooting')">Request a Quote</button>
+          </div>
+        </div>
+      </article>
+      <article class="product-item-card">
+        <div class="product-item-img-wrap">
+          <img src="../images/activities/net-climbing.jpeg" alt="Net Climbing - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
+        </div>
+        <div class="product-item-body">
+          <h3 class="product-item-title">Net Climbing</h3>
+          <p class="product-item-desc">Tensioned braided cargo rope climb built for towers, obstacle arenas, and outdoor camps.</p>
+          <div class="product-item-actions">
+            <a href="net-climbing.html" class="btn-product-info">View Info</a>
+            <button type="button" class="btn-product-enquire" onclick="openQuoteModal('Net Climbing')">Request a Quote</button>
+          </div>
+        </div>
+      </article>
+      <article class="product-item-card">
+        <div class="product-item-img-wrap">
+          <img src="../images/activities/tower_square.jpeg" alt="Multi Activity Tower - Starline Adventures" class="product-item-img" loading="lazy" decoding="async">
+        </div>
+        <div class="product-item-body">
+          <h3 class="product-item-title">Multi Activity Tower</h3>
+          <p class="product-item-desc">Centralized multi-station adventure steel tower integrating climbing walls, nets, rappelling, and zipline takeoff.</p>
+          <div class="product-item-actions">
+            <a href="multi-activity-tower.html" class="btn-product-info">View Info</a>
+            <button type="button" class="btn-product-enquire" onclick="openQuoteModal('Multi Activity Tower')">Request a Quote</button>
+          </div>
+        </div>
+      </article>
                 </div>
                 <div style="text-align: center; margin-top: 36px;">
-                    <a href="/products.html" class="btn btn-primary">View All Products &rarr;</a>
+                    <a href="../products.html" class="btn btn-primary">View All Products &rarr;</a>
                 </div>
             </div>
         </section>
@@ -1226,7 +1235,7 @@
                     <p class="footer-brand-sub">Adventure Ride Manufacturer &amp; Installation</p>
                     <p class="footer-brand-desc">Manufacturing, supplying and installing certified adventure rides, activity towers, and equipment across India.</p>
                     <div class="footer-quote-wrap">
-                        <a href="/contact.html" class="btn-footer-quote">
+                        <a href="../contact.html" class="btn-footer-quote">
                             Request a Quote <span aria-hidden="true">&rarr;</span>
                         </a>
                     </div>
@@ -1236,32 +1245,32 @@
                     <nav class="footer-column" aria-label="Company Links">
                         <h3 class="footer-title">COMPANY</h3>
                         <ul class="footer-links-list">
-                            <li><a href="/about.html">About Us</a></li>
-                            <li><a href="/portfolio.html">Projects</a></li>
-                            <li><a href="/gallery.html">Gallery</a></li>
-                            <li><a href="/team.html">Team</a></li>
+                            <li><a href="../about.html">About Us</a></li>
+                            <li><a href="../portfolio.html">Projects</a></li>
+                            <li><a href="../gallery.html">Gallery</a></li>
+                            <li><a href="../team.html">Team</a></li>
                         </ul>
                     </nav>
 
                     <nav class="footer-column" aria-label="Product Categories">
                         <h3 class="footer-title">PRODUCTS</h3>
                         <ul class="footer-links-list">
-                            <li><a href="/products.html#activities">Activities</a></li>
-                            <li><a href="/products.html#equipment">Equipment</a></li>
-                            <li><a href="/product/giant-swing.html">Giant Swing</a></li>
-                            <li><a href="/product/zipline.html">Zipline</a></li>
-                            <li><a href="/product/rope-course.html">Rope Course</a></li>
-                            <li><a href="/product/climbing-wall.html">Climbing Wall</a></li>
+                            <li><a href="../products.html#activities">Activities</a></li>
+                            <li><a href="../products.html#equipment">Equipment</a></li>
+                            <li><a href="giant-swing.html">Giant Swing</a></li>
+                            <li><a href="zipline.html">Zipline</a></li>
+                            <li><a href="rope-course.html">Rope Course</a></li>
+                            <li><a href="climbing-wall.html">Climbing Wall</a></li>
                         </ul>
                     </nav>
 
                     <nav class="footer-column" aria-label="Quick Links">
                         <h3 class="footer-title">QUICK LINKS</h3>
                         <ul class="footer-links-list">
-                            <li><a href="/index.html">Home</a></li>
-                            <li><a href="/products.html">All Products</a></li>
-                            <li><a href="/portfolio.html">Projects</a></li>
-                            <li><a href="/contact.html">Contact</a></li>
+                            <li><a href="../index.html">Home</a></li>
+                            <li><a href="../products.html">All Products</a></li>
+                            <li><a href="../portfolio.html">Projects</a></li>
+                            <li><a href="../contact.html">Contact</a></li>
                         </ul>
                     </nav>
 
@@ -1327,8 +1336,8 @@
     </a>
 
     <!-- Scripts -->
-    <script src="/js/config.js"></script>
-    <script src="/js/firebase-init.js"></script>
-    <script src="/js/script.js"></script>
+    <script src="../js/config.js?v=2.0"></script>
+    <script src="../js/firebase-init.js?v=2.0"></script>
+    <script src="../js/script.js?v=2.0"></script>
 </body>
 </html>
