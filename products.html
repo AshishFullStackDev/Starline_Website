@@ -12,15 +12,15 @@
     <meta property="og:url" content="https://starlineadventures.com/products.html">
     <meta property="og:title" content="Adventure Rides &amp; Equipment | Starline Adventures">
     <meta property="og:description" content="Explore commercial adventure rides and park equipment by Starline Adventures Pvt Ltd, including zip lines, giant swings, sky cycles, and obstacle towers.">
-    <meta property="og:image" content="https://starlineadventures.com/images/activities/Giant swing.jpeg">
+    <meta property="og:image" content="https://starlineadventures.com/images/activities/giant-swing.jpeg">
     <meta property="og:image:alt" content="Commercial giant swing and adventure rides manufactured by Starline Adventures Pvt Ltd">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Adventure Rides &amp; Equipment | Starline Adventures">
     <meta name="twitter:description" content="Explore commercial adventure rides and park equipment by Starline Adventures Pvt Ltd, including zip lines, giant swings, sky cycles, and obstacle towers.">
-    <meta name="twitter:image" content="https://starlineadventures.com/images/activities/Giant swing.jpeg">
+    <meta name="twitter:image" content="https://starlineadventures.com/images/activities/giant-swing.jpeg">
     <meta name="twitter:image:alt" content="Commercial giant swing and adventure rides manufactured by Starline Adventures Pvt Ltd">
-    <link rel="icon" href=images/logo/logo.jpeg type="image/jpeg">
-    <link rel="apple-touch-icon" href=images/logo/logo.jpeg>
+    <link rel="icon" href="images/logo/logo.jpeg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="images/logo/logo.jpeg">
     <title>Adventure Rides &amp; Equipment | Starline Adventures</title>
 
     <script type="application/ld+json">
@@ -131,7 +131,7 @@
 
                     <!-- Logo -->
                     <a href="index.html" class="logo" aria-label="Starline Adventures Home">
-                        <img src=images/logo/logo.jpeg alt="STARLINE ADVENTURES PVT LTD" decoding="async">
+                        <img src="images/logo/logo.jpeg" alt="STARLINE ADVENTURES PVT LTD" decoding="async">
                     </a>
 
                     <!-- Mobile Menu Button -->
@@ -304,23 +304,33 @@
          ======================================================= -->
     <div id="productInfoModal" class="product-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
         <div class="product-modal-backdrop" id="productInfoBackdrop"></div>
-        <div class="product-modal-dialog">
+        <div class="product-modal-dialog" role="document">
             <div class="product-modal-header">
                 <h3 id="productModalTitle">Product Details</h3>
                 <button type="button" class="product-modal-close" id="productInfoClose" aria-label="Close product details">&times;</button>
             </div>
             <div class="product-modal-body">
-                <img src=images/logo/logo.jpeg alt="Product Image" id="productModalImg" class="product-modal-img" loading="lazy">
-                <p id="productModalDesc" class="product-modal-desc"></p>
-                
-                <h4 style="font-size: 1.05rem; font-weight: 700; color: #0b192c; margin: 20px 0 12px;">Specifications &amp; Parameters</h4>
-                <table class="product-specs-table" id="productModalSpecs">
-                    <!-- Populated dynamically -->
-                </table>
+                <div class="product-info-popup-grid">
+                    <div class="product-info-media" id="productModalMedia">
+                        <img src="" alt="" id="productModalImg" class="product-modal-img" decoding="async" style="display: none;">
+                        <div id="productModalFallback" class="product-card-empty-box product-modal-empty-box" style="display: none;">
+                            <span class="product-card-empty-icon" aria-hidden="true">📷</span>
+                            <span class="product-card-empty-text">Product image unavailable</span>
+                        </div>
+                    </div>
+                    <div class="product-info-details">
+                        <p id="productModalDesc" class="product-modal-desc"></p>
 
-                <div class="product-modal-footer">
-                    <button type="button" class="btn btn-product-info" id="productModalCloseBtn">Close</button>
-                    <button type="button" class="btn btn-product-enquire" id="productModalEnquireBtn">Enquire About This Product &rarr;</button>
+                        <h4 class="product-modal-specs-heading">Specifications &amp; Parameters</h4>
+                        <table class="product-specs-table" id="productModalSpecs">
+                            <!-- Populated dynamically -->
+                        </table>
+
+                        <div class="product-modal-footer">
+                            <button type="button" class="btn btn-product-info" id="productModalCloseBtn">Close</button>
+                            <button type="button" class="btn btn-product-enquire" id="productModalEnquireBtn">Enquire About This Product &rarr;</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

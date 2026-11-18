@@ -10497,29 +10497,22 @@ body.starline-loader-active {
    ========================================================================== */
 .products-grid-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 24px;
     margin-top: 10px;
 }
 
 @media (max-width: 1200px) {
     .products-grid-container {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 22px;
     }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1023px) {
     .products-grid-container {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 20px;
-    }
-}
-
-@media (max-width: 640px) {
-    .products-grid-container {
-        grid-template-columns: 1fr;
-        gap: 18px;
     }
 }
 
@@ -10531,6 +10524,7 @@ body.starline-loader-active {
     display: flex;
     flex-direction: column;
     height: 100%;
+    min-width: 0;
     box-shadow: 0 4px 18px rgba(11, 25, 44, 0.05);
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
                 box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
@@ -10569,6 +10563,8 @@ body.starline-loader-active {
 .product-item-img {
     width: 100%;
     height: 100%;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
     object-position: center;
     display: block;
@@ -10625,6 +10621,7 @@ body.starline-loader-active {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    min-width: 0;
 }
 
 .product-item-title {
@@ -10657,7 +10654,7 @@ body.starline-loader-active {
 
 .product-item-actions {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 10px;
     margin-top: auto;
 }
@@ -10666,19 +10663,20 @@ body.starline-loader-active {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 12px;
+    padding: 10px 8px;
     border-radius: 8px;
     background: #f8fafc;
     color: #0b192c;
-    font-size: 0.88rem;
+    font-size: 0.84rem;
     font-weight: 600;
+    line-height: 1.25;
     border: 1.5px solid #cbd5e1;
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: center;
     font-family: inherit;
     text-decoration: none;
-    white-space: nowrap;
+    white-space: normal;
 }
 
 .btn-product-info:hover {
@@ -10691,19 +10689,20 @@ body.starline-loader-active {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 12px;
+    padding: 10px 8px;
     border-radius: 8px;
     background: #f47621;
     color: #ffffff;
-    font-size: 0.88rem;
+    font-size: 0.84rem;
     font-weight: 600;
+    line-height: 1.25;
     border: 1.5px solid #f47621;
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: center;
     font-family: inherit;
     box-shadow: 0 2px 8px rgba(244, 118, 33, 0.25);
-    white-space: nowrap;
+    white-space: normal;
 }
 
 .btn-product-enquire:hover {
@@ -10723,8 +10722,8 @@ body.starline-loader-active {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     z-index: 10000;
     display: none;
     align-items: center;
@@ -10753,14 +10752,18 @@ body.starline-loader-active {
     position: relative;
     background: #ffffff;
     width: 100%;
-    max-width: 720px;
-    max-height: 88vh;
+    max-width: 920px;
+    max-height: 90vh;
+    max-height: 90dvh;
     border-radius: 20px;
     box-shadow: 0 25px 50px -12px rgba(11, 25, 44, 0.35);
     overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
     z-index: 2;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     animation: productModalPop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -10776,15 +10779,16 @@ body.starline-loader-active {
 }
 
 .product-modal-header {
-    padding: 18px 24px;
+    padding: 16px 24px;
     border-bottom: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
     position: sticky;
     top: 0;
     background: #ffffff;
-    z-index: 3;
+    z-index: 5;
 }
 
 .product-modal-header h3 {
@@ -10792,54 +10796,108 @@ body.starline-loader-active {
     font-size: 1.35rem;
     color: #0b192c;
     font-weight: 700;
+    line-height: 1.3;
+    min-width: 0;
+    word-break: break-word;
 }
 
 .product-modal-close {
     background: #f1f5f9;
-    border: none;
+    border: 1px solid #e2e8f0;
     font-size: 1.5rem;
     line-height: 1;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    flex-shrink: 0;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #475569;
-    transition: background 0.2s, color 0.2s;
+    color: #0b192c;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .product-modal-close:hover {
-    background: #e2e8f0;
-    color: #0b192c;
+    background: #f47621;
+    border-color: #f47621;
+    color: #ffffff;
 }
 
 .product-modal-body {
     padding: 24px;
+    box-sizing: border-box;
+}
+
+.product-info-popup-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.18fr);
+    gap: 28px;
+    align-items: start;
+}
+
+.product-info-media {
+    width: 100%;
+    min-height: 220px;
+    max-height: 420px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 14px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: sticky;
+    top: 84px;
 }
 
 .product-modal-img {
     width: 100%;
-    height: 280px;
+    height: auto;
+    max-width: 100%;
+    max-height: 390px;
     object-fit: contain;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    background: #f8fafc;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    object-position: center center;
+    border-radius: 10px;
+    margin: 0 auto;
+    background: transparent;
+    box-shadow: none;
+    display: block;
+}
+
+.product-modal-empty-box {
+    min-height: 220px;
+    border-radius: 10px;
+}
+
+.product-info-details {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .product-modal-desc {
     font-size: 0.98rem;
     line-height: 1.65;
     color: #334155;
-    margin-bottom: 20px;
+    margin: 0 0 18px;
+}
+
+.product-modal-specs-heading {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0b192c;
+    margin: 0 0 12px;
 }
 
 .product-specs-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
     font-size: 0.9rem;
 }
 
@@ -10849,18 +10907,21 @@ body.starline-loader-active {
 
 .product-specs-table th {
     text-align: left;
-    padding: 11px 14px;
+    padding: 10px 12px;
     color: #475569;
     font-weight: 600;
-    width: 32%;
+    width: 34%;
     background: #f8fafc;
     border-radius: 6px 0 0 6px;
+    vertical-align: top;
 }
 
 .product-specs-table td {
-    padding: 11px 14px;
+    padding: 10px 12px;
     color: #0b192c;
     font-weight: 500;
+    vertical-align: top;
+    word-break: break-word;
 }
 
 .product-modal-footer {
@@ -10869,17 +10930,54 @@ body.starline-loader-active {
     gap: 12px;
     padding-top: 18px;
     border-top: 1px solid #e2e8f0;
+    margin-top: auto;
+}
+
+.product-modal-footer .btn-product-info,
+.product-modal-footer .btn-product-enquire {
+    min-height: 44px;
+    padding: 10px 20px;
+}
+
+@media (max-width: 768px) {
+    .product-modal {
+        padding: 12px;
+    }
+    .product-modal-dialog {
+        max-height: 92vh;
+        max-height: 92dvh;
+        border-radius: 16px;
+    }
+    .product-modal-header {
+        padding: 14px 16px;
+    }
+    .product-modal-header h3 {
+        font-size: 1.15rem;
+    }
+    .product-modal-body {
+        padding: 16px;
+    }
+    .product-info-popup-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+    .product-info-media {
+        position: static;
+        min-height: 180px;
+        max-height: 300px;
+        padding: 10px;
+    }
+    .product-modal-img {
+        max-height: 278px;
+    }
 }
 
 @media (max-width: 640px) {
     .products-grid-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
         gap: 20px;
     }
     .product-item-img-wrap {
-        height: 200px;
-    }
-    .product-modal-img {
         height: 200px;
     }
     .product-specs-table th,
@@ -10895,6 +10993,38 @@ body.starline-loader-active {
     }
     .product-modal-footer button {
         width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-grid-container {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+    .product-item-img-wrap {
+        height: 200px;
+    }
+    .product-item-body {
+        padding: 16px;
+    }
+    .product-item-title {
+        font-size: 1.1rem;
+    }
+    .product-item-desc {
+        font-size: 0.9rem;
+    }
+    .product-item-actions {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    .product-item-actions .btn-product-info,
+    .product-item-actions .btn-product-enquire {
+        width: 100%;
+        min-height: 44px;
+        text-align: center;
+        justify-content: center;
+        padding: 10px 16px;
+        box-sizing: border-box;
     }
 }
 
@@ -10977,7 +11107,9 @@ body.starline-loader-active {
         padding: 10px 16px;
         font-size: 0.88rem;
         flex: 1 1 auto;
+        justify-content: center;
         text-align: center;
+        min-height: 44px;
         max-width: 100%;
     }
     .product-filter-dropdown-wrap {
@@ -14986,14 +15118,16 @@ body.home-page .client-circle-card img {
     margin: auto !important;
 }
 
-/* 6. Product Enquiry Modal Image */
+/* 6. Product Info Modal Image (object-fit: contain without cropping) */
 body.home-page .product-modal-img {
     width: 100% !important;
-    height: 280px !important;
-    object-fit: cover !important;
-    object-position: center !important;
-    border-radius: 12px !important;
-    display: block !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: 390px !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    border-radius: 10px !important;
+    display: block;
 }
 
 /* ==========================================================================
@@ -15080,7 +15214,7 @@ body.home-page .product-modal-img {
         padding: 12px !important;
     }
     body.home-page .product-modal-img {
-        height: 200px !important;
+        max-height: 278px !important;
     }
 }
 

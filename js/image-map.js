@@ -575,6 +575,8 @@
                 <img src="${escapeHtml(resolvePathForCurrentPage(imgUrl))}"
                      alt="${escapeHtml(name)} - Starline Adventures"
                      class="product-item-img"
+                     width="400"
+                     height="275"
                      loading="lazy"
                      decoding="async"
                      onerror="this.onerror=null; this.parentElement.innerHTML = getEmptyPlaceholderHtml('${escapeHtml(name)}', false);">

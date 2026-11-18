@@ -1684,7 +1684,7 @@ app.get('/sitemap.xml', (req, res) => {
 
 // Root landing page
 app.get('/', (req, res) => {
-  res.sendFile(path.join(ROOT_DIR, 'index.html'));
+  return res.sendFile(path.join(ROOT_DIR, 'index.html'));
 });
 
 // 3. Clean 301 redirects from old directory URLs (e.g. /zipline-manufacturer/ -> /product/zipline.html)
