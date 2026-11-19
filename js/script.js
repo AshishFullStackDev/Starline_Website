@@ -3705,39 +3705,82 @@ window.closeQuoteModal = closeQuoteModal;
 })();
 
 /* ============================================================
-   ZAPIER INTERFACES FLOATING CHATBOT WIDGET
-   - Loaded once via shared script.js across all website pages
-   - Bottom-right launcher (#E8771F) + responsive floating panel
+   STARLINE AI INTELLIGENT ADVENTURE ACTIVITY & SALES ASSISTANT
+   - Native frontend chat widget powered by Starline knowledge base
+   - Conversation history saved in localStorage & reset via New Chat button
+   - Direct WhatsApp, Call, and Quote modal integrations
    ============================================================ */
-(function initStarlineZapierChatbot() {
+(function initStarlineNativeAssistant() {
     if (typeof window === 'undefined' || typeof document === 'undefined') return;
-    if (window.__starlineZapierChatbotInitialized) return;
-    window.__starlineZapierChatbotInitialized = true;
+    if (window.__starlineAssistantInitialized) return;
+    window.__starlineAssistantInitialized = true;
 
-    const ZAPIER_SCRIPT_SRC = 'https://interfaces.zapier.com/assets/web-components/zapier-interfaces/zapier-interfaces.esm.js';
-    const CHATBOT_ID = 'cmwn7ek1n0061sjdm9eqm4982';
+    const STORAGE_KEY = 'starline_ai_chat_messages_v2';
 
-    function loadZapierScriptOnce() {
-        if (window.__starlineZapierScriptInjected) return;
-        const existingScript = document.querySelector('script[src*="zapier-interfaces.esm.js"]');
-        if (existingScript) {
-            window.__starlineZapierScriptInjected = true;
-            return;
+    const INITIAL_MESSAGE = {
+        role: 'assistant',
+        text: "Hello! Welcome to Starline Adventures. I am your Starline AI Adventure Activity & Sales Assistant. How can I help you today? Feel free to ask about Ziplines, Rope Courses, Giant Swings, Climbing Walls, pricing, or custom park setup!"
+    };
+
+    const KNOWLEDGE_BASE = [
+        {
+            keywords: ['zipline', 'zip line', 'zip-line', 'cable'],
+            answer: "Starline Adventures is India's premier manufacturer and installer of high-performance Zip Line systems. We offer single-line, dual-line, and high-altitude scenic ziplines engineered with high-tensile steel cables, certified braking systems, and heavy-duty harnesses. Spans can range from 100 meters to over 1,000 meters. Would you like a price estimate or technical specifications?"
+        },
+        {
+            keywords: ['rope course', 'ropecourse', 'obstacle', 'bridge', 'course'],
+            answer: "We design and install world-class High Rope Courses and Low Rope Courses featuring 16 to 32+ thrilling obstacles, suspended log bridges, cargo net crossings, and continuous belay safety systems. Ideal for resorts, adventure parks, and camp grounds. Would you like to discuss layout planning for your property?"
+        },
+        {
+            keywords: ['giant swing', 'swing', 'pendulum'],
+            answer: "The Starline Giant Swing is an extreme high-adrenaline pendulum thrill ride built with robust steel towers and pneumatic quick-release mechanisms. It offers a breathtaking free-fall sensation for adventure parks and thrill zones. Safety harnesses and dual-point rigging ensure maximum security."
+        },
+        {
+            keywords: ['climbing', 'wall', 'tower', 'rock climb'],
+            answer: "We manufacture modular Climbing Walls, Speed Climbing Panels, and Multi-Activity Adventure Towers equipped with auto-belay systems and certified climbing holds. Suitable for indoor entertainment centers, outdoor parks, and institutional sports zones."
+        },
+        {
+            keywords: ['price', 'cost', 'quotation', 'quote', 'budget', 'rate'],
+            answer: "Pricing for Starline adventure installations depends on the specific activity, site dimensions, structural engineering requirements, and location. You can click 'Request Quote' below or chat with our sales team on WhatsApp at +91 94249 04000 to receive a customized quotation within 24 hours!"
+        },
+        {
+            keywords: ['contact', 'phone', 'whatsapp', 'call', 'reach', 'office', 'nagpur'],
+            answer: "You can reach Starline Adventures directly via phone at +91 94249 04000 / +91 9421 244 244, email at starlineadventure@gmail.com, or visit our headquarters opposite Government Guest House, Nagpur – 441302. Use the buttons below for instant WhatsApp or phone connection!"
         }
-        window.__starlineZapierScriptInjected = true;
-        const script = document.createElement('script');
-        script.type = 'module';
-        script.async = true;
-        script.src = ZAPIER_SCRIPT_SRC;
-        script.id = 'starline-zapier-chatbot-script';
-        document.head.appendChild(script);
+    ];
+
+    function getAIResponse(query) {
+        const q = query.toLowerCase();
+        for (const item of KNOWLEDGE_BASE) {
+            if (item.keywords.some(kw => q.includes(kw))) {
+                return item.answer;
+            }
+        }
+        return "That's a great question about adventure park setup! Starline Adventures manufactures and installs over 50+ adventure activities and amusement rides. Our engineering team can customize this specifically for your location. Would you like to connect with our sales team on WhatsApp or request a custom project quotation?";
     }
 
-    function mountZapierChatbotWidget() {
+    function loadMessages() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    return parsed;
+                }
+            }
+        } catch (e) {}
+        return [INITIAL_MESSAGE];
+    }
+
+    function saveMessages(msgs) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(msgs));
+        } catch (e) {}
+    }
+
+    function mountChatbotWidget() {
         if (!document.body) return;
         if (document.getElementById('starline-chatbot-widget')) return;
-
-        loadZapierScriptOnce();
 
         const widget = document.createElement('div');
         widget.id = 'starline-chatbot-widget';
@@ -3755,7 +3798,7 @@ window.closeQuoteModal = closeQuoteModal;
                         <span class="starline-chatbot-status-dot" aria-hidden="true"></span>
                         <div class="starline-chatbot-title-wrap">
                             <span class="starline-chatbot-title" id="starline-chatbot-title">STARLINE ADVENTURES</span>
-                            <span class="starline-chatbot-subtitle">Adventure Rides &amp; Equipment Assistant</span>
+                            <span class="starline-chatbot-subtitle">Adventure AI &amp; Sales Assistant</span>
                         </div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px;">
@@ -3783,13 +3826,25 @@ window.closeQuoteModal = closeQuoteModal;
                     <button type="button" class="starline-chatbot-chip" data-query="Giant Swing requirements">🌟 Giant Swing</button>
                 </div>
                 <div class="starline-chatbot-body" id="starline-chatbot-body">
-                    <zapier-interfaces-chatbot-embed
-                        is-popup="false"
-                        chatbot-id="${CHATBOT_ID}"
-                        height="100%"
-                        width="100%"
-                        style-override="width: 100%; height: 100%; border: 0; display: block;">
-                    </zapier-interfaces-chatbot-embed>
+                    <div class="starline-native-chat">
+                        <div class="starline-chat-messages" id="starline-chat-messages"></div>
+                        <div class="starline-chat-input-area">
+                            <form id="starline-chat-form" class="starline-chat-form" novalidate>
+                                <input type="text"
+                                       id="starline-chat-input"
+                                       class="starline-chat-input"
+                                       placeholder="Ask about rides, pricing or setup..."
+                                       autocomplete="off"
+                                       required>
+                                <button type="submit" class="starline-chat-send" id="starline-chat-send" aria-label="Send message">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 <div class="starline-chatbot-sales-bar">
                     <a href="https://wa.me/919424904000?text=Hello%20Starline%20Adventures%2C%20I%20am%20interested%20in%20adventure%20rides%20and%20equipment.%20I%20would%20like%20to%20know%20about%20pricing%2C%20technical%20specifications%2C%20installation%20requirements%2C%20and%20a%20quotation.%20Please%20contact%20me."
@@ -3842,10 +3897,52 @@ window.closeQuoteModal = closeQuoteModal;
         const launcher = widget.querySelector('#starline-chatbot-launcher');
         const closeBtn = widget.querySelector('#starline-chatbot-close');
         const resetBtn = widget.querySelector('#starline-chatbot-reset');
+        const messagesContainer = widget.querySelector('#starline-chat-messages');
+        const chatForm = widget.querySelector('#starline-chat-form');
+        const chatInput = widget.querySelector('#starline-chat-input');
 
         if (panel && 'inert' in panel) {
             panel.inert = true;
         }
+
+        let messages = loadMessages();
+
+        function renderMessages() {
+            if (!messagesContainer) return;
+            messagesContainer.innerHTML = messages.map(m => `
+                <div class="starline-chat-msg ${m.role}">
+                    ${escapeHTML(m.text)}
+                </div>
+            `).join('');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        renderMessages();
+
+        function handleUserMessage(text) {
+            const cleanText = (text || '').trim();
+            if (!cleanText) return;
+
+            messages.push({ role: 'user', text: cleanText });
+            saveMessages(messages);
+            renderMessages();
+
+            if (chatInput) chatInput.value = '';
+
+            setTimeout(() => {
+                const reply = getAIResponse(cleanText);
+                messages.push({ role: 'assistant', text: reply });
+                saveMessages(messages);
+                renderMessages();
+            }, 450);
+        }
+
+        chatForm?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (chatInput) {
+                handleUserMessage(chatInput.value);
+            }
+        });
 
         function setOpenState(open) {
             const isOpen = Boolean(open);
@@ -3861,6 +3958,9 @@ window.closeQuoteModal = closeQuoteModal;
                 launcher.setAttribute('aria-expanded', String(isOpen));
                 launcher.setAttribute('aria-label', isOpen ? 'Close chat assistant' : 'Open chat assistant');
                 launcher.setAttribute('title', isOpen ? 'Close chat' : 'Chat with Starline Adventures');
+            }
+            if (isOpen && chatInput) {
+                setTimeout(() => chatInput.focus(), 200);
             }
         }
 
@@ -3881,37 +3981,10 @@ window.closeQuoteModal = closeQuoteModal;
 
         function resetChat() {
             try {
-                const sessionKeys = [];
-                for (let i = 0; i < sessionStorage.length; i++) {
-                    const k = sessionStorage.key(i);
-                    if (k && (k.includes('chatbot') || k.includes('zapier') || k.includes('session'))) {
-                        sessionKeys.push(k);
-                    }
-                }
-                sessionKeys.forEach(k => sessionStorage.removeItem(k));
-
-                const localKeys = [];
-                for (let i = 0; i < localStorage.length; i++) {
-                    const k = localStorage.key(i);
-                    if (k && (k.includes('chatbot') || k.includes('zapier'))) {
-                        localKeys.push(k);
-                    }
-                }
-                localKeys.forEach(k => localStorage.removeItem(k));
+                localStorage.removeItem(STORAGE_KEY);
             } catch (e) {}
-
-            const bodyEl = widget.querySelector('#starline-chatbot-body');
-            if (bodyEl) {
-                bodyEl.innerHTML = `
-                    <zapier-interfaces-chatbot-embed
-                        is-popup="false"
-                        chatbot-id="${CHATBOT_ID}"
-                        height="100%"
-                        width="100%"
-                        style-override="width: 100%; height: 100%; border: 0; display: block;">
-                    </zapier-interfaces-chatbot-embed>
-                `;
-            }
+            messages = [INITIAL_MESSAGE];
+            renderMessages();
         }
 
         launcher?.addEventListener('click', (e) => {
@@ -3943,8 +4016,7 @@ window.closeQuoteModal = closeQuoteModal;
             chip.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const query = chip.getAttribute('data-query') || 'adventure rides';
-                const waUrl = `https://wa.me/919424904000?text=${encodeURIComponent(`Hello Starline Adventures, I would like to inquire about ${query}. Please share pricing, specifications, and quotation details.`)}`;
-                window.open(waUrl, '_blank', 'noopener,noreferrer');
+                handleUserMessage(query);
             });
         });
 
@@ -3968,9 +4040,9 @@ window.closeQuoteModal = closeQuoteModal;
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', mountZapierChatbotWidget);
+        document.addEventListener('DOMContentLoaded', mountChatbotWidget);
     } else {
-        mountZapierChatbotWidget();
+        mountChatbotWidget();
     }
 })();
 
