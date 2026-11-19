@@ -3776,6 +3776,12 @@ window.closeQuoteModal = closeQuoteModal;
                                 title="Close chat">&times;</button>
                     </div>
                 </div>
+                <div class="starline-chatbot-chips" id="starline-chatbot-chips">
+                    <button type="button" class="starline-chatbot-chip" data-query="Build an adventure park">🏗️ Build Adventure Park</button>
+                    <button type="button" class="starline-chatbot-chip" data-query="Zipline pricing & specs">🎢 Zipline Specs &amp; Quote</button>
+                    <button type="button" class="starline-chatbot-chip" data-query="Rope course installation">🧗 Rope Courses</button>
+                    <button type="button" class="starline-chatbot-chip" data-query="Giant Swing requirements">🌟 Giant Swing</button>
+                </div>
                 <div class="starline-chatbot-body" id="starline-chatbot-body">
                     <zapier-interfaces-chatbot-embed
                         is-popup="false"
@@ -3784,6 +3790,29 @@ window.closeQuoteModal = closeQuoteModal;
                         width="100%"
                         style-override="width: 100%; height: 100%; border: 0; display: block;">
                     </zapier-interfaces-chatbot-embed>
+                </div>
+                <div class="starline-chatbot-sales-bar">
+                    <a href="https://wa.me/919424904000?text=Hello%20Starline%20Adventures%2C%20I%20am%20interested%20in%20adventure%20rides%20and%20equipment.%20I%20would%20like%20to%20know%20about%20pricing%2C%20technical%20specifications%2C%20installation%20requirements%2C%20and%20a%20quotation.%20Please%20contact%20me."
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="starline-chatbot-sales-btn starline-chatbot-sales-btn--wa"
+                       aria-label="Chat with Starline Sales Team on WhatsApp"
+                       title="WhatsApp Sales Team">
+                        💬 WhatsApp Sales
+                    </a>
+                    <a href="tel:+919424904000"
+                       class="starline-chatbot-sales-btn starline-chatbot-sales-btn--call"
+                       aria-label="Call Starline Sales Team"
+                       title="Call +91 94249 04000">
+                        📞 Call Sales
+                    </a>
+                    <button type="button"
+                            class="starline-chatbot-sales-btn starline-chatbot-sales-btn--quote"
+                            id="starline-chatbot-quote-trigger"
+                            aria-label="Request custom project quotation"
+                            title="Request Quote">
+                        📋 Request Quote
+                    </button>
                 </div>
             </div>
             <button type="button"
@@ -3898,6 +3927,25 @@ window.closeQuoteModal = closeQuoteModal;
         resetBtn?.addEventListener('click', (e) => {
             e.stopPropagation();
             resetChat();
+        });
+
+        const quoteBtn = widget.querySelector('#starline-chatbot-quote-trigger');
+        quoteBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (typeof window.openQuoteModal === 'function') {
+                window.openQuoteModal('Starline AI Assistant Enquiry');
+            } else if (typeof window.openLeadCapturePopup === 'function') {
+                window.openLeadCapturePopup();
+            }
+        });
+
+        widget.querySelectorAll('.starline-chatbot-chip').forEach(chip => {
+            chip.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const query = chip.getAttribute('data-query') || 'adventure rides';
+                const waUrl = `https://wa.me/919424904000?text=${encodeURIComponent(`Hello Starline Adventures, I would like to inquire about ${query}. Please share pricing, specifications, and quotation details.`)}`;
+                window.open(waUrl, '_blank', 'noopener,noreferrer');
+            });
         });
 
         document.addEventListener('click', (e) => {
