@@ -1324,28 +1324,61 @@ try {
 
 function getLocalKnowledgeReply(query) {
   const q = String(query || '').toLowerCase();
-  if (q.includes('zipline') || q.includes('zip line') || q.includes('zip-line') || q.includes('cable')) {
-    return "Starline Adventures is India's premier manufacturer and installer of high-performance Zip Line systems. We offer single-line, dual-line, and high-altitude scenic ziplines engineered with high-tensile steel cables, certified braking systems, and heavy-duty harnesses. Spans can range from 100 meters to over 1,000 meters. Would you like a price estimate or technical specifications?";
+  if (q.includes('hi') || q.includes('hello') || q.includes('hey') || q.includes('namaste')) {
+    return "Hello! Welcome to Starline Adventures. I am Starline AI, your adventure industry consultant and project advisor. How can I assist you with your adventure park, resort, or ride project today?";
   }
-  if (q.includes('rope course') || q.includes('ropecourse') || q.includes('obstacle') || q.includes('bridge')) {
-    return "We design and install world-class High Rope Courses and Low Rope Courses featuring 16 to 32+ thrilling obstacles, suspended log bridges, cargo net crossings, and continuous belay safety systems. Ideal for resorts, adventure parks, and camp grounds. Would you like to discuss layout planning for your property?";
+  if (q.includes('zipline') || q.includes('zip line') || q.includes('zip-line') || q.includes('cable')) {
+    return "Starline Adventures is India's premier manufacturer and installer of high-performance Zip Line systems. We offer single-line, dual-line, and high-altitude scenic ziplines engineered with high-tensile steel cables, certified braking systems, and heavy-duty harnesses. Spans range from 100 meters to over 1,000 meters.";
+  }
+  if (q.includes('bungee') || q.includes('jump')) {
+    return "Bungee jumping is an extreme gravity-defying thrill activity where participants leap from a secure tower or crane connected to high-stretch elastic cords and redundant safety harnesses. Starline provides engineering consultation and safety systems for extreme height attractions.";
   }
   if (q.includes('giant swing') || q.includes('swing') || q.includes('pendulum')) {
-    return "The Starline Giant Swing is an extreme high-adrenaline pendulum thrill ride built with robust steel towers and pneumatic quick-release mechanisms. It offers a breathtaking free-fall sensation for adventure parks and thrill zones. Safety harnesses and dual-point rigging ensure maximum security.";
+    return "The Starline Giant Swing is an extreme high-adrenaline pendulum thrill ride built with robust steel towers and pneumatic quick-release mechanisms, delivering a breathtaking free-fall sensation for adventure parks.";
+  }
+  if (q.includes('sky cycling') || q.includes('sky cycle')) {
+    return "Sky Cycling is an aerial adventure activity where guests ride specially designed bicycles suspended on a high-tensile steel cable wire high above the ground. It offers a wonderful mix of fitness, thrill, and scenic sightseeing.";
+  }
+  if (q.includes('sky roller') || q.includes('roller')) {
+    return "Sky Roller is an aerial rotational ride where participants control their spinning wing rotation while suspended along a descending or undulating cable track, combining flying and rolling sensations.";
+  }
+  if (q.includes('rope course') || q.includes('ropecourse') || q.includes('obstacle') || q.includes('bridge') || q.includes('ninja')) {
+    return "We design and install High Rope Courses, Low Rope Courses, and Ninja Warrior obstacle circuits featuring 16 to 32+ thrilling challenges, suspended log bridges, and continuous belay safety systems.";
   }
   if (q.includes('climbing') || q.includes('wall') || q.includes('tower')) {
-    return "We manufacture modular Climbing Walls, Speed Climbing Panels, and Multi-Activity Adventure Towers equipped with auto-belay systems and certified climbing holds. Suitable for indoor entertainment centers, outdoor parks, and institutional sports zones.";
+    return "We manufacture modular Climbing Walls, Speed Climbing Panels, and Multi-Activity Adventure Towers equipped with auto-belay systems and certified climbing holds.";
+  }
+  if (q.includes('gyro') || q.includes('human gyro')) {
+    return "The Human Gyro Ride consists of concentric rotating rings that spin riders in multiple 360-degree axes simultaneously, creating a zero-gravity astronaut training sensation.";
+  }
+  if (q.includes('trampoline') || q.includes('bull') || q.includes('mechanical bull')) {
+    return "Trampoline parks and Mechanical Bull rides are high-energy family entertainment attractions. Starline supplies heavy-duty mechanical ride bases, variable speed controls, and safety padding.";
+  }
+  if (q.includes('archery') || q.includes('shooting') || q.includes('rifle')) {
+    return "Archery ranges and Rifle Shooting galleries are precision sports activities designed for safety-controlled target challenges in resorts and adventure parks.";
   }
   if (q.includes('water park') || q.includes('waterpark') || q.includes('water')) {
     return "For water parks, Starline provides thrilling water adventure equipment, splash pads, suspension bridges over water zones, and aquatic challenge modules. Would you like to discuss water park planning and activity combinations?";
   }
+  if (q.includes('resort') || q.includes('tourism') || q.includes('hotel')) {
+    return "Resorts benefit greatly from medium-footprint attractions such as low rope courses, archery ranges, climbing walls, ziplines, and kids' play zones that enhance guest engagement and average stay duration.";
+  }
+  if (q.includes('land') || q.includes('acre') || q.includes('space') || q.includes('layout') || q.includes('planning')) {
+    return "Adventure park land requirements vary: compact setups fit in 0.5 to 1 acre (rope course, climbing wall, zipline), while full-scale theme parks require 2 to 5+ acres. Starline provides expert master layout planning and tower height engineering.";
+  }
+  if (q.includes('safety') || q.includes('harness') || q.includes('helmet') || q.includes('braking')) {
+    return "Safety is paramount in adventure parks. Starline utilizes CE/UIAA certified full-body safety harnesses, impact helmets, fall-arrest systems, steel cables, primary and secondary braking systems, and high-strength safety nets.";
+  }
   if (q.includes('price') || q.includes('cost') || q.includes('quotation') || q.includes('quote') || q.includes('budget')) {
-    return "Pricing for Starline adventure installations depends on the specific activity, site dimensions, structural engineering requirements, and location. You can click 'Request Quote' below or chat with our sales team on WhatsApp at +91 94249 04000 to receive a customized quotation within 24 hours!";
+    return "Approximate project costs vary based on scale: mini setup (5–10 lakhs), medium adventure park (25–50 lakhs), and large-scale resort parks (1+ crore). Would you like a precise customized quotation for your project?";
+  }
+  if (q.includes('manufacture') || q.includes('manufacturing')) {
+    return "Starline Adventures manufactures and tests its core adventure equipment and structural towers in Nagpur under strict ISO/CE compliant safety standards. For unverified custom items, our engineering team confirms manufacturing feasibility.";
   }
   if (q.includes('contact') || q.includes('phone') || q.includes('whatsapp') || q.includes('call') || q.includes('nagpur')) {
-    return "You can reach Starline Adventures directly via phone at +91 94249 04000 / +91 9421 244 244, email at starlineadventure@gmail.com, or visit our headquarters opposite Government Guest House, Nagpur – 441302. Use the buttons below for instant WhatsApp or phone connection!";
+    return "You can reach Starline Adventures directly via phone at +91 94249 04000 / +91 9421 244 244, email at starlineadventure@gmail.com, or visit our headquarters opposite Government Guest House, Nagpur – 441302.";
   }
-  return "Starline Adventures manufactures and installs over 50+ adventure activities and amusement rides. Our engineering team can customize this specifically for your location. Would you like to connect with our sales team on WhatsApp or request a custom project quotation?";
+  return "Starline Adventures manufactures and installs over 50+ adventure activities, amusement rides, and safety systems. Our engineering team can customize this specifically for your project. How can I help you plan your adventure facility?";
 }
 
 app.post('/api/chat', async (req, res) => {
@@ -1377,13 +1410,13 @@ app.post('/api/chat', async (req, res) => {
 
     const systemInstruction = `You are Starline AI, an expert adventure industry consultant, project advisor, and sales lead generation specialist for Starline Adventures Pvt. Ltd. (India's premier manufacturer and installer of adventure park equipment, ziplines, rope courses, giant swings, climbing walls, water park attractions, safety gear, and turnkey amusement parks, based in Nagpur).
 
-Your core objectives:
-1. Answer customer questions accurately and helpfully about any adventure activity, ride, park design, technical specification, safety consideration, or project planning.
-2. Act as a project consultant: when users want to build an adventure park, water park, resort, or entertainment center, guide them conversationally through land area, budget, target audience, and activity combinations.
-3. Handle unlisted activities intelligently using general industry knowledge while clearly distinguishing between verified Starline manufactured products/services and general industry information. Never falsely claim Starline manufactures something unverified.
-4. Support multilingual conversations seamlessly in English, Hindi, Hinglish, and Marathi. Automatically detect the user's language and reply in the same language naturally.
-5. Detect purchase intent (e.g. wanting to buy, install, get a quotation, pricing, or build a park) and organically offer sales actions (WhatsApp Sales, Call Sales, and Request Quote).
-6. Be concise by default, professional, warm, and helpful. Avoid robotic language or unverified claims.`;
+Your core guidelines:
+1. Answer ALL types of user questions thoroughly and intelligently — including specific adventure activities (zipline, bungee jumping, giant swing, sky cycling, sky roller, rope courses, climbing walls, ninja courses, human gyro, trampoline, mechanical bull, archery, shooting), water parks, resorts, amusement parks, equipment, manufacturing, installation, safety systems (harnesses, helmets, cables, braking), project planning, land requirements, layouts, and general conversational/unrelated questions.
+2. NEVER use WhatsApp or sales links as an evasion or fallback for answering questions. Always provide a complete, helpful answer first before suggesting optional contact buttons (WhatsApp, Call, Quote).
+3. Distinguish between Verified Starline Information, General Industry Knowledge, and Unknown Company-Specific Details (never invent exact pricing or custom manufacturing specifications for unverified items; state general knowledge and offer sales/engineering team confirmation).
+4. Maintain conversation context across turns (remembering project types like water parks, land size, or budget previously discussed).
+5. Match the user's language automatically: English, Hindi, Hinglish, or Marathi.
+6. Be concise by default, professional, warm, and helpful.`;
 
     const chatHistory = Array.isArray(history) ? history.map(h => ({
       role: h.role === 'user' ? 'user' : 'model',
@@ -1401,7 +1434,7 @@ Your core objectives:
       }
     });
 
-    const reply = response.text || "Thank you for contacting Starline Adventures! How else can I assist your adventure project today?";
+    const reply = response.text || getLocalKnowledgeReply(message);
     res.json({ ok: true, reply, source: 'gemini' });
 
   } catch (err) {
