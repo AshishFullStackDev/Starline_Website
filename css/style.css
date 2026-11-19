@@ -2614,8 +2614,8 @@ summary:focus-visible,
 /* WhatsApp Float Button */
 .whatsapp-float {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    bottom: 96px;
+    right: 25px;
     background: var(--success);
     color: var(--white);
     width: 60px;
@@ -2628,8 +2628,14 @@ summary:focus-visible,
     box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
     cursor: pointer;
     z-index: 999;
-    transition: transform 0.3s;
+    transition: transform 0.3s, opacity 0.22s ease;
     text-decoration: none;
+}
+
+body.starline-chatbot-open .whatsapp-float {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.85);
 }
 
 .whatsapp-float:hover {
@@ -7453,6 +7459,8 @@ summary:focus-visible,
     }
     
     .whatsapp-float {
+        bottom: 82px;
+        right: 17px;
         width: 50px;
         height: 50px;
         font-size: 24px;
@@ -15505,3 +15513,251 @@ body.lead-popup-open {
         display: none;
     }
 }
+
+/* ============================================================
+   ZAPIER FLOATING CHATBOT WIDGET (STARLINE ADVENTURES PVT. LTD.)
+   Bottom-right launcher + responsive floating panel
+   ============================================================ */
+.starline-chatbot-widget {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 99990;
+    font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+    transition: opacity 0.2s ease;
+}
+
+body.menu-open .starline-chatbot-widget,
+body.lead-popup-open .starline-chatbot-widget {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.starline-chatbot-launcher {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #F47621 0%, #E8771F 100%);
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.28);
+    box-shadow: 0 8px 24px rgba(232, 119, 31, 0.42), 0 2px 8px rgba(11, 25, 44, 0.18);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+}
+
+.starline-chatbot-launcher:hover {
+    transform: translateY(-2px) scale(1.06);
+    box-shadow: 0 12px 28px rgba(232, 119, 31, 0.5), 0 4px 12px rgba(11, 25, 44, 0.22);
+}
+
+.starline-chatbot-launcher:focus-visible {
+    outline: 3px solid rgba(232, 119, 31, 0.45);
+    outline-offset: 3px;
+}
+
+.starline-chatbot-launcher-icon {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.starline-chatbot-launcher-icon--close {
+    position: absolute;
+    opacity: 0;
+    transform: rotate(-45deg) scale(0.75);
+}
+
+.starline-chatbot-widget.is-open .starline-chatbot-launcher-icon--chat {
+    opacity: 0;
+    transform: rotate(45deg) scale(0.75);
+}
+
+.starline-chatbot-widget.is-open .starline-chatbot-launcher-icon--close {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+.starline-chatbot-panel {
+    position: fixed;
+    bottom: 94px;
+    right: 24px;
+    width: 400px;
+    max-width: calc(100vw - 32px);
+    height: min(600px, calc(100vh - 118px));
+    height: min(600px, calc(100dvh - 118px));
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 22px 54px rgba(11, 25, 44, 0.26), 0 0 0 1px rgba(11, 25, 44, 0.08);
+    display: flex;
+    flex-direction: column;
+    z-index: 99991;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(16px) scale(0.96);
+    transform-origin: bottom right;
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+    box-sizing: border-box;
+}
+
+.starline-chatbot-widget.is-open .starline-chatbot-panel {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.starline-chatbot-header {
+    background: linear-gradient(135deg, #0b192c 0%, #14213d 100%);
+    color: #ffffff;
+    padding: 12px 16px;
+    border-bottom: 2px solid #E8771F;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.starline-chatbot-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.starline-chatbot-status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #E8771F;
+    box-shadow: 0 0 0 3px rgba(232, 119, 31, 0.28);
+    flex-shrink: 0;
+}
+
+.starline-chatbot-title-wrap {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.starline-chatbot-title {
+    font-family: var(--font-heading, 'Outfit', sans-serif);
+    font-size: 0.94rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.starline-chatbot-subtitle {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.76);
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.starline-chatbot-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    font-size: 20px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 0;
+    transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.starline-chatbot-close:hover {
+    background: #E8771F;
+    border-color: #E8771F;
+}
+
+.starline-chatbot-close:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}
+
+.starline-chatbot-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    background: #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+.starline-chatbot-body zapier-interfaces-chatbot-embed {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+    .starline-chatbot-widget {
+        bottom: 18px;
+        right: 16px;
+    }
+
+    .starline-chatbot-launcher {
+        width: 52px;
+        height: 52px;
+    }
+
+    .starline-chatbot-launcher-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .starline-chatbot-panel {
+        bottom: 80px;
+        right: 16px;
+        width: min(400px, calc(100vw - 32px));
+        max-width: calc(100vw - 32px);
+        height: min(560px, calc(100vh - 98px));
+        height: min(560px, calc(100dvh - 98px));
+    }
+}
+
+@media (max-width: 480px) {
+    .starline-chatbot-panel {
+        bottom: 78px;
+        right: 12px;
+        left: 12px;
+        width: auto;
+        max-width: calc(100vw - 24px);
+        height: min(540px, calc(100vh - 96px));
+        height: min(540px, calc(100dvh - 96px));
+        border-radius: 14px;
+    }
+}
+
+@media (max-height: 580px) {
+    .starline-chatbot-panel {
+        bottom: 76px;
+        height: calc(100vh - 90px);
+        height: calc(100dvh - 90px);
+    }
+}
+

@@ -3703,3 +3703,172 @@ window.closeQuoteModal = closeQuoteModal;
         initLeadCaptureModule();
     }
 })();
+
+/* ============================================================
+   ZAPIER INTERFACES FLOATING CHATBOT WIDGET
+   - Loaded once via shared script.js across all website pages
+   - Bottom-right launcher (#E8771F) + responsive floating panel
+   ============================================================ */
+(function initStarlineZapierChatbot() {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+    if (window.__starlineZapierChatbotInitialized) return;
+    window.__starlineZapierChatbotInitialized = true;
+
+    const ZAPIER_SCRIPT_SRC = 'https://interfaces.zapier.com/assets/web-components/zapier-interfaces/zapier-interfaces.esm.js';
+    const CHATBOT_ID = 'cmwn7ek1n0061sjdm9eqm4982';
+
+    function loadZapierScriptOnce() {
+        if (window.__starlineZapierScriptInjected) return;
+        const existingScript = document.querySelector('script[src*="zapier-interfaces.esm.js"]');
+        if (existingScript) {
+            window.__starlineZapierScriptInjected = true;
+            return;
+        }
+        window.__starlineZapierScriptInjected = true;
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.async = true;
+        script.src = ZAPIER_SCRIPT_SRC;
+        script.id = 'starline-zapier-chatbot-script';
+        document.head.appendChild(script);
+    }
+
+    function mountZapierChatbotWidget() {
+        if (!document.body) return;
+        if (document.getElementById('starline-chatbot-widget')) return;
+
+        loadZapierScriptOnce();
+
+        const widget = document.createElement('div');
+        widget.id = 'starline-chatbot-widget';
+        widget.className = 'starline-chatbot-widget';
+
+        widget.innerHTML = `
+            <div class="starline-chatbot-panel"
+                 id="starline-chatbot-panel"
+                 role="dialog"
+                 aria-modal="false"
+                 aria-labelledby="starline-chatbot-title"
+                 aria-hidden="true">
+                <div class="starline-chatbot-header">
+                    <div class="starline-chatbot-brand">
+                        <span class="starline-chatbot-status-dot" aria-hidden="true"></span>
+                        <div class="starline-chatbot-title-wrap">
+                            <span class="starline-chatbot-title" id="starline-chatbot-title">STARLINE ADVENTURES</span>
+                            <span class="starline-chatbot-subtitle">Adventure Rides &amp; Equipment Assistant</span>
+                        </div>
+                    </div>
+                    <button type="button"
+                            class="starline-chatbot-close"
+                            id="starline-chatbot-close"
+                            aria-label="Close chat assistant"
+                            title="Close chat">&times;</button>
+                </div>
+                <div class="starline-chatbot-body" id="starline-chatbot-body">
+                    <zapier-interfaces-chatbot-embed
+                        is-popup="false"
+                        chatbot-id="${CHATBOT_ID}"
+                        height="100%"
+                        width="100%"
+                        style-override="width: 100%; height: 100%; border: 0; display: block;">
+                    </zapier-interfaces-chatbot-embed>
+                </div>
+            </div>
+            <button type="button"
+                    class="starline-chatbot-launcher"
+                    id="starline-chatbot-launcher"
+                    aria-label="Open chat assistant"
+                    aria-expanded="false"
+                    aria-controls="starline-chatbot-panel"
+                    title="Chat with Starline Adventures">
+                <span class="starline-chatbot-launcher-icon starline-chatbot-launcher-icon--chat" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
+                </span>
+                <span class="starline-chatbot-launcher-icon starline-chatbot-launcher-icon--close" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </span>
+            </button>
+        `;
+
+        document.body.appendChild(widget);
+
+        const panel = widget.querySelector('#starline-chatbot-panel');
+        const launcher = widget.querySelector('#starline-chatbot-launcher');
+        const closeBtn = widget.querySelector('#starline-chatbot-close');
+
+        if (panel && 'inert' in panel) {
+            panel.inert = true;
+        }
+
+        function setOpenState(open) {
+            const isOpen = Boolean(open);
+            widget.classList.toggle('is-open', isOpen);
+            document.body.classList.toggle('starline-chatbot-open', isOpen);
+            if (panel) {
+                panel.setAttribute('aria-hidden', String(!isOpen));
+                if ('inert' in panel) {
+                    panel.inert = !isOpen;
+                }
+            }
+            if (launcher) {
+                launcher.setAttribute('aria-expanded', String(isOpen));
+                launcher.setAttribute('aria-label', isOpen ? 'Close chat assistant' : 'Open chat assistant');
+                launcher.setAttribute('title', isOpen ? 'Close chat' : 'Chat with Starline Adventures');
+            }
+        }
+
+        function openChatbot() {
+            setOpenState(true);
+        }
+
+        function closeChatbot(restoreFocus) {
+            setOpenState(false);
+            if (restoreFocus && launcher) {
+                launcher.focus();
+            }
+        }
+
+        function toggleChatbot() {
+            setOpenState(!widget.classList.contains('is-open'));
+        }
+
+        launcher?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleChatbot();
+        });
+
+        closeBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeChatbot(true);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!widget.classList.contains('is-open')) return;
+            if (!widget.contains(e.target)) {
+                closeChatbot(false);
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && widget.classList.contains('is-open')) {
+                closeChatbot(true);
+            }
+        });
+
+        window.openStarlineChatbot = openChatbot;
+        window.closeStarlineChatbot = () => closeChatbot(false);
+        window.toggleStarlineChatbot = toggleChatbot;
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', mountZapierChatbotWidget);
+    } else {
+        mountZapierChatbotWidget();
+    }
+})();
+
