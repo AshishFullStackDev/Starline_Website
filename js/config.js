@@ -61,6 +61,31 @@ var STARLINE_CONFIG = (typeof window !== 'undefined' && window.STARLINE_CONFIG) 
     // Local development endpoint for Express server (port 3000):
     DEVELOPMENT_API_URL: 'http://localhost:3000/api/enquiry',
 
+    // ============================================================
+    // RENDER BACKEND CHAT API URL CONFIGURATION
+    // ============================================================
+    // Since the frontend is hosted statically (e.g. GitHub Pages), chatbot API requests
+    // must point to your deployed Node.js backend on Render.
+    // Replace the placeholder below with your actual Render service URL once deployed
+    // (e.g. 'https://starline-backend.onrender.com').
+    PRODUCTION_BACKEND_URL: 'https://your-render-backend-service.onrender.com',
+
+    getChatApiUrl: function() {
+        if (typeof window === 'undefined') {
+            return '/api/chat';
+        }
+        if (window.__STARLINE_BACKEND_URL__) {
+            return window.__STARLINE_BACKEND_URL__.replace(/\/+$/, '') + '/api/chat';
+        }
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            return 'http://localhost:3000/api/chat';
+        }
+        if (this.PRODUCTION_BACKEND_URL && !this.PRODUCTION_BACKEND_URL.includes('your-render-backend-service')) {
+            return this.PRODUCTION_BACKEND_URL.replace(/\/+$/, '') + '/api/chat';
+        }
+        return this.PRODUCTION_BACKEND_URL ? this.PRODUCTION_BACKEND_URL.replace(/\/+$/, '') + '/api/chat' : '/api/chat';
+    },
+
     // Function to dynamically resolve the appropriate API endpoint
     getEnquiryApiUrl: function() {
         if (typeof window === 'undefined') {

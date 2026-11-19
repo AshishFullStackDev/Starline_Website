@@ -112,6 +112,7 @@ function isOriginAllowed(origin) {
 
   const normalized = origin.toLowerCase().trim();
   if (PRODUCTION_ALLOWED_ORIGINS.includes(normalized)) return true;
+  if (normalized.includes('.github.io')) return true;
 
   if (process.env.ALLOWED_ORIGINS) {
     const customAllowed = process.env.ALLOWED_ORIGINS
@@ -120,18 +121,20 @@ function isOriginAllowed(origin) {
     if (customAllowed.includes(normalized)) return true;
   }
 
-  // Allow preview & local development environments ONLY when dev or in Cloud Run preview
+  // Allow preview & local development environments
   const isDevOrPreview = NODE_ENV !== 'production' ||
     normalized.includes('.run.app') ||
     normalized.includes('.google.com') ||
-    normalized.includes('googleusercontent.com');
+    normalized.includes('googleusercontent.com') ||
+    normalized.includes('.github.io');
 
   if (isDevOrPreview && (
     normalized.includes('.run.app') ||
     normalized.includes('.google.com') ||
     normalized.includes('googleusercontent.com') ||
     normalized.includes('localhost') ||
-    normalized.includes('127.0.0.1')
+    normalized.includes('127.0.0.1') ||
+    normalized.includes('.github.io')
   )) {
     return true;
   }

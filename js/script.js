@@ -3957,7 +3957,11 @@ window.closeQuoteModal = closeQuoteModal;
                     .filter(m => !m.isTyping && m.text !== INITIAL_MESSAGE.text)
                     .slice(-10);
 
-                const res = await fetch('/api/chat', {
+                const chatApiUrl = (typeof STARLINE_CONFIG !== 'undefined' && typeof STARLINE_CONFIG.getChatApiUrl === 'function')
+                    ? STARLINE_CONFIG.getChatApiUrl()
+                    : '/api/chat';
+
+                const res = await fetch(chatApiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -3976,11 +3980,14 @@ window.closeQuoteModal = closeQuoteModal;
                         messages.push({ role: 'assistant', text: "Thank you for reaching out to Starline Adventures. How can we help with your adventure project?" });
                     }
                 } else {
-                    messages.push({ role: 'assistant', text: "We received your message. For immediate assistance, please chat with our sales team on WhatsApp below!" });
+                    const errorText = await res.text().catch(() => '');
+                    console.error('[Chat API Error]: Status', res.status, errorText);
+                    messages.push({ role: 'assistant', text: `⚠️ Backend Connection Error (HTTP ${res.status}): Unable to reach backend AI server at [${chatApiUrl}]. Please deploy your Node.js backend on Render and configure PRODUCTION_BACKEND_URL in js/config.js.` });
                 }
             } catch (err) {
                 messages = messages.filter(m => m.id !== typingId);
-                messages.push({ role: 'assistant', text: "Thank you for your enquiry. Please feel free to call our sales team directly at +91 94249 04000." });
+                console.error('[Chat Network Error]:', err.message);
+                messages.push({ role: 'assistant', text: `⚠️ Network Connection Error: Could not connect to backend server. Please verify that your Render backend is running and PRODUCTION_BACKEND_URL is set in js/config.js.` });
             }
 
             saveMessages(messages);
