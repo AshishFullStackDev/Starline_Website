@@ -1311,6 +1311,106 @@ app.get('/api/enquiries-firestore', requireAdminAuth, async (req, res) => {
   }
 });
 
+// ============================================================
+// GEMINI AI CHATBOT ENDPOINT (Starline AI Assistant)
+// ============================================================
+let GoogleGenAI;
+try {
+  const genaiModule = require('@google/genai');
+  GoogleGenAI = genaiModule.GoogleGenAI;
+} catch (e) {
+  console.warn('[Gemini Notice]: @google/genai package not loaded:', e.message);
+}
+
+function getLocalKnowledgeReply(query) {
+  const q = String(query || '').toLowerCase();
+  if (q.includes('zipline') || q.includes('zip line') || q.includes('zip-line') || q.includes('cable')) {
+    return "Starline Adventures is India's premier manufacturer and installer of high-performance Zip Line systems. We offer single-line, dual-line, and high-altitude scenic ziplines engineered with high-tensile steel cables, certified braking systems, and heavy-duty harnesses. Spans can range from 100 meters to over 1,000 meters. Would you like a price estimate or technical specifications?";
+  }
+  if (q.includes('rope course') || q.includes('ropecourse') || q.includes('obstacle') || q.includes('bridge')) {
+    return "We design and install world-class High Rope Courses and Low Rope Courses featuring 16 to 32+ thrilling obstacles, suspended log bridges, cargo net crossings, and continuous belay safety systems. Ideal for resorts, adventure parks, and camp grounds. Would you like to discuss layout planning for your property?";
+  }
+  if (q.includes('giant swing') || q.includes('swing') || q.includes('pendulum')) {
+    return "The Starline Giant Swing is an extreme high-adrenaline pendulum thrill ride built with robust steel towers and pneumatic quick-release mechanisms. It offers a breathtaking free-fall sensation for adventure parks and thrill zones. Safety harnesses and dual-point rigging ensure maximum security.";
+  }
+  if (q.includes('climbing') || q.includes('wall') || q.includes('tower')) {
+    return "We manufacture modular Climbing Walls, Speed Climbing Panels, and Multi-Activity Adventure Towers equipped with auto-belay systems and certified climbing holds. Suitable for indoor entertainment centers, outdoor parks, and institutional sports zones.";
+  }
+  if (q.includes('water park') || q.includes('waterpark') || q.includes('water')) {
+    return "For water parks, Starline provides thrilling water adventure equipment, splash pads, suspension bridges over water zones, and aquatic challenge modules. Would you like to discuss water park planning and activity combinations?";
+  }
+  if (q.includes('price') || q.includes('cost') || q.includes('quotation') || q.includes('quote') || q.includes('budget')) {
+    return "Pricing for Starline adventure installations depends on the specific activity, site dimensions, structural engineering requirements, and location. You can click 'Request Quote' below or chat with our sales team on WhatsApp at +91 94249 04000 to receive a customized quotation within 24 hours!";
+  }
+  if (q.includes('contact') || q.includes('phone') || q.includes('whatsapp') || q.includes('call') || q.includes('nagpur')) {
+    return "You can reach Starline Adventures directly via phone at +91 94249 04000 / +91 9421 244 244, email at starlineadventure@gmail.com, or visit our headquarters opposite Government Guest House, Nagpur – 441302. Use the buttons below for instant WhatsApp or phone connection!";
+  }
+  return "Starline Adventures manufactures and installs over 50+ adventure activities and amusement rides. Our engineering team can customize this specifically for your location. Would you like to connect with our sales team on WhatsApp or request a custom project quotation?";
+}
+
+app.post('/api/chat', async (req, res) => {
+  const clientIp = getClientIp(req);
+  if (!checkApiRateLimit(clientIp)) {
+    return res.status(429).json({ ok: false, error: 'Rate limit exceeded. Please wait a moment.' });
+  }
+
+  try {
+    const { message, history } = req.body || {};
+    if (!message || typeof message !== 'string') {
+      return res.status(400).json({ ok: false, error: 'Message is required.' });
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey || !GoogleGenAI) {
+      const reply = getLocalKnowledgeReply(message);
+      return res.json({ ok: true, reply, source: 'knowledge-base' });
+    }
+
+    const ai = new GoogleGenAI({
+      apiKey,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build'
+        }
+      }
+    });
+
+    const systemInstruction = `You are Starline AI, an expert adventure industry consultant, project advisor, and sales lead generation specialist for Starline Adventures Pvt. Ltd. (India's premier manufacturer and installer of adventure park equipment, ziplines, rope courses, giant swings, climbing walls, water park attractions, safety gear, and turnkey amusement parks, based in Nagpur).
+
+Your core objectives:
+1. Answer customer questions accurately and helpfully about any adventure activity, ride, park design, technical specification, safety consideration, or project planning.
+2. Act as a project consultant: when users want to build an adventure park, water park, resort, or entertainment center, guide them conversationally through land area, budget, target audience, and activity combinations.
+3. Handle unlisted activities intelligently using general industry knowledge while clearly distinguishing between verified Starline manufactured products/services and general industry information. Never falsely claim Starline manufactures something unverified.
+4. Support multilingual conversations seamlessly in English, Hindi, Hinglish, and Marathi. Automatically detect the user's language and reply in the same language naturally.
+5. Detect purchase intent (e.g. wanting to buy, install, get a quotation, pricing, or build a park) and organically offer sales actions (WhatsApp Sales, Call Sales, and Request Quote).
+6. Be concise by default, professional, warm, and helpful. Avoid robotic language or unverified claims.`;
+
+    const chatHistory = Array.isArray(history) ? history.map(h => ({
+      role: h.role === 'user' ? 'user' : 'model',
+      parts: [{ text: String(h.text || '') }]
+    })) : [];
+
+    const contents = [...chatHistory, { role: 'user', parts: [{ text: message }] }];
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.5-flash-lite',
+      contents,
+      config: {
+        systemInstruction,
+        thinkingConfig: { thinkingLevel: 'LOW' }
+      }
+    });
+
+    const reply = response.text || "Thank you for contacting Starline Adventures! How else can I assist your adventure project today?";
+    res.json({ ok: true, reply, source: 'gemini' });
+
+  } catch (err) {
+    console.error('[Gemini Chat Error]:', err.message);
+    const reply = getLocalKnowledgeReply(req.body?.message || '');
+    res.json({ ok: true, reply, source: 'knowledge-base-fallback' });
+  }
+});
+
 // Public Submission Endpoints
 app.post('/api/enquiry', (req, res) => handleSubmission(req, res, 'Contact Form'));
 app.post('/api/rfq', (req, res) => handleSubmission(req, res, 'Quick RFQ'));

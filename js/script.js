@@ -3919,9 +3919,28 @@ window.closeQuoteModal = closeQuoteModal;
 
         renderMessages();
 
-        function handleUserMessage(text) {
+        function updateDynamicWhatsAppLink(lastQuery) {
+            const waBtn = widget.querySelector('.starline-chatbot-sales-btn--wa');
+            if (!waBtn) return;
+            const q = (lastQuery || '').toLowerCase();
+            let msg = "Hello Starline Adventures, I am interested in adventure rides and equipment. Please contact me with pricing and quotation details.";
+            if (q.includes('zipline') || q.includes('zip line') || q.includes('zip-line')) {
+                msg = "Hello Starline Adventures, I am interested in a Zipline installation. Please share technical specifications, pricing, and a quotation.";
+            } else if (q.includes('water park') || q.includes('water')) {
+                msg = "Hello Starline Adventures, I am planning a water park project and would like to discuss attractions, planning, and quotation.";
+            } else if (q.includes('rope course')) {
+                msg = "Hello Starline Adventures, I am interested in a Rope Course installation. Please share layout options and quotation.";
+            } else if (q.includes('adventure park') || q.includes('park')) {
+                msg = "Hello Starline Adventures, I want to build an adventure park. Please share project planning guidance and quotation.";
+            }
+            waBtn.href = `https://wa.me/919424904000?text=${encodeURIComponent(msg)}`;
+        }
+
+        async function handleUserMessage(text) {
             const cleanText = (text || '').trim();
             if (!cleanText) return;
+
+            updateDynamicWhatsAppLink(cleanText);
 
             messages.push({ role: 'user', text: cleanText });
             saveMessages(messages);
@@ -3929,12 +3948,43 @@ window.closeQuoteModal = closeQuoteModal;
 
             if (chatInput) chatInput.value = '';
 
-            setTimeout(() => {
-                const reply = getAIResponse(cleanText);
-                messages.push({ role: 'assistant', text: reply });
-                saveMessages(messages);
-                renderMessages();
-            }, 450);
+            const typingId = 'typing_' + Date.now();
+            messages.push({ role: 'assistant', text: 'Starline AI is typing...', isTyping: true, id: typingId });
+            renderMessages();
+
+            try {
+                const historyForApi = messages
+                    .filter(m => !m.isTyping && m.text !== INITIAL_MESSAGE.text)
+                    .slice(-10);
+
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: cleanText,
+                        history: historyForApi
+                    })
+                });
+
+                messages = messages.filter(m => m.id !== typingId);
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.reply) {
+                        messages.push({ role: 'assistant', text: data.reply });
+                    } else {
+                        messages.push({ role: 'assistant', text: "Thank you for reaching out to Starline Adventures. How can we help with your adventure project?" });
+                    }
+                } else {
+                    messages.push({ role: 'assistant', text: "We received your message. For immediate assistance, please chat with our sales team on WhatsApp below!" });
+                }
+            } catch (err) {
+                messages = messages.filter(m => m.id !== typingId);
+                messages.push({ role: 'assistant', text: "Thank you for your enquiry. Please feel free to call our sales team directly at +91 94249 04000." });
+            }
+
+            saveMessages(messages);
+            renderMessages();
         }
 
         chatForm?.addEventListener('submit', (e) => {
