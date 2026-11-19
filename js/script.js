@@ -3758,11 +3758,23 @@ window.closeQuoteModal = closeQuoteModal;
                             <span class="starline-chatbot-subtitle">Adventure Rides &amp; Equipment Assistant</span>
                         </div>
                     </div>
-                    <button type="button"
-                            class="starline-chatbot-close"
-                            id="starline-chatbot-close"
-                            aria-label="Close chat assistant"
-                            title="Close chat">&times;</button>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <button type="button"
+                                class="starline-chatbot-reset"
+                                id="starline-chatbot-reset"
+                                aria-label="Start new chat / Clear conversation"
+                                title="Start New Chat">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                                <path d="M3 3v5h5"></path>
+                            </svg>
+                        </button>
+                        <button type="button"
+                                class="starline-chatbot-close"
+                                id="starline-chatbot-close"
+                                aria-label="Close chat assistant"
+                                title="Close chat">&times;</button>
+                    </div>
                 </div>
                 <div class="starline-chatbot-body" id="starline-chatbot-body">
                     <zapier-interfaces-chatbot-embed
@@ -3800,6 +3812,7 @@ window.closeQuoteModal = closeQuoteModal;
         const panel = widget.querySelector('#starline-chatbot-panel');
         const launcher = widget.querySelector('#starline-chatbot-launcher');
         const closeBtn = widget.querySelector('#starline-chatbot-close');
+        const resetBtn = widget.querySelector('#starline-chatbot-reset');
 
         if (panel && 'inert' in panel) {
             panel.inert = true;
@@ -3837,6 +3850,41 @@ window.closeQuoteModal = closeQuoteModal;
             setOpenState(!widget.classList.contains('is-open'));
         }
 
+        function resetChat() {
+            try {
+                const sessionKeys = [];
+                for (let i = 0; i < sessionStorage.length; i++) {
+                    const k = sessionStorage.key(i);
+                    if (k && (k.includes('chatbot') || k.includes('zapier') || k.includes('session'))) {
+                        sessionKeys.push(k);
+                    }
+                }
+                sessionKeys.forEach(k => sessionStorage.removeItem(k));
+
+                const localKeys = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const k = localStorage.key(i);
+                    if (k && (k.includes('chatbot') || k.includes('zapier'))) {
+                        localKeys.push(k);
+                    }
+                }
+                localKeys.forEach(k => localStorage.removeItem(k));
+            } catch (e) {}
+
+            const bodyEl = widget.querySelector('#starline-chatbot-body');
+            if (bodyEl) {
+                bodyEl.innerHTML = `
+                    <zapier-interfaces-chatbot-embed
+                        is-popup="false"
+                        chatbot-id="${CHATBOT_ID}"
+                        height="100%"
+                        width="100%"
+                        style-override="width: 100%; height: 100%; border: 0; display: block;">
+                    </zapier-interfaces-chatbot-embed>
+                `;
+            }
+        }
+
         launcher?.addEventListener('click', (e) => {
             e.stopPropagation();
             toggleChatbot();
@@ -3845,6 +3893,11 @@ window.closeQuoteModal = closeQuoteModal;
         closeBtn?.addEventListener('click', (e) => {
             e.stopPropagation();
             closeChatbot(true);
+        });
+
+        resetBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            resetChat();
         });
 
         document.addEventListener('click', (e) => {
@@ -3863,6 +3916,7 @@ window.closeQuoteModal = closeQuoteModal;
         window.openStarlineChatbot = openChatbot;
         window.closeStarlineChatbot = () => closeChatbot(false);
         window.toggleStarlineChatbot = toggleChatbot;
+        window.resetStarlineChatbot = resetChat;
     }
 
     if (document.readyState === 'loading') {

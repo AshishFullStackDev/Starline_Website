@@ -15699,6 +15699,33 @@ body.lead-popup-open .starline-chatbot-widget {
     outline-offset: 2px;
 }
 
+.starline-chatbot-reset {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 0;
+    transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.starline-chatbot-reset:hover {
+    background: #E8771F;
+    border-color: #E8771F;
+    transform: rotate(45deg);
+}
+
+.starline-chatbot-reset:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}
+
 .starline-chatbot-body {
     flex: 1 1 auto;
     min-height: 0;
