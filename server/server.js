@@ -115,7 +115,7 @@ function isOriginAllowed(origin) {
 
   const normalized = origin.toLowerCase().trim();
   if (PRODUCTION_ALLOWED_ORIGINS.includes(normalized)) return true;
-  if (normalized.includes('.github.io')) return true;
+  if (normalized.includes('.github.io') || normalized.includes('.onrender.com')) return true;
 
   if (process.env.ALLOWED_ORIGINS) {
     const customAllowed = process.env.ALLOWED_ORIGINS

@@ -50,7 +50,7 @@ var STARLINE_CONFIG = (typeof window !== 'undefined' && window.STARLINE_CONFIG) 
     // set PRODUCTION_BACKEND_URL to your deployed Render backend base URL:
     // e.g. 'https://starline-adventures-api.onrender.com'
     // Do NOT include a trailing slash or '/api/chat'.
-    PRODUCTION_BACKEND_URL: 'https://YOUR-RENDER-SERVICE.onrender.com',
+    PRODUCTION_BACKEND_URL: 'https://starline-website.onrender.com',
 
     // Local development backend URL (used only on localhost / 127.0.0.1)
     DEVELOPMENT_BACKEND_URL: 'http://localhost:3000',
