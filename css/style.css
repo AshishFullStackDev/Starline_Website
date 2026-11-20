@@ -15515,7 +15515,7 @@ body.lead-popup-open {
 }
 
 /* ============================================================
-   ZAPIER FLOATING CHATBOT WIDGET (STARLINE ADVENTURES PVT. LTD.)
+   STARLINE AI CHATBOT WIDGET (v3 — ORANGE / NAVY / WHITE)
    Bottom-right launcher + responsive floating panel
    ============================================================ */
 .starline-chatbot-widget {
@@ -15537,26 +15537,26 @@ body.lead-popup-open .starline-chatbot-widget {
     width: 58px;
     height: 58px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #F47621 0%, #E8771F 100%);
+    background: linear-gradient(135deg, #F47621 0%, #e0610f 100%);
     color: #ffffff;
-    border: 2px solid rgba(255, 255, 255, 0.28);
-    box-shadow: 0 8px 24px rgba(232, 119, 31, 0.42), 0 2px 8px rgba(11, 25, 44, 0.18);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 26px rgba(244, 118, 33, 0.42), 0 3px 10px rgba(11, 25, 44, 0.22);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
     position: relative;
-    transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
 
 .starline-chatbot-launcher:hover {
     transform: translateY(-2px) scale(1.06);
-    box-shadow: 0 12px 28px rgba(232, 119, 31, 0.5), 0 4px 12px rgba(11, 25, 44, 0.22);
+    box-shadow: 0 14px 30px rgba(244, 118, 33, 0.5), 0 4px 12px rgba(11, 25, 44, 0.25);
 }
 
 .starline-chatbot-launcher:focus-visible {
-    outline: 3px solid rgba(232, 119, 31, 0.45);
+    outline: 3px solid rgba(244, 118, 33, 0.5);
     outline-offset: 3px;
 }
 
@@ -15587,25 +15587,25 @@ body.lead-popup-open .starline-chatbot-widget {
 
 .starline-chatbot-panel {
     position: fixed;
-    bottom: 94px;
+    bottom: 96px;
     right: 24px;
-    width: 400px;
+    width: 420px;
     max-width: calc(100vw - 32px);
-    height: min(600px, calc(100vh - 118px));
-    height: min(600px, calc(100dvh - 118px));
+    height: min(650px, calc(100vh - 120px));
+    height: min(650px, calc(100dvh - 120px));
     background: #ffffff;
-    border-radius: 16px;
+    border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 22px 54px rgba(11, 25, 44, 0.26), 0 0 0 1px rgba(11, 25, 44, 0.08);
+    box-shadow: 0 24px 60px rgba(11, 25, 44, 0.32), 0 0 0 1px rgba(11, 25, 44, 0.08);
     display: flex;
     flex-direction: column;
     z-index: 99991;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translateY(16px) scale(0.96);
+    transform: translateY(18px) scale(0.95);
     transform-origin: bottom right;
-    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     box-sizing: border-box;
 }
 
@@ -15619,8 +15619,8 @@ body.lead-popup-open .starline-chatbot-widget {
 .starline-chatbot-header {
     background: linear-gradient(135deg, #0b192c 0%, #14213d 100%);
     color: #ffffff;
-    padding: 12px 16px;
-    border-bottom: 2px solid #E8771F;
+    padding: 14px 18px;
+    border-bottom: 2px solid #F47621;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -15639,8 +15639,8 @@ body.lead-popup-open .starline-chatbot-widget {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: #E8771F;
-    box-shadow: 0 0 0 3px rgba(232, 119, 31, 0.28);
+    background: #F47621;
+    box-shadow: 0 0 0 3px rgba(244, 118, 33, 0.3);
     flex-shrink: 0;
 }
 
@@ -15652,11 +15652,11 @@ body.lead-popup-open .starline-chatbot-widget {
 
 .starline-chatbot-title {
     font-family: var(--font-heading, 'Outfit', sans-serif);
-    font-size: 0.94rem;
-    font-weight: 700;
+    font-size: 0.95rem;
+    font-weight: 800;
     color: #ffffff;
     line-height: 1.2;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.03em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -15664,66 +15664,159 @@ body.lead-popup-open .starline-chatbot-widget {
 
 .starline-chatbot-subtitle {
     font-size: 0.72rem;
-    color: rgba(255, 255, 255, 0.76);
-    line-height: 1.25;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.3;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.starline-chatbot-close {
+.starline-chatbot-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.starline-chatbot-header-btn {
     width: 32px;
     height: 32px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: #ffffff;
-    font-size: 20px;
+    font-size: 16px;
     line-height: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    flex-shrink: 0;
     padding: 0;
-    transition: background 0.18s ease, transform 0.18s ease;
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
 }
 
-.starline-chatbot-close:hover {
-    background: #E8771F;
-    border-color: #E8771F;
+.starline-chatbot-header-btn:hover {
+    background: #F47621;
+    border-color: #F47621;
 }
 
-.starline-chatbot-close:focus-visible {
+.starline-chatbot-header-btn:focus-visible {
     outline: 2px solid #ffffff;
     outline-offset: 2px;
-}
-
-.starline-chatbot-reset {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    color: #ffffff;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
-    padding: 0;
-    transition: background 0.18s ease, transform 0.18s ease;
 }
 
 .starline-chatbot-reset:hover {
-    background: #E8771F;
-    border-color: #E8771F;
-    transform: rotate(45deg);
+    transform: rotate(-35deg);
 }
 
-.starline-chatbot-reset:focus-visible {
-    outline: 2px solid #ffffff;
-    outline-offset: 2px;
+/* Clear Conversation Confirmation Bar */
+.starline-chatbot-confirm-bar {
+    background: #fff7ed;
+    border-bottom: 1px solid #fed7aa;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: #7c2d12;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.starline-chatbot-confirm-bar[hidden] {
+    display: none;
+}
+
+.starline-chatbot-confirm-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.starline-confirm-btn {
+    border: none;
+    border-radius: 6px;
+    padding: 5px 11px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s ease;
+}
+
+.starline-confirm-btn--yes {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.starline-confirm-btn--yes:hover {
+    background: #b91c1c;
+}
+
+.starline-confirm-btn--no {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.starline-confirm-btn--no:hover {
+    background: #cbd5e1;
+}
+
+/* Chat View Container */
+.starline-chatbot-view {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.starline-chatbot-view[hidden] {
+    display: none;
+}
+
+.starline-chatbot-chips {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 10px 14px;
+    background: #fff7ed;
+    border-bottom: 1px solid #fed7aa;
+    flex-shrink: 0;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.starline-chatbot-chips::-webkit-scrollbar {
+    display: none;
+}
+
+.starline-chatbot-chip {
+    background: #ffffff;
+    border: 1px solid #fdba74;
+    color: #9a3412;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    flex-shrink: 0;
+    font-family: inherit;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.starline-chatbot-chip:hover:not(:disabled) {
+    background: #F47621;
+    color: #ffffff;
+    border-color: #F47621;
+    transform: translateY(-1px);
+}
+
+.starline-chatbot-chip:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
 }
 
 .starline-chatbot-body {
@@ -15735,82 +15828,475 @@ body.lead-popup-open .starline-chatbot-widget {
     overflow: hidden;
 }
 
-@media (max-width: 768px) {
-    .starline-chatbot-widget {
-        bottom: 18px;
-        right: 16px;
-    }
+.starline-native-chat {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #f8fafc;
+}
 
-    .starline-chatbot-launcher {
-        width: 52px;
-        height: 52px;
-    }
+.starline-chat-messages {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #ffffff;
+    scroll-behavior: smooth;
+}
 
-    .starline-chatbot-launcher-icon {
-        width: 24px;
-        height: 24px;
-    }
+.starline-chat-msg {
+    max-width: 86%;
+    padding: 11px 15px;
+    border-radius: 14px;
+    font-size: 0.87rem;
+    line-height: 1.55;
+    word-break: break-word;
+}
 
-    .starline-chatbot-panel {
-        bottom: 80px;
-        right: 16px;
-        width: min(400px, calc(100vw - 32px));
-        max-width: calc(100vw - 32px);
-        height: min(560px, calc(100vh - 98px));
-        height: min(560px, calc(100dvh - 98px));
+.starline-chat-msg.assistant {
+    background: #f1f5f9;
+    color: #0f172a;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    border: 1px solid #e2e8f0;
+}
+
+.starline-chat-msg.user {
+    background: #F47621;
+    color: #ffffff;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    white-space: pre-wrap;
+    box-shadow: 0 3px 12px rgba(244, 118, 33, 0.25);
+}
+
+.starline-chat-p {
+    margin: 0 0 6px;
+}
+
+.starline-chat-p:last-child {
+    margin-bottom: 0;
+}
+
+.starline-chat-gap {
+    height: 6px;
+}
+
+.starline-chat-list {
+    margin: 6px 0 8px 18px;
+    padding: 0;
+}
+
+.starline-chat-list li {
+    margin-bottom: 4px;
+}
+
+.starline-chat-inline-link {
+    color: #c2410c;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.starline-chat-heading {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #0b192c;
+    margin: 8px 0 4px;
+}
+
+.starline-chat-heading:first-child {
+    margin-top: 0;
+}
+
+.starline-chat-divider {
+    border: none;
+    border-top: 1px solid #cbd5e1;
+    margin: 8px 0;
+}
+
+/* Typing Indicator */
+.starline-chat-msg.is-typing {
+    padding: 12px 16px;
+}
+
+.starline-typing-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 16px;
+}
+
+.starline-typing-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #F47621;
+    animation: starlineTypingBounce 1.1s infinite ease-in-out both;
+}
+
+.starline-typing-dots span:nth-child(2) {
+    animation-delay: 0.18s;
+}
+
+.starline-typing-dots span:nth-child(3) {
+    animation-delay: 0.36s;
+}
+
+@keyframes starlineTypingBounce {
+    0%, 80%, 100% {
+        transform: scale(0.6);
+        opacity: 0.4;
+    }
+    40% {
+        transform: scale(1.05);
+        opacity: 1;
     }
 }
 
-@media (max-width: 480px) {
-    .starline-chatbot-panel {
-        bottom: 78px;
-        right: 12px;
-        left: 12px;
-        width: auto;
-        max-width: calc(100vw - 24px);
-        height: min(540px, calc(100vh - 96px));
-        height: min(540px, calc(100dvh - 96px));
-        border-radius: 14px;
-    }
+/* Friendly Error + Retry */
+.starline-chat-msg.is-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
 }
 
-@media (max-height: 580px) {
-    .starline-chatbot-panel {
-        bottom: 76px;
-        height: calc(100vh - 90px);
-        height: calc(100dvh - 90px);
-    }
+.starline-chat-error-text {
+    font-size: 0.84rem;
+    line-height: 1.5;
 }
 
+.starline-chat-retry-btn {
+    background: #dc2626;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.16s ease;
+}
 
-/* ============================================================
-   UPGRADED STARLINE AI INTELLIGENT SALES & CHATBOT EXTENSIONS
-   ============================================================ */
+.starline-chat-retry-btn:hover {
+    background: #b91c1c;
+}
+
+/* Input Area */
+.starline-chat-input-area {
+    padding: 12px 14px 10px;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    flex-shrink: 0;
+}
+
+.starline-chat-form {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.starline-chat-input {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 0.86rem;
+    line-height: 1.45;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: inherit;
+    background: #ffffff;
+    color: #0f172a;
+    resize: none;
+    max-height: 96px;
+    overflow-y: auto;
+}
+
+.starline-chat-input:focus {
+    border-color: #F47621;
+    box-shadow: 0 0 0 3px rgba(244, 118, 33, 0.16);
+}
+
+.starline-chat-input:disabled {
+    background: #f8fafc;
+    color: #64748b;
+}
+
+.starline-chat-send {
+    background: #F47621;
+    color: #ffffff;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease, opacity 0.2s ease, transform 0.15s ease;
+    flex-shrink: 0;
+}
+
+.starline-chat-send:hover:not(:disabled) {
+    background: #d46816;
+    transform: scale(1.03);
+}
+
+.starline-chat-send:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.starline-chat-input-hint {
+    margin-top: 5px;
+    font-size: 0.7rem;
+    color: #64748b;
+    text-align: right;
+}
+
+/* Integrated Enquiry Form View */
+.starline-chatbot-enquiry-view {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    overflow-y: auto;
+    padding: 14px 16px 18px;
+}
+
+.starline-chatbot-enquiry-view[hidden] {
+    display: none;
+}
+
+.starline-enquiry-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.starline-enquiry-back {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #0b192c;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 6px 11px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s ease;
+}
+
+.starline-enquiry-back:hover {
+    background: #e2e8f0;
+}
+
+.starline-enquiry-heading {
+    font-size: 0.86rem;
+    font-weight: 800;
+    color: #0b192c;
+}
+
+.starline-enquiry-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.starline-enquiry-form[hidden] {
+    display: none;
+}
+
+.starline-enq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.starline-enq-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.starline-enq-full {
+    grid-column: 1 / -1;
+}
+
+.starline-enq-field label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.starline-enq-field label span {
+    color: #dc2626;
+}
+
+.starline-enq-field input,
+.starline-enq-field select,
+.starline-enq-field textarea {
+    width: 100%;
+    padding: 8px 11px;
+    font-size: 0.83rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: inherit;
+    color: #0f172a;
+    background: #ffffff;
+    box-sizing: border-box;
+}
+
+.starline-enq-field input:focus,
+.starline-enq-field select:focus,
+.starline-enq-field textarea:focus {
+    outline: none;
+    border-color: #F47621;
+    box-shadow: 0 0 0 3px rgba(244, 118, 33, 0.16);
+}
+
+.starline-enq-field input.has-error,
+.starline-enq-field textarea.has-error {
+    border-color: #dc2626;
+}
+
+.starline-enq-err {
+    font-size: 0.72rem;
+    color: #dc2626;
+    min-height: 0;
+}
+
+.starline-enq-status {
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    line-height: 1.45;
+}
+
+.starline-enq-status.is-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+
+.starline-enq-submit {
+    background: #F47621;
+    color: #ffffff;
+    border: none;
+    border-radius: 9px;
+    padding: 11px 16px;
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.18s ease;
+}
+
+.starline-enq-submit:hover:not(:disabled) {
+    background: #d46816;
+}
+
+.starline-enq-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.starline-enq-success {
+    text-align: center;
+    padding: 20px 12px;
+}
+
+.starline-enq-success[hidden] {
+    display: none;
+}
+
+.starline-enq-success-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 24px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.starline-enq-success h4 {
+    margin: 0 0 8px;
+    color: #0b192c;
+    font-size: 1.05rem;
+}
+
+.starline-enq-ref {
+    display: inline-block;
+    background: #0b192c;
+    color: #F47621;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin: 0 0 12px;
+}
+
+.starline-enq-success-text {
+    font-size: 0.84rem;
+    color: #334155;
+    line-height: 1.55;
+    margin: 0 0 16px;
+}
+
+.starline-enq-success-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Sales Bar */
 .starline-chatbot-sales-bar {
     background: #f8fafc;
     border-top: 1px solid #e2e8f0;
-    padding: 8px 12px;
+    padding: 10px 14px;
     display: flex;
     align-items: center;
     gap: 8px;
     flex-shrink: 0;
-    flex-wrap: wrap;
     justify-content: space-between;
 }
 
 .starline-chatbot-sales-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 5px;
-    padding: 6px 10px;
-    font-size: 0.74rem;
+    padding: 7px 11px;
+    font-size: 0.75rem;
     font-weight: 700;
-    border-radius: 6px;
+    border-radius: 7px;
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: background 0.18s ease, transform 0.18s ease;
     border: none;
     cursor: pointer;
-    font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+    font-family: inherit;
+    flex: 1;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .starline-chatbot-sales-btn--wa {
@@ -15819,7 +16305,7 @@ body.lead-popup-open .starline-chatbot-widget {
 }
 
 .starline-chatbot-sales-btn--wa:hover {
-    background: #20ba5a;
+    background: #1fb858;
     color: #ffffff;
 }
 
@@ -15834,7 +16320,7 @@ body.lead-popup-open .starline-chatbot-widget {
 }
 
 .starline-chatbot-sales-btn--quote {
-    background: #E8771F;
+    background: #F47621;
     color: #ffffff;
 }
 
@@ -15843,133 +16329,55 @@ body.lead-popup-open .starline-chatbot-widget {
     color: #ffffff;
 }
 
-.starline-chatbot-chips {
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    padding: 6px 12px;
-    background: #fff7ed;
-    border-top: 1px solid #fed7aa;
-    flex-shrink: 0;
-    white-space: nowrap;
-    scrollbar-width: none;
+@media (max-width: 768px) {
+    .starline-chatbot-widget {
+        bottom: 20px;
+        right: 16px;
+    }
+
+    .starline-chatbot-launcher {
+        width: 56px;
+        height: 56px;
+    }
+
+    .starline-chatbot-panel {
+        bottom: 86px;
+        right: 16px;
+        width: min(420px, calc(100vw - 32px));
+        max-width: calc(100vw - 32px);
+        height: min(600px, calc(100vh - 104px));
+        height: min(600px, calc(100dvh - 104px));
+    }
 }
 
-.starline-chatbot-chips::-webkit-scrollbar {
-    display: none;
+@media (max-width: 480px) {
+    .starline-chatbot-widget {
+        bottom: 14px;
+        right: 14px;
+    }
+
+    .starline-chatbot-panel {
+        position: fixed;
+        bottom: 12px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        max-width: none;
+        height: calc(100dvh - 24px);
+        max-height: calc(100dvh - 24px);
+        border-radius: 16px;
+        transform-origin: bottom center;
+    }
+
+    .starline-enq-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
-.starline-chatbot-chip {
-    background: #ffffff;
-    border: 1px solid #fdba74;
-    color: #9a3412;
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: all 0.18s ease;
-    flex-shrink: 0;
-    font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-}
-
-.starline-chatbot-chip:hover {
-    background: #E8771F;
-    color: #ffffff;
-    border-color: #E8771F;
-}
-
-/* ============================================================
-   NATIVE STARLINE AI CHAT INTERFACE STYLES
-   ============================================================ */
-.starline-native-chat {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    background: #f8fafc;
-    font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-}
-
-.starline-chat-messages {
-    flex: 1 1 auto;
-    overflow-y: auto;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: #ffffff;
-}
-
-.starline-chat-msg {
-    max-width: 85%;
-    padding: 10px 14px;
-    border-radius: 12px;
-    font-size: 0.86rem;
-    line-height: 1.5;
-    word-break: break-word;
-    white-space: pre-wrap;
-}
-
-.starline-chat-msg.assistant {
-    background: #f1f5f9;
-    color: #1e293b;
-    align-self: flex-start;
-    border-bottom-left-radius: 4px;
-    border: 1px solid #e2e8f0;
-}
-
-.starline-chat-msg.user {
-    background: #F47621;
-    color: #ffffff;
-    align-self: flex-end;
-    border-bottom-right-radius: 4px;
-}
-
-.starline-chat-input-area {
-    padding: 12px;
-    background: #ffffff;
-    border-top: 1px solid #e2e8f0;
-}
-
-.starline-chat-form {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.starline-chat-input {
-    flex: 1;
-    padding: 10px 14px;
-    font-size: 0.86rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    outline: none;
-    transition: border-color 0.2s ease;
-    font-family: inherit;
-    background: #ffffff;
-    color: #0f172a;
-}
-
-.starline-chat-input:focus {
-    border-color: #F47621;
-    box-shadow: 0 0 0 2px rgba(244, 118, 33, 0.15);
-}
-
-.starline-chat-send {
-    background: #F47621;
-    color: #ffffff;
-    border: none;
-    width: 38px;
-    height: 38px;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.2s ease;
-    flex-shrink: 0;
-}
-
-.starline-chat-send:hover {
-    background: #d46816;
+@media (max-height: 580px) {
+    .starline-chatbot-panel {
+        bottom: 10px;
+        height: calc(100dvh - 20px);
+        max-height: calc(100dvh - 20px);
+    }
 }

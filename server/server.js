@@ -13,9 +13,12 @@ const { initializeApp } = require('firebase/app');
 const { getFirestore, doc, setDoc, getDoc, getDocs, collection, setLogLevel } = require('firebase/firestore');
 const { getAuth } = require('firebase/auth');
 
+const { generateChatReply, getConfiguredModel } = require('./gemini-service');
+
 const app = express();
-// AI Studio dev server requires binding strictly to port 3000 (environment PORT is 8080 for the container ingress)
-const PORT = 3000;
+// Render injects RENDER=true and PORT dynamically; AI Studio dev server requires binding strictly to port 3000
+const IS_RENDER_ENV = Boolean(process.env.RENDER || process.env.RENDER_EXTERNAL_URL || process.env.USE_ENV_PORT === 'true');
+const PORT = IS_RENDER_ENV ? (Number(process.env.PORT) || 3000) : 3000;
 const NODE_ENV = process.env.NODE_ENV || 'production';
 app.set('env', NODE_ENV);
 app.set('trust proxy', 1);
@@ -53,7 +56,7 @@ app.use((req, res, next) => {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com data:",
     "img-src 'self' data: blob: https:",
-    "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://api.emailjs.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
+    "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://api.emailjs.com https://*.onrender.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
     "frame-src 'self' https://maps.google.com https://*.firebaseapp.com",
     "frame-ancestors 'self' https://*.google.com https://*.googleusercontent.com https://localhost.corp.google.com:26001 https://*.run.app"
   ].join('; ');
@@ -227,6 +230,22 @@ function checkApiRateLimit(ip) {
   return true;
 }
 
+// Chat API rate limiter: max 35 requests per 5 minutes per IP
+const chatRateLimitMap = new Map();
+const CHAT_WINDOW_MS = 5 * 60 * 1000;
+const CHAT_MAX_REQUESTS = 35;
+
+function checkChatRateLimit(ip) {
+  const now = Date.now();
+  const timestamps = (chatRateLimitMap.get(ip) || []).filter(ts => now - ts < CHAT_WINDOW_MS);
+  if (timestamps.length >= CHAT_MAX_REQUESTS) {
+    return false;
+  }
+  timestamps.push(now);
+  chatRateLimitMap.set(ip, timestamps);
+  return true;
+}
+
 // Periodic cleanup of rate limiter maps
 setInterval(() => {
   const now = Date.now();
@@ -240,7 +259,12 @@ setInterval(() => {
     if (valid.length === 0) apiRateLimitMap.delete(ip);
     else apiRateLimitMap.set(ip, valid);
   }
-}, 5 * 60 * 1000);
+  for (const [ip, list] of chatRateLimitMap.entries()) {
+    const valid = list.filter(ts => now - ts < CHAT_WINDOW_MS);
+    if (valid.length === 0) chatRateLimitMap.delete(ip);
+    else chatRateLimitMap.set(ip, valid);
+  }
+}, 5 * 60 * 1000).unref();
 
 // Deduplication Store
 const recentSubmissions = new Map();
@@ -880,17 +904,33 @@ function detectProductFromUrl(url) {
 // 9. INPUT VALIDATION & ENQUIRY PROCESSING
 // ============================================================
 function validateEnquiryPayload(body, defaultFormType = 'Contact Form', referer = '') {
-  let { name, email, phone, company, location, product, message, formType } = body || {};
+  let {
+    name,
+    email,
+    phone,
+    company,
+    location,
+    projectLocation,
+    projectType,
+    activities,
+    availableLand,
+    product,
+    message,
+    formType
+  } = body || {};
 
   name = sanitizeInput(name);
   email = String(email || '').trim().toLowerCase();
   phone = sanitizeInput(phone);
   message = sanitizeInput(message);
+  projectType = sanitizeInput(projectType);
+  activities = sanitizeInput(activities);
+  availableLand = sanitizeInput(availableLand);
 
   // Optional/internal fields - never mandatory for the user
   company = company ? sanitizeInput(company) : 'N/A';
-  location = location ? sanitizeInput(location) : 'Not specified';
-  product = (product && sanitizeInput(product)) || detectProductFromUrl(referer || body?.pageUrl) || 'General Adventure Project Quote';
+  location = sanitizeInput(location || projectLocation) || 'Not specified';
+  product = (product && sanitizeInput(product)) || activities || detectProductFromUrl(referer || body?.pageUrl) || 'General Adventure Project Quote';
   const type = sanitizeInput(formType || defaultFormType);
 
   // 1. Name validation (Mandatory)
@@ -901,7 +941,7 @@ function validateEnquiryPayload(body, defaultFormType = 'Contact Form', referer 
     return { valid: false, error: 'Invalid characters in name.' };
   }
 
-  // 2. Email validation (Optional for custom requirement/activity forms, mandatory otherwise)
+  // 2. Email validation (Optional for legacy custom forms, validated strictly when provided)
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
   if (email && email !== 'no-email@starline.customer' && email !== 'not-provided@customer.com') {
     if (email.length < 5 || email.length > 120 || !emailRegex.test(email) || /[\r\n]/.test(email)) {
@@ -913,8 +953,19 @@ function validateEnquiryPayload(body, defaultFormType = 'Contact Form', referer 
 
   // 3. Phone validation (Mandatory)
   const phoneDigits = phone.replace(/[^\d]/g, '');
-  if (!phone || phoneDigits.length < 8 || phoneDigits.length > 20 || phone.length > 30 || !/^\+?[0-9\s\-()]{8,30}$/.test(phone)) {
-    return { valid: false, error: 'Please enter a valid phone number (minimum 8 digits).' };
+  if (!phone || phoneDigits.length < 8 || phoneDigits.length > 15 || phone.length > 30 || !/^\+?[0-9\s\-()]{8,30}$/.test(phone)) {
+    return { valid: false, error: 'Please enter a valid phone number (8 to 15 digits).' };
+  }
+
+  // Build structured details into message when optional project fields are supplied
+  const extraDetails = [];
+  if (projectType) extraDetails.push(`Project Type: ${projectType}`);
+  if (activities) extraDetails.push(`Activities Interested In: ${activities}`);
+  if (availableLand) extraDetails.push(`Available Land: ${availableLand}`);
+
+  if (extraDetails.length > 0) {
+    const contextHeader = extraDetails.join(' | ');
+    message = message ? `${contextHeader}\n\n${message}` : contextHeader;
   }
 
   // 4. Message validation (Mandatory)
@@ -936,6 +987,9 @@ function validateEnquiryPayload(body, defaultFormType = 'Contact Form', referer 
       company,
       location,
       product,
+      projectType,
+      activities,
+      availableLand,
       message,
       formType: type.slice(0, 64)
     }
@@ -1119,6 +1173,15 @@ async function handleSubmission(req, res, defaultFormType = 'Contact Form') {
       console.warn(`[Customer Mail Warning]: Confirmation notice for [${enquiryId}]:`, safeErrMsg);
     });
 
+    // Never falsely report success if configured Firestore persistence AND email notification both failed
+    const firebaseConfigured = Boolean(firebaseConfig && firebaseConfig.projectId);
+    if (firebaseConfigured && !firestoreSaved && !emailSent) {
+      return res.status(502).json({
+        ok: false,
+        error: 'Unable to save your enquiry to our database right now. Please retry or contact us directly on WhatsApp (+91-94249-04000).'
+      });
+    }
+
     // Support standard browser form redirection (only for classic HTML form POSTs, not JSON API fetches)
     if (!req.is('json') && req.headers.accept && req.headers.accept.includes('text/html') && !req.xhr) {
       return res.redirect(303, '/thank-you.html');
@@ -1189,18 +1252,29 @@ app.use('/api', (req, res, next) => {
   next();
 });
 
-// Public Health Check Endpoint (sanitized, no credentials or internals exposed)
-app.get('/api/health', (req, res) => {
+// Public Health Check Endpoints (both /health and /api/health, no secrets exposed)
+function handleHealthCheck(req, res) {
   const clientIp = getClientIp(req);
   if (!checkApiRateLimit(clientIp)) {
     return res.status(429).json({ ok: false, error: 'Rate limit exceeded' });
   }
 
-  res.json({
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  return res.json({
+    ok: true,
     status: 'ok',
+    service: 'starline-adventures-chatbot-api',
+    version: '2.0.0',
+    aiConfigured: Boolean((process.env.GEMINI_API_KEY || '').trim()),
+    model: getConfiguredModel(),
+    firestoreConfigured: Boolean(firebaseConfig && firebaseConfig.projectId),
+    uptimeSeconds: Math.floor(process.uptime()),
     time: new Date().toISOString()
   });
-});
+}
+
+app.get('/health', handleHealthCheck);
+app.get('/api/health', handleHealthCheck);
 
 // Firebase client config endpoint (public web keys only)
 app.get('/api/firebase-config', (req, res) => {
@@ -1315,136 +1389,56 @@ app.get('/api/enquiries-firestore', requireAdminAuth, async (req, res) => {
 });
 
 // ============================================================
-// GEMINI AI CHATBOT ENDPOINT (Starline AI Assistant)
+// GEMINI AI CHATBOT ENDPOINT (Starline AI Assistant v2)
 // ============================================================
-let GoogleGenAI;
-try {
-  const genaiModule = require('@google/genai');
-  GoogleGenAI = genaiModule.GoogleGenAI;
-} catch (e) {
-  console.warn('[Gemini Notice]: @google/genai package not loaded:', e.message);
-}
-
-function getLocalKnowledgeReply(query) {
-  const q = String(query || '').toLowerCase();
-  if (q.includes('hi') || q.includes('hello') || q.includes('hey') || q.includes('namaste')) {
-    return "Hello! Welcome to Starline Adventures. I am Starline AI, your adventure industry consultant and project advisor. How can I assist you with your adventure park, resort, or ride project today?";
-  }
-  if (q.includes('zipline') || q.includes('zip line') || q.includes('zip-line') || q.includes('cable')) {
-    return "Starline Adventures is India's premier manufacturer and installer of high-performance Zip Line systems. We offer single-line, dual-line, and high-altitude scenic ziplines engineered with high-tensile steel cables, certified braking systems, and heavy-duty harnesses. Spans range from 100 meters to over 1,000 meters.";
-  }
-  if (q.includes('bungee') || q.includes('jump')) {
-    return "Bungee jumping is an extreme gravity-defying thrill activity where participants leap from a secure tower or crane connected to high-stretch elastic cords and redundant safety harnesses. Starline provides engineering consultation and safety systems for extreme height attractions.";
-  }
-  if (q.includes('giant swing') || q.includes('swing') || q.includes('pendulum')) {
-    return "The Starline Giant Swing is an extreme high-adrenaline pendulum thrill ride built with robust steel towers and pneumatic quick-release mechanisms, delivering a breathtaking free-fall sensation for adventure parks.";
-  }
-  if (q.includes('sky cycling') || q.includes('sky cycle')) {
-    return "Sky Cycling is an aerial adventure activity where guests ride specially designed bicycles suspended on a high-tensile steel cable wire high above the ground. It offers a wonderful mix of fitness, thrill, and scenic sightseeing.";
-  }
-  if (q.includes('sky roller') || q.includes('roller')) {
-    return "Sky Roller is an aerial rotational ride where participants control their spinning wing rotation while suspended along a descending or undulating cable track, combining flying and rolling sensations.";
-  }
-  if (q.includes('rope course') || q.includes('ropecourse') || q.includes('obstacle') || q.includes('bridge') || q.includes('ninja')) {
-    return "We design and install High Rope Courses, Low Rope Courses, and Ninja Warrior obstacle circuits featuring 16 to 32+ thrilling challenges, suspended log bridges, and continuous belay safety systems.";
-  }
-  if (q.includes('climbing') || q.includes('wall') || q.includes('tower')) {
-    return "We manufacture modular Climbing Walls, Speed Climbing Panels, and Multi-Activity Adventure Towers equipped with auto-belay systems and certified climbing holds.";
-  }
-  if (q.includes('gyro') || q.includes('human gyro')) {
-    return "The Human Gyro Ride consists of concentric rotating rings that spin riders in multiple 360-degree axes simultaneously, creating a zero-gravity astronaut training sensation.";
-  }
-  if (q.includes('trampoline') || q.includes('bull') || q.includes('mechanical bull')) {
-    return "Trampoline parks and Mechanical Bull rides are high-energy family entertainment attractions. Starline supplies heavy-duty mechanical ride bases, variable speed controls, and safety padding.";
-  }
-  if (q.includes('archery') || q.includes('shooting') || q.includes('rifle')) {
-    return "Archery ranges and Rifle Shooting galleries are precision sports activities designed for safety-controlled target challenges in resorts and adventure parks.";
-  }
-  if (q.includes('water park') || q.includes('waterpark') || q.includes('water')) {
-    return "For water parks, Starline provides thrilling water adventure equipment, splash pads, suspension bridges over water zones, and aquatic challenge modules. Would you like to discuss water park planning and activity combinations?";
-  }
-  if (q.includes('resort') || q.includes('tourism') || q.includes('hotel')) {
-    return "Resorts benefit greatly from medium-footprint attractions such as low rope courses, archery ranges, climbing walls, ziplines, and kids' play zones that enhance guest engagement and average stay duration.";
-  }
-  if (q.includes('land') || q.includes('acre') || q.includes('space') || q.includes('layout') || q.includes('planning')) {
-    return "Adventure park land requirements vary: compact setups fit in 0.5 to 1 acre (rope course, climbing wall, zipline), while full-scale theme parks require 2 to 5+ acres. Starline provides expert master layout planning and tower height engineering.";
-  }
-  if (q.includes('safety') || q.includes('harness') || q.includes('helmet') || q.includes('braking')) {
-    return "Safety is paramount in adventure parks. Starline utilizes CE/UIAA certified full-body safety harnesses, impact helmets, fall-arrest systems, steel cables, primary and secondary braking systems, and high-strength safety nets.";
-  }
-  if (q.includes('price') || q.includes('cost') || q.includes('quotation') || q.includes('quote') || q.includes('budget')) {
-    return "Approximate project costs vary based on scale: mini setup (5–10 lakhs), medium adventure park (25–50 lakhs), and large-scale resort parks (1+ crore). Would you like a precise customized quotation for your project?";
-  }
-  if (q.includes('manufacture') || q.includes('manufacturing')) {
-    return "Starline Adventures manufactures and tests its core adventure equipment and structural towers in Nagpur under strict ISO/CE compliant safety standards. For unverified custom items, our engineering team confirms manufacturing feasibility.";
-  }
-  if (q.includes('contact') || q.includes('phone') || q.includes('whatsapp') || q.includes('call') || q.includes('nagpur')) {
-    return "You can reach Starline Adventures directly via phone at +91 94249 04000 / +91 9421 244 244, email at starlineadventure@gmail.com, or visit our headquarters opposite Government Guest House, Nagpur – 441302.";
-  }
-  return "Starline Adventures manufactures and installs over 50+ adventure activities, amusement rides, and safety systems. Our engineering team can customize this specifically for your project. How can I help you plan your adventure facility?";
-}
-
 app.post('/api/chat', async (req, res) => {
   const clientIp = getClientIp(req);
-  if (!checkApiRateLimit(clientIp)) {
-    return res.status(429).json({ ok: false, error: 'Rate limit exceeded. Please wait a moment.' });
+  if (!checkApiRateLimit(clientIp) || !checkChatRateLimit(clientIp)) {
+    return res.status(429).json({
+      ok: false,
+      code: 'RATE_LIMITED',
+      retryable: true,
+      error: 'Too many chat requests in a short time. Please wait a moment and try again.'
+    });
   }
 
-  try {
-    const { message, history } = req.body || {};
-    if (!message || typeof message !== 'string') {
-      return res.status(400).json({ ok: false, error: 'Message is required.' });
-    }
-
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey || !GoogleGenAI) {
-      const reply = getLocalKnowledgeReply(message);
-      return res.json({ ok: true, reply, source: 'knowledge-base' });
-    }
-
-    const ai = new GoogleGenAI({
-      apiKey,
-      httpOptions: {
-        headers: {
-          'User-Agent': 'aistudio-build'
-        }
-      }
+  const { message, history, sessionId } = req.body || {};
+  if (!message || typeof message !== 'string' || !message.trim()) {
+    return res.status(400).json({
+      ok: false,
+      code: 'INVALID_INPUT',
+      retryable: false,
+      error: 'Message is required and must be a non-empty string.'
     });
-
-    const systemInstruction = `You are Starline AI, an expert adventure industry consultant, project advisor, and sales lead generation specialist for Starline Adventures Pvt. Ltd. (India's premier manufacturer and installer of adventure park equipment, ziplines, rope courses, giant swings, climbing walls, water park attractions, safety gear, and turnkey amusement parks, based in Nagpur).
-
-Your core guidelines:
-1. Answer ALL types of user questions thoroughly and intelligently — including specific adventure activities (zipline, bungee jumping, giant swing, sky cycling, sky roller, rope courses, climbing walls, ninja courses, human gyro, trampoline, mechanical bull, archery, shooting), water parks, resorts, amusement parks, equipment, manufacturing, installation, safety systems (harnesses, helmets, cables, braking), project planning, land requirements, layouts, and general conversational/unrelated questions.
-2. NEVER use WhatsApp or sales links as an evasion or fallback for answering questions. Always provide a complete, helpful answer first before suggesting optional contact buttons (WhatsApp, Call, Quote).
-3. Distinguish between Verified Starline Information, General Industry Knowledge, and Unknown Company-Specific Details (never invent exact pricing or custom manufacturing specifications for unverified items; state general knowledge and offer sales/engineering team confirmation).
-4. Maintain conversation context across turns (remembering project types like water parks, land size, or budget previously discussed).
-5. Match the user's language automatically: English, Hindi, Hinglish, or Marathi.
-6. Be concise by default, professional, warm, and helpful.`;
-
-    const chatHistory = Array.isArray(history) ? history.map(h => ({
-      role: h.role === 'user' ? 'user' : 'model',
-      parts: [{ text: String(h.text || '') }]
-    })) : [];
-
-    const contents = [...chatHistory, { role: 'user', parts: [{ text: message }] }];
-
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash-lite',
-      contents,
-      config: {
-        systemInstruction,
-        thinkingConfig: { thinkingLevel: 'LOW' }
-      }
-    });
-
-    const reply = response.text || getLocalKnowledgeReply(message);
-    res.json({ ok: true, reply, source: 'gemini' });
-
-  } catch (err) {
-    console.error('[Gemini Chat Error]:', err.message);
-    const reply = getLocalKnowledgeReply(req.body?.message || '');
-    res.json({ ok: true, reply, source: 'knowledge-base-fallback' });
   }
+
+  const cleanSessionId = (typeof sessionId === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(sessionId.trim()))
+    ? sessionId.trim()
+    : '';
+
+  const result = await generateChatReply({
+    message,
+    history: Array.isArray(history) ? history : [],
+    sessionId: cleanSessionId
+  });
+
+  if (!result.ok) {
+    return res.status(result.httpStatus || 500).json({
+      ok: false,
+      code: result.code || 'CHAT_ERROR',
+      retryable: Boolean(result.retryable),
+      error: result.error || 'Unable to generate an AI response right now.',
+      ...(cleanSessionId ? { sessionId: cleanSessionId } : {})
+    });
+  }
+
+  return res.json({
+    ok: true,
+    reply: result.reply,
+    model: result.model,
+    ...(cleanSessionId ? { sessionId: cleanSessionId } : {}),
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Public Submission Endpoints

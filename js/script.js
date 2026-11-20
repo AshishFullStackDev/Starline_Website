@@ -3705,401 +3705,61 @@ window.closeQuoteModal = closeQuoteModal;
 })();
 
 /* ============================================================
-   STARLINE AI INTELLIGENT ADVENTURE ACTIVITY & SALES ASSISTANT
-   - Native frontend chat widget powered by Starline knowledge base
-   - Conversation history saved in localStorage & reset via New Chat button
-   - Direct WhatsApp, Call, and Quote modal integrations
+   STARLINE AI CHATBOT LOADER (Rebuilt v3 -> js/chatbot.js)
    ============================================================ */
-(function initStarlineNativeAssistant() {
+(function loadStarlineChatbotModule() {
     if (typeof window === 'undefined' || typeof document === 'undefined') return;
-    if (window.__starlineAssistantInitialized) return;
-    window.__starlineAssistantInitialized = true;
+    if (window.__starlineChatbotV3Initialized || window.__starlineChatbotLoaderRan) return;
+    window.__starlineChatbotLoaderRan = true;
 
-    const STORAGE_KEY = 'starline_ai_chat_messages_v2';
-
-    const INITIAL_MESSAGE = {
-        role: 'assistant',
-        text: "Hello! Welcome to Starline Adventures. I am your Starline AI Adventure Activity & Sales Assistant. How can I help you today? Feel free to ask about Ziplines, Rope Courses, Giant Swings, Climbing Walls, pricing, or custom park setup!"
-    };
-
-    const KNOWLEDGE_BASE = [
-        {
-            keywords: ['zipline', 'zip line', 'zip-line', 'cable'],
-            answer: "Starline Adventures is India's premier manufacturer and installer of high-performance Zip Line systems. We offer single-line, dual-line, and high-altitude scenic ziplines engineered with high-tensile steel cables, certified braking systems, and heavy-duty harnesses. Spans can range from 100 meters to over 1,000 meters. Would you like a price estimate or technical specifications?"
-        },
-        {
-            keywords: ['rope course', 'ropecourse', 'obstacle', 'bridge', 'course'],
-            answer: "We design and install world-class High Rope Courses and Low Rope Courses featuring 16 to 32+ thrilling obstacles, suspended log bridges, cargo net crossings, and continuous belay safety systems. Ideal for resorts, adventure parks, and camp grounds. Would you like to discuss layout planning for your property?"
-        },
-        {
-            keywords: ['giant swing', 'swing', 'pendulum'],
-            answer: "The Starline Giant Swing is an extreme high-adrenaline pendulum thrill ride built with robust steel towers and pneumatic quick-release mechanisms. It offers a breathtaking free-fall sensation for adventure parks and thrill zones. Safety harnesses and dual-point rigging ensure maximum security."
-        },
-        {
-            keywords: ['climbing', 'wall', 'tower', 'rock climb'],
-            answer: "We manufacture modular Climbing Walls, Speed Climbing Panels, and Multi-Activity Adventure Towers equipped with auto-belay systems and certified climbing holds. Suitable for indoor entertainment centers, outdoor parks, and institutional sports zones."
-        },
-        {
-            keywords: ['price', 'cost', 'quotation', 'quote', 'budget', 'rate'],
-            answer: "Pricing for Starline adventure installations depends on the specific activity, site dimensions, structural engineering requirements, and location. You can click 'Request Quote' below or chat with our sales team on WhatsApp at +91 94249 04000 to receive a customized quotation within 24 hours!"
-        },
-        {
-            keywords: ['contact', 'phone', 'whatsapp', 'call', 'reach', 'office', 'nagpur'],
-            answer: "You can reach Starline Adventures directly via phone at +91 94249 04000 / +91 9421 244 244, email at starlineadventure@gmail.com, or visit our headquarters opposite Government Guest House, Nagpur – 441302. Use the buttons below for instant WhatsApp or phone connection!"
-        }
-    ];
-
-    function getAIResponse(query) {
-        const q = query.toLowerCase();
-        for (const item of KNOWLEDGE_BASE) {
-            if (item.keywords.some(kw => q.includes(kw))) {
-                return item.answer;
-            }
-        }
-        return "That's a great question about adventure park setup! Starline Adventures manufactures and installs over 50+ adventure activities and amusement rides. Our engineering team can customize this specifically for your location. Would you like to connect with our sales team on WhatsApp or request a custom project quotation?";
-    }
-
-    function loadMessages() {
+    function getJsBaseDir() {
         try {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            if (raw) {
-                const parsed = JSON.parse(raw);
-                if (Array.isArray(parsed) && parsed.length > 0) {
-                    return parsed;
+            const scripts = document.querySelectorAll('script[src]');
+            for (let i = 0; i < scripts.length; i++) {
+                const src = scripts[i].getAttribute('src') || '';
+                if (/js\/script\.js(\?|$)/i.test(src)) {
+                    return src.replace(/script\.js(\?.*)?$/i, '');
                 }
             }
         } catch (e) {}
-        return [INITIAL_MESSAGE];
+        return (window.location && window.location.pathname && window.location.pathname.includes('/product/'))
+            ? '../js/'
+            : 'js/';
     }
 
-    function saveMessages(msgs) {
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(msgs));
-        } catch (e) {}
+    function appendScriptOnce(src, onload) {
+        const cleanSrc = src.split('?')[0];
+        const existing = Array.from(document.querySelectorAll('script[src]')).some(s => {
+            const cur = (s.getAttribute('src') || '').split('?')[0];
+            return cur === cleanSrc || cur.endsWith('/' + cleanSrc);
+        });
+        if (existing) {
+            if (typeof onload === 'function') onload();
+            return;
+        }
+        const el = document.createElement('script');
+        el.src = src;
+        el.defer = true;
+        if (typeof onload === 'function') {
+            el.onload = onload;
+        }
+        document.body.appendChild(el);
     }
 
-    function mountChatbotWidget() {
-        if (!document.body) return;
-        if (document.getElementById('starline-chatbot-widget')) return;
-
-        const widget = document.createElement('div');
-        widget.id = 'starline-chatbot-widget';
-        widget.className = 'starline-chatbot-widget';
-
-        widget.innerHTML = `
-            <div class="starline-chatbot-panel"
-                 id="starline-chatbot-panel"
-                 role="dialog"
-                 aria-modal="false"
-                 aria-labelledby="starline-chatbot-title"
-                 aria-hidden="true">
-                <div class="starline-chatbot-header">
-                    <div class="starline-chatbot-brand">
-                        <span class="starline-chatbot-status-dot" aria-hidden="true"></span>
-                        <div class="starline-chatbot-title-wrap">
-                            <span class="starline-chatbot-title" id="starline-chatbot-title">STARLINE ADVENTURES</span>
-                            <span class="starline-chatbot-subtitle">Adventure AI &amp; Sales Assistant</span>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <button type="button"
-                                class="starline-chatbot-reset"
-                                id="starline-chatbot-reset"
-                                aria-label="Start new chat / Clear conversation"
-                                title="Start New Chat">
-                            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                                <path d="M3 3v5h5"></path>
-                            </svg>
-                        </button>
-                        <button type="button"
-                                class="starline-chatbot-close"
-                                id="starline-chatbot-close"
-                                aria-label="Close chat assistant"
-                                title="Close chat">&times;</button>
-                    </div>
-                </div>
-                <div class="starline-chatbot-chips" id="starline-chatbot-chips">
-                    <button type="button" class="starline-chatbot-chip" data-query="Build an adventure park">🏗️ Build Adventure Park</button>
-                    <button type="button" class="starline-chatbot-chip" data-query="Zipline pricing & specs">🎢 Zipline Specs &amp; Quote</button>
-                    <button type="button" class="starline-chatbot-chip" data-query="Rope course installation">🧗 Rope Courses</button>
-                    <button type="button" class="starline-chatbot-chip" data-query="Giant Swing requirements">🌟 Giant Swing</button>
-                </div>
-                <div class="starline-chatbot-body" id="starline-chatbot-body">
-                    <div class="starline-native-chat">
-                        <div class="starline-chat-messages" id="starline-chat-messages"></div>
-                        <div class="starline-chat-input-area">
-                            <form id="starline-chat-form" class="starline-chat-form" novalidate>
-                                <input type="text"
-                                       id="starline-chat-input"
-                                       class="starline-chat-input"
-                                       placeholder="Ask about rides, pricing or setup..."
-                                       autocomplete="off"
-                                       required>
-                                <button type="submit" class="starline-chat-send" id="starline-chat-send" aria-label="Send message">
-                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                        <line x1="22" y1="2" x2="11" y2="13"></line>
-                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                    </svg>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="starline-chatbot-sales-bar">
-                    <a href="https://wa.me/919424904000?text=Hello%20Starline%20Adventures%2C%20I%20am%20interested%20in%20adventure%20rides%20and%20equipment.%20I%20would%20like%20to%20know%20about%20pricing%2C%20technical%20specifications%2C%20installation%20requirements%2C%20and%20a%20quotation.%20Please%20contact%20me."
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       class="starline-chatbot-sales-btn starline-chatbot-sales-btn--wa"
-                       aria-label="Chat with Starline Sales Team on WhatsApp"
-                       title="WhatsApp Sales Team">
-                        💬 WhatsApp Sales
-                    </a>
-                    <a href="tel:+919424904000"
-                       class="starline-chatbot-sales-btn starline-chatbot-sales-btn--call"
-                       aria-label="Call Starline Sales Team"
-                       title="Call +91 94249 04000">
-                        📞 Call Sales
-                    </a>
-                    <button type="button"
-                            class="starline-chatbot-sales-btn starline-chatbot-sales-btn--quote"
-                            id="starline-chatbot-quote-trigger"
-                            aria-label="Request custom project quotation"
-                            title="Request Quote">
-                        📋 Request Quote
-                    </button>
-                </div>
-            </div>
-            <button type="button"
-                    class="starline-chatbot-launcher"
-                    id="starline-chatbot-launcher"
-                    aria-label="Open chat assistant"
-                    aria-expanded="false"
-                    aria-controls="starline-chatbot-panel"
-                    title="Chat with Starline Adventures">
-                <span class="starline-chatbot-launcher-icon starline-chatbot-launcher-icon--chat" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                    </svg>
-                </span>
-                <span class="starline-chatbot-launcher-icon starline-chatbot-launcher-icon--close" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </span>
-            </button>
-        `;
-
-        document.body.appendChild(widget);
-
-        const panel = widget.querySelector('#starline-chatbot-panel');
-        const launcher = widget.querySelector('#starline-chatbot-launcher');
-        const closeBtn = widget.querySelector('#starline-chatbot-close');
-        const resetBtn = widget.querySelector('#starline-chatbot-reset');
-        const messagesContainer = widget.querySelector('#starline-chat-messages');
-        const chatForm = widget.querySelector('#starline-chat-form');
-        const chatInput = widget.querySelector('#starline-chat-input');
-
-        if (panel && 'inert' in panel) {
-            panel.inert = true;
-        }
-
-        let messages = loadMessages();
-
-        function renderMessages() {
-            if (!messagesContainer) return;
-            messagesContainer.innerHTML = messages.map(m => `
-                <div class="starline-chat-msg ${m.role}">
-                    ${escapeHTML(m.text)}
-                </div>
-            `).join('');
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        renderMessages();
-
-        function updateDynamicWhatsAppLink(lastQuery) {
-            const waBtn = widget.querySelector('.starline-chatbot-sales-btn--wa');
-            if (!waBtn) return;
-            const q = (lastQuery || '').toLowerCase();
-            let msg = "Hello Starline Adventures, I am interested in adventure rides and equipment. Please contact me with pricing and quotation details.";
-            if (q.includes('zipline') || q.includes('zip line') || q.includes('zip-line')) {
-                msg = "Hello Starline Adventures, I am interested in a Zipline installation. Please share technical specifications, pricing, and a quotation.";
-            } else if (q.includes('water park') || q.includes('water')) {
-                msg = "Hello Starline Adventures, I am planning a water park project and would like to discuss attractions, planning, and quotation.";
-            } else if (q.includes('rope course')) {
-                msg = "Hello Starline Adventures, I am interested in a Rope Course installation. Please share layout options and quotation.";
-            } else if (q.includes('adventure park') || q.includes('park')) {
-                msg = "Hello Starline Adventures, I want to build an adventure park. Please share project planning guidance and quotation.";
-            }
-            waBtn.href = `https://wa.me/919424904000?text=${encodeURIComponent(msg)}`;
-        }
-
-        async function handleUserMessage(text) {
-            const cleanText = (text || '').trim();
-            if (!cleanText) return;
-
-            updateDynamicWhatsAppLink(cleanText);
-
-            messages.push({ role: 'user', text: cleanText });
-            saveMessages(messages);
-            renderMessages();
-
-            if (chatInput) chatInput.value = '';
-
-            const typingId = 'typing_' + Date.now();
-            messages.push({ role: 'assistant', text: 'Starline AI is typing...', isTyping: true, id: typingId });
-            renderMessages();
-
-            try {
-                const historyForApi = messages
-                    .filter(m => !m.isTyping && m.text !== INITIAL_MESSAGE.text)
-                    .slice(-10);
-
-                const chatApiUrl = (typeof STARLINE_CONFIG !== 'undefined' && typeof STARLINE_CONFIG.getChatApiUrl === 'function')
-                    ? STARLINE_CONFIG.getChatApiUrl()
-                    : '/api/chat';
-
-                const res = await fetch(chatApiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        message: cleanText,
-                        history: historyForApi
-                    })
-                });
-
-                messages = messages.filter(m => m.id !== typingId);
-
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data && data.reply) {
-                        messages.push({ role: 'assistant', text: data.reply });
-                    } else {
-                        messages.push({ role: 'assistant', text: "Thank you for reaching out to Starline Adventures. How can we help with your adventure project?" });
-                    }
-                } else {
-                    const errorText = await res.text().catch(() => '');
-                    console.error('[Chat API Error]: Status', res.status, errorText);
-                    messages.push({ role: 'assistant', text: `⚠️ Backend Connection Error (HTTP ${res.status}): Unable to reach backend AI server at [${chatApiUrl}]. Please deploy your Node.js backend on Render and configure PRODUCTION_BACKEND_URL in js/config.js.` });
-                }
-            } catch (err) {
-                messages = messages.filter(m => m.id !== typingId);
-                console.error('[Chat Network Error]:', err.message);
-                messages.push({ role: 'assistant', text: `⚠️ Network Connection Error: Could not connect to backend server. Please verify that your Render backend is running and PRODUCTION_BACKEND_URL is set in js/config.js.` });
-            }
-
-            saveMessages(messages);
-            renderMessages();
-        }
-
-        chatForm?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (chatInput) {
-                handleUserMessage(chatInput.value);
-            }
-        });
-
-        function setOpenState(open) {
-            const isOpen = Boolean(open);
-            widget.classList.toggle('is-open', isOpen);
-            document.body.classList.toggle('starline-chatbot-open', isOpen);
-            if (panel) {
-                panel.setAttribute('aria-hidden', String(!isOpen));
-                if ('inert' in panel) {
-                    panel.inert = !isOpen;
-                }
-            }
-            if (launcher) {
-                launcher.setAttribute('aria-expanded', String(isOpen));
-                launcher.setAttribute('aria-label', isOpen ? 'Close chat assistant' : 'Open chat assistant');
-                launcher.setAttribute('title', isOpen ? 'Close chat' : 'Chat with Starline Adventures');
-            }
-            if (isOpen && chatInput) {
-                setTimeout(() => chatInput.focus(), 200);
-            }
-        }
-
-        function openChatbot() {
-            setOpenState(true);
-        }
-
-        function closeChatbot(restoreFocus) {
-            setOpenState(false);
-            if (restoreFocus && launcher) {
-                launcher.focus();
-            }
-        }
-
-        function toggleChatbot() {
-            setOpenState(!widget.classList.contains('is-open'));
-        }
-
-        function resetChat() {
-            try {
-                localStorage.removeItem(STORAGE_KEY);
-            } catch (e) {}
-            messages = [INITIAL_MESSAGE];
-            renderMessages();
-        }
-
-        launcher?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleChatbot();
-        });
-
-        closeBtn?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            closeChatbot(true);
-        });
-
-        resetBtn?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            resetChat();
-        });
-
-        const quoteBtn = widget.querySelector('#starline-chatbot-quote-trigger');
-        quoteBtn?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (typeof window.openQuoteModal === 'function') {
-                window.openQuoteModal('Starline AI Assistant Enquiry');
-            } else if (typeof window.openLeadCapturePopup === 'function') {
-                window.openLeadCapturePopup();
-            }
-        });
-
-        widget.querySelectorAll('.starline-chatbot-chip').forEach(chip => {
-            chip.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const query = chip.getAttribute('data-query') || 'adventure rides';
-                handleUserMessage(query);
+    function boot() {
+        const base = getJsBaseDir();
+        if (typeof window.STARLINE_CONFIG === 'undefined') {
+            appendScriptOnce(base + 'config.js?v=3.0', function () {
+                appendScriptOnce(base + 'chatbot.js?v=3.0');
             });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!widget.classList.contains('is-open')) return;
-            if (!widget.contains(e.target)) {
-                closeChatbot(false);
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && widget.classList.contains('is-open')) {
-                closeChatbot(true);
-            }
-        });
-
-        window.openStarlineChatbot = openChatbot;
-        window.closeStarlineChatbot = () => closeChatbot(false);
-        window.toggleStarlineChatbot = toggleChatbot;
-        window.resetStarlineChatbot = resetChat;
+        } else {
+            appendScriptOnce(base + 'chatbot.js?v=3.0');
+        }
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', mountChatbotWidget);
+        document.addEventListener('DOMContentLoaded', boot);
     } else {
-        mountChatbotWidget();
+        boot();
     }
 })();
-

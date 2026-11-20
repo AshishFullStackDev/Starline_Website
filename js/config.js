@@ -44,74 +44,125 @@ var STARLINE_CONFIG = (typeof window !== 'undefined' && window.STARLINE_CONFIG) 
     },
 
     // ============================================================
-    // BACKEND API URL CONFIGURATION
+    // CENTRALIZED BACKEND API CONFIGURATION (RENDER + GITHUB PAGES)
     // ============================================================
-    // The live website frontend is hosted on static hosting at https://starlineadventure.com
-    // (e.g. GitHub Pages / GoDaddy static / Netlify / Vercel).
-    // Static hosting cannot execute server.js, returning HTTP 405 Method Not Allowed for POST /api/enquiry.
-    //
-    // The Node.js / Express backend (server.js) runs on a separate Node-compatible service:
-    // e.g. https://api.starlineadventure.com (Render, Railway, Cloud Run, VPS, etc.).
-    //
-    // Set this to your live backend server URL once deployed (e.g. 'https://your-api.onrender.com/api/enquiry').
-    // By default, leave empty ('') or 'direct-firebase' to use serverless direct Firestore saving,
-    // which works 100% out of the box on static hosting without requiring DNS configuration or a backend server!
-    PRODUCTION_API_URL: '',
+    // When the frontend is hosted statically on GitHub Pages (https://starlineadventure.com),
+    // set PRODUCTION_BACKEND_URL to your deployed Render backend base URL:
+    // e.g. 'https://starline-adventures-api.onrender.com'
+    // Do NOT include a trailing slash or '/api/chat'.
+    PRODUCTION_BACKEND_URL: 'https://YOUR-RENDER-SERVICE.onrender.com',
 
-    // Local development endpoint for Express server (port 3000):
+    // Local development backend URL (used only on localhost / 127.0.0.1)
+    DEVELOPMENT_BACKEND_URL: 'http://localhost:3000',
+
+    // Legacy compatibility fields
+    PRODUCTION_API_URL: '',
     DEVELOPMENT_API_URL: 'http://localhost:3000/api/enquiry',
 
-    // ============================================================
-    // RENDER BACKEND CHAT API URL CONFIGURATION
-    // ============================================================
-    // Since the frontend is hosted statically (e.g. GitHub Pages), chatbot API requests
-    // must point to your deployed Node.js backend on Render.
-    // Replace the placeholder below with your actual Render service URL once deployed
-    // (e.g. 'https://starline-backend.onrender.com').
-    PRODUCTION_BACKEND_URL: 'https://your-render-backend-service.onrender.com',
-
-    getChatApiUrl: function() {
-        if (typeof window === 'undefined') {
-            return '/api/chat';
-        }
-        if (window.__STARLINE_BACKEND_URL__) {
-            return window.__STARLINE_BACKEND_URL__.replace(/\/+$/, '') + '/api/chat';
-        }
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            return 'http://localhost:3000/api/chat';
-        }
-        if (this.PRODUCTION_BACKEND_URL && !this.PRODUCTION_BACKEND_URL.includes('your-render-backend-service')) {
-            return this.PRODUCTION_BACKEND_URL.replace(/\/+$/, '') + '/api/chat';
-        }
-        return this.PRODUCTION_BACKEND_URL ? this.PRODUCTION_BACKEND_URL.replace(/\/+$/, '') + '/api/chat' : '/api/chat';
+    _isPlaceholderBackendUrl: function(url) {
+        if (!url || typeof url !== 'string') return true;
+        const trimmed = url.trim();
+        if (!trimmed) return true;
+        const lower = trimmed.toLowerCase();
+        return (
+            lower.includes('your-render-service') ||
+            lower.includes('your-render-backend-service') ||
+            lower.includes('example.com')
+        );
     },
 
-    // Function to dynamically resolve the appropriate API endpoint
+    _normalizeBaseUrl: function(url) {
+        return String(url || '').trim().replace(/\/+$/, '');
+    },
+
+    getBackendBaseUrl: function() {
+        if (typeof window === 'undefined') {
+            return !this._isPlaceholderBackendUrl(this.PRODUCTION_BACKEND_URL)
+                ? this._normalizeBaseUrl(this.PRODUCTION_BACKEND_URL)
+                : '';
+        }
+
+        // Manual runtime override for testing/staging
+        if (window.__STARLINE_BACKEND_URL__) {
+            return this._normalizeBaseUrl(window.__STARLINE_BACKEND_URL__);
+        }
+
+        const hostname = (window.location.hostname || '').toLowerCase();
+
+        // Local development
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            return window.location.port === '3000'
+                ? this._normalizeBaseUrl(window.location.origin)
+                : this._normalizeBaseUrl(this.DEVELOPMENT_BACKEND_URL || 'http://localhost:3000');
+        }
+
+        // Fullstack Node preview/deployment hosts (same-origin Express server)
+        if (
+            hostname.endsWith('.run.app') ||
+            hostname.endsWith('.googleusercontent.com') ||
+            hostname.endsWith('.onrender.com')
+        ) {
+            return this._normalizeBaseUrl(window.location.origin);
+        }
+
+        // Static production hosting (GitHub Pages / starlineadventure.com)
+        if (!this._isPlaceholderBackendUrl(this.PRODUCTION_BACKEND_URL)) {
+            return this._normalizeBaseUrl(this.PRODUCTION_BACKEND_URL);
+        }
+
+        // Explicitly return empty string instead of calling GitHub Pages /api/chat (prevents HTTP 405)
+        return '';
+    },
+
+    getChatEndpointInfo: function() {
+        const base = this.getBackendBaseUrl();
+        if (!base) {
+            return {
+                configured: false,
+                url: null,
+                errorMessage: 'AI backend URL is not configured yet. Please set PRODUCTION_BACKEND_URL in js/config.js to your deployed Render service URL.'
+            };
+        }
+        return {
+            configured: true,
+            url: `${base}/api/chat`,
+            healthUrl: `${base}/health`,
+            enquiryUrl: `${base}/api/enquiry`,
+            errorMessage: null
+        };
+    },
+
+    getChatApiUrl: function() {
+        const info = this.getChatEndpointInfo();
+        return info.url || '';
+    },
+
+    getEnquiryBackendUrl: function() {
+        const base = this.getBackendBaseUrl();
+        return base ? `${base}/api/enquiry` : '';
+    },
+
+    // Function to dynamically resolve the appropriate enquiry endpoint
     getEnquiryApiUrl: function() {
         if (typeof window === 'undefined') {
             return this.PRODUCTION_API_URL || 'direct-firebase';
         }
 
-        // Support manual override for testing / staging environments
         if (window.__STARLINE_API_URL__) {
             return window.__STARLINE_API_URL__;
         }
 
-        // Direct Firebase Firestore submission for static hosting and all environments:
+        const backendUrl = this.getEnquiryBackendUrl();
+        if (backendUrl) {
+            return backendUrl;
+        }
+
         return 'direct-firebase';
     },
 
     // Base URL helper for server API endpoints (/api/health, /api/firebase-config)
     getBaseApiUrl: function() {
-        const apiUrl = this.getEnquiryApiUrl();
-        if (apiUrl && (apiUrl.startsWith('http://') || apiUrl.startsWith('https://'))) {
-            try {
-                return new URL(apiUrl).origin;
-            } catch (e) {
-                return apiUrl.replace(/\/api\/enquiry\/?$/, '').replace(/\/+$/, '');
-            }
-        }
-        return '';
+        return this.getBackendBaseUrl();
     },
 
     // Backward-compatible property getter
